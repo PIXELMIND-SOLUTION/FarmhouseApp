@@ -1,581 +1,1104 @@
-// import 'package:farmhouse_app/views/payment/payment_screen.dart';
-// import 'package:flutter/material.dart';
+// // import 'dart:io';
+// // import 'package:farmhouse_app/views/models/farmhouse_model.dart';
+// // import 'package:farmhouse_app/views/payment/payment_screen.dart';
+// // import 'package:farmhouse_app/widgets/like_widget.dart';
+// // import 'package:flutter/material.dart';
+// // import 'package:http/http.dart' as http;
+// // import 'package:intl/intl.dart';
+// // import 'package:path_provider/path_provider.dart';
+// // import 'package:share_plus/share_plus.dart';
 
-// class HouseDetailScreen extends StatefulWidget {
-//   const HouseDetailScreen({super.key});
+// // class HouseDetailScreen extends StatefulWidget {
+// //   final Farmhouse?farmhouse;
+// //   final String?id;
+// //   const HouseDetailScreen({super.key,this.farmhouse,this.id});
 
-//   @override
-//   State<HouseDetailScreen> createState() => _HouseDetailScreenState();
-// }
+// //   @override
+// //   State<HouseDetailScreen> createState() => _HouseDetailScreenState();
+// // }
 
-// class _HouseDetailScreenState extends State<HouseDetailScreen> {
-//   int selectedImageIndex = 0;
-//   String selectedPricing = 'hour';
+// // class _HouseDetailScreenState extends State<HouseDetailScreen> {
+// //   int selectedImageIndex = 0;
+// //   String selectedPricing = 'hour';
+// //   int? selectedDateIndex;
+// //   String? selectedTimeSlot;
 
-//   final List<String> imageUrls = [
-//     'https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?w=800',
-//     'https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?w=800',
-//     'https://images.unsplash.com/photo-1600585154340-be6161a56a0c?w=800',
-//     'https://images.unsplash.com/photo-1600566753190-17f0baa2a6c3?w=800',
-//   ];
+// //   DateTime selectedDate = DateTime.now();
 
-//   final List<Map<String, dynamic>> reviews = [
-//     {
-//       'name': 'Sarah Johnson',
-//       'rating': 5,
-//       'comment':
-//           'Amazing place! Perfect for a weekend getaway. The views are breathtaking.',
-//       'date': '2 weeks ago',
-//       'avatar': 'SJ',
-//     },
-//     {
-//       'name': 'Michael Chen',
-//       'rating': 4,
-//       'comment':
-//           'Beautiful farmhouse with great amenities. Highly recommended for families.',
-//       'date': '1 month ago',
-//       'avatar': 'MC',
-//     },
-//     {
-//       'name': 'Emma Williams',
-//       'rating': 5,
-//       'comment':
-//           'Peaceful and serene. Exactly what we needed to disconnect from city life.',
-//       'date': '2 months ago',
-//       'avatar': 'EW',
-//     },
-//   ];
+// //   late final WishlistManager wishlistManager = WishlistManager();
 
-//   @override
-//   Widget build(BuildContext context) {
-//     return Scaffold(
-//       backgroundColor: Colors.white,
-//       body: Stack(
-//         children: [
-//           CustomScrollView(
-//             slivers: [
-//               // Image Gallery Header
-//               SliverAppBar(
-//                 expandedHeight: 400,
-//                 pinned: true,
-//                 backgroundColor: Colors.white,
-//                 elevation: 0,
-//                 leading: Padding(
-//                   padding: const EdgeInsets.all(8.0),
-//                   child: CircleAvatar(
-//                     backgroundColor: Colors.white,
-//                     child: IconButton(
-//                       icon: const Icon(Icons.arrow_back, color: Colors.black),
-//                       onPressed: () => Navigator.pop(context),
-//                     ),
-//                   ),
-//                 ),
-//                 actions: [
-//                   Padding(
-//                     padding: const EdgeInsets.all(8.0),
-//                     child: CircleAvatar(
-//                       backgroundColor: Colors.white,
-//                       child: IconButton(
-//                         icon: const Icon(
-//                           Icons.favorite_border,
-//                           color: Colors.black,
-//                         ),
-//                         onPressed: () {},
-//                       ),
-//                     ),
-//                   ),
-//                   Padding(
-//                     padding: const EdgeInsets.all(8.0),
-//                     child: CircleAvatar(
-//                       backgroundColor: Colors.white,
-//                       child: IconButton(
-//                         icon: const Icon(Icons.share, color: Colors.black),
-//                         onPressed: () {},
-//                       ),
-//                     ),
-//                   ),
-//                 ],
-//                 flexibleSpace: FlexibleSpaceBar(
-//                   background: Stack(
-//                     fit: StackFit.expand,
-//                     children: [
-//                       Image.network(
-//                         imageUrls[selectedImageIndex],
-//                         fit: BoxFit.cover,
-//                       ),
-//                       Positioned(
-//                         bottom: 20,
-//                         right: 20,
-//                         child: Container(
-//                           padding: const EdgeInsets.symmetric(
-//                             horizontal: 12,
-//                             vertical: 6,
-//                           ),
-//                           decoration: BoxDecoration(
-//                             color: Colors.black.withOpacity(0.7),
-//                             borderRadius: BorderRadius.circular(20),
-//                           ),
-//                           child: Text(
-//                             '${selectedImageIndex + 1}/${imageUrls.length}',
-//                             style: const TextStyle(
-//                               color: Colors.white,
-//                               fontWeight: FontWeight.w600,
-//                             ),
-//                           ),
-//                         ),
-//                       ),
-//                       Positioned(
-//                         bottom: 20,
-//                         left: 0,
-//                         right: 0,
-//                         child: SizedBox(
-//                           height: 80,
-//                           child: ListView.builder(
-//                             scrollDirection: Axis.horizontal,
-//                             padding: const EdgeInsets.symmetric(horizontal: 20),
-//                             itemCount: imageUrls.length,
-//                             itemBuilder: (context, index) {
-//                               return GestureDetector(
-//                                 onTap: () {
-//                                   setState(() {
-//                                     selectedImageIndex = index;
-//                                   });
-//                                 },
-//                                 child: Container(
-//                                   width: 80,
-//                                   margin: const EdgeInsets.only(right: 10),
-//                                   decoration: BoxDecoration(
-//                                     borderRadius: BorderRadius.circular(12),
-//                                     border: Border.all(
-//                                       color: selectedImageIndex == index
-//                                           ? Colors.white
-//                                           : Colors.transparent,
-//                                       width: 3,
-//                                     ),
-//                                   ),
-//                                   child: ClipRRect(
-//                                     borderRadius: BorderRadius.circular(10),
-//                                     child: Image.network(
-//                                       imageUrls[index],
-//                                       fit: BoxFit.cover,
-//                                     ),
-//                                   ),
-//                                 ),
-//                               );
-//                             },
-//                           ),
-//                         ),
-//                       ),
-//                     ],
-//                   ),
-//                 ),
-//               ),
+// //   @override
+// //   void initState() {
+// //     super.initState();
+// //     wishlistManager.addListener(_onWishlistChanged);
+// //   }
 
-//               // Content
-//               SliverToBoxAdapter(
-//                 child: Padding(
-//                   padding: const EdgeInsets.all(20.0),
-//                   child: Column(
-//                     crossAxisAlignment: CrossAxisAlignment.start,
-//                     children: [
-//                       // Title and Rating
-//                       Row(
-//                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
-//                         children: [
-//                           const Expanded(
-//                             child: Text(
-//                               'Luxury Farm House',
-//                               style: TextStyle(
-//                                 fontSize: 28,
-//                                 fontWeight: FontWeight.bold,
-//                               ),
-//                             ),
-//                           ),
-//                           Container(
-//                             padding: const EdgeInsets.symmetric(
-//                               horizontal: 12,
-//                               vertical: 6,
-//                             ),
-//                             decoration: BoxDecoration(
-//                               color: Colors.amber,
-//                               borderRadius: BorderRadius.circular(20),
-//                             ),
-//                             child: const Row(
-//                               children: [
-//                                 Icon(Icons.star, color: Colors.white, size: 18),
-//                                 SizedBox(width: 4),
-//                                 Text(
-//                                   '4.8',
-//                                   style: TextStyle(
-//                                     color: Colors.white,
-//                                     fontWeight: FontWeight.bold,
-//                                     fontSize: 16,
-//                                   ),
-//                                 ),
-//                               ],
-//                             ),
-//                           ),
-//                         ],
-//                       ),
-//                       const SizedBox(height: 8),
-//                       Row(
-//                         children: [
-//                           const Icon(
-//                             Icons.location_on,
-//                             size: 20,
-//                             color: Colors.grey,
-//                           ),
-//                           const SizedBox(width: 4),
-//                           Text(
-//                             'Green Valley, Countryside',
-//                             style: TextStyle(
-//                               color: Colors.grey[600],
-//                               fontSize: 16,
-//                             ),
-//                           ),
-//                         ],
-//                       ),
-//                       const SizedBox(height: 24),
+// //   @override
+// //   void dispose() {
+// //     wishlistManager.removeListener(_onWishlistChanged);
+// //     super.dispose();
+// //   }
 
-//                       // Pricing Toggle
-//                       Container(
-//                         padding: const EdgeInsets.all(4),
-//                         decoration: BoxDecoration(
-//                           color: Colors.grey[100],
-//                           borderRadius: BorderRadius.circular(12),
-//                         ),
-//                         child: Row(
-//                           children: [
-//                             Expanded(
-//                               child: GestureDetector(
-//                                 onTap: () {
-//                                   setState(() {
-//                                     selectedPricing = 'hour';
-//                                   });
-//                                 },
-//                                 child: Container(
-//                                   padding: const EdgeInsets.symmetric(
-//                                     vertical: 12,
-//                                   ),
-//                                   decoration: BoxDecoration(
-//                                     color: selectedPricing == 'hour'
-//                                         ? Colors.white
-//                                         : Colors.transparent,
-//                                     borderRadius: BorderRadius.circular(10),
-//                                     boxShadow: selectedPricing == 'hour'
-//                                         ? [
-//                                             BoxShadow(
-//                                               color: Colors.black.withOpacity(
-//                                                 0.1,
-//                                               ),
-//                                               blurRadius: 8,
-//                                               offset: const Offset(0, 2),
-//                                             ),
-//                                           ]
-//                                         : null,
-//                                   ),
-//                                   child: Column(
-//                                     children: [
-//                                       Text(
-//                                         '\$50',
-//                                         style: TextStyle(
-//                                           fontSize: 24,
-//                                           fontWeight: FontWeight.bold,
-//                                           color: selectedPricing == 'hour'
-//                                               ? Colors.black
-//                                               : Colors.grey,
-//                                         ),
-//                                       ),
-//                                       Text(
-//                                         'per hour',
-//                                         style: TextStyle(
-//                                           color: selectedPricing == 'hour'
-//                                               ? Colors.grey[600]
-//                                               : Colors.grey[400],
-//                                         ),
-//                                       ),
-//                                     ],
-//                                   ),
-//                                 ),
-//                               ),
-//                             ),
-//                             Expanded(
-//                               child: GestureDetector(
-//                                 onTap: () {
-//                                   setState(() {
-//                                     selectedPricing = 'day';
-//                                   });
-//                                 },
-//                                 child: Container(
-//                                   padding: const EdgeInsets.symmetric(
-//                                     vertical: 12,
-//                                   ),
-//                                   decoration: BoxDecoration(
-//                                     color: selectedPricing == 'day'
-//                                         ? Colors.white
-//                                         : Colors.transparent,
-//                                     borderRadius: BorderRadius.circular(10),
-//                                     boxShadow: selectedPricing == 'day'
-//                                         ? [
-//                                             BoxShadow(
-//                                               color: Colors.black.withOpacity(
-//                                                 0.1,
-//                                               ),
-//                                               blurRadius: 8,
-//                                               offset: const Offset(0, 2),
-//                                             ),
-//                                           ]
-//                                         : null,
-//                                   ),
-//                                   child: Column(
-//                                     children: [
-//                                       Text(
-//                                         '\$350',
-//                                         style: TextStyle(
-//                                           fontSize: 24,
-//                                           fontWeight: FontWeight.bold,
-//                                           color: selectedPricing == 'day'
-//                                               ? Colors.black
-//                                               : Colors.grey,
-//                                         ),
-//                                       ),
-//                                       Text(
-//                                         'per day',
-//                                         style: TextStyle(
-//                                           color: selectedPricing == 'day'
-//                                               ? Colors.grey[600]
-//                                               : Colors.grey[400],
-//                                         ),
-//                                       ),
-//                                     ],
-//                                   ),
-//                                 ),
-//                               ),
-//                             ),
-//                           ],
-//                         ),
-//                       ),
-//                       const SizedBox(height: 24),
+// //   void _onWishlistChanged() {
+// //     setState(() {});
+// //   }
 
-//                       // Features
-//                       const Text(
-//                         'Features',
-//                         style: TextStyle(
-//                           fontSize: 20,
-//                           fontWeight: FontWeight.bold,
-//                         ),
-//                       ),
-//                       const SizedBox(height: 12),
-//                       Row(
-//                         mainAxisAlignment: MainAxisAlignment.spaceAround,
-//                         children: [
-//                           _buildFeatureItem(Icons.bed, '4 Bedrooms'),
-//                           _buildFeatureItem(Icons.bathtub, '3 Bathrooms'),
-//                           _buildFeatureItem(Icons.square_foot, '2500 sqft'),
-//                         ],
-//                       ),
-//                       const SizedBox(height: 24),
+// //   final List<String> imageUrls = [
+// //     'https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?w=800',
+// //     'https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?w=800',
+// //     'https://images.unsplash.com/photo-1600585154340-be6161a56a0c?w=800',
+// //     'https://images.unsplash.com/photo-1600566753190-17f0baa2a6c3?w=800',
+// //   ];
 
-//                       // Description
-//                       const Text(
-//                         'Description',
-//                         style: TextStyle(
-//                           fontSize: 20,
-//                           fontWeight: FontWeight.bold,
-//                         ),
-//                       ),
-//                       const SizedBox(height: 12),
-//                       Text(
-//                         'Experience tranquility in this stunning farmhouse nestled in the countryside. Perfect for family gatherings, weekend retreats, or special celebrations. Features include a spacious garden, modern amenities, and breathtaking views.',
-//                         style: TextStyle(
-//                           color: Colors.grey[700],
-//                           fontSize: 15,
-//                           height: 1.6,
-//                         ),
-//                       ),
-//                       const SizedBox(height: 24),
+// //   final Map<String, dynamic> houseData = {
+// //     'name': 'Luxury Farm House',
+// //     'location': 'Green Valley, Countryside',
+// //     'price': '\$50',
+// //     'rating': 4.8,
+// //     'image':
+// //         'https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?w=800',
+// //     'features': ['4 Bedrooms', '3 Bathrooms', '2500 sqft'],
+// //   };
 
-//                       Text('ssssssssssssssssss'),
+// //   final List<Map<String, dynamic>> reviews = [
+// //     {
+// //       'name': 'Sarah Johnson',
+// //       'rating': 5,
+// //       'comment':
+// //           'Amazing place! Perfect for a weekend getaway. The views are breathtaking.',
+// //       'date': '2 weeks ago',
+// //       'avatar': 'SJ',
+// //     },
+// //     {
+// //       'name': 'Michael Chen',
+// //       'rating': 4,
+// //       'comment':
+// //           'Beautiful farmhouse with great amenities. Highly recommended for families.',
+// //       'date': '1 month ago',
+// //       'avatar': 'MC',
+// //     },
+// //     {
+// //       'name': 'Emma Williams',
+// //       'rating': 5,
+// //       'comment':
+// //           'Peaceful and serene. Exactly what we needed to disconnect from city life.',
+// //       'date': '2 months ago',
+// //       'avatar': 'EW',
+// //     },
+// //   ];
 
-//                       // Reviews Header
-//                       Row(
-//                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
-//                         children: [
-//                           const Text(
-//                             'Reviews',
-//                             style: TextStyle(
-//                               fontSize: 20,
-//                               fontWeight: FontWeight.bold,
-//                             ),
-//                           ),
-//                           TextButton(
-//                             onPressed: () {},
-//                             child: const Text('See all'),
-//                           ),
-//                         ],
-//                       ),
-//                       const SizedBox(height: 12),
+// //   final List<Map<String, dynamic>> timeSlots = [
+// //     {'label': 'Day', 'time': '9am - 8pm', 'price': '₹ 8000'},
+// //     {'label': 'Night', 'time': '9pm - 8am', 'price': '₹ 8000'},
+// //     {'label': 'Full Day', 'time': '12pm - 10am', 'price': '₹ 9000'},
+// //     {'label': 'Mid-Day', 'time': '3pm - 1pm', 'price': '₹ 9000'},
+// //     {'label': 'Late-Stay', 'time': '6pm - 4pm', 'price': '₹ 12000'},
+// //   ];
 
-//                       // Reviews List
-//                       ...reviews.map((review) => _buildReviewCard(review)),
-//                       const SizedBox(height: 100),
+// //     Future<void> shareFarmhouse(
+// //     BuildContext context,
+// //     Farmhouse farmhouse,
+// //   ) async {
+// //     try {
+// //       // Show loading indicator
+// //       showDialog(
+// //         context: context,
+// //         barrierDismissible: false,
+// //         builder: (context) => const Center(
+// //           child: CircularProgressIndicator(
+// //             color: Color(0xFF6366F1),
+// //           ),
+// //         ),
+// //       );
 
-//                     ],
-//                   ),
-//                 ),
-//               ),
-//             ],
-//           ),
+// //       // Download the first image from network
+// //       final String imageUrl = farmhouse.images.isNotEmpty
+// //           ? farmhouse.images[0]
+// //           : '';
 
-//           // Book Now Button (Fixed at bottom)
-//           Positioned(
-//             left: 0,
-//             right: 0,
-//             bottom: 0,
-//             child: Container(
-//               padding: const EdgeInsets.all(20),
-//               decoration: BoxDecoration(
-//                 color: Colors.white,
-//                 boxShadow: [
-//                   BoxShadow(
-//                     color: Colors.black.withOpacity(0.1),
-//                     blurRadius: 10,
-//                     offset: const Offset(0, -5),
-//                   ),
-//                 ],
-//               ),
-//               child: ElevatedButton(
-//                 onPressed: () {
-//                   Navigator.push(
-//                     context,
-//                     MaterialPageRoute(
-//                       builder: (context) => PaymentScreen(
-//                         image: imageUrls[0],
-//                         // name: reviews[0]['name'],
-//                         name: 'Luxury Farm House',
-//                       ),
-//                     ),
-//                   );
-//                   // ScaffoldMessenger.of(context).showSnackBar(
-//                   //   const SnackBar(
-//                   //     content: Text('Booking initiated!'),
-//                   //     behavior: SnackBarBehavior.floating,
-//                   //   ),
-//                   // );
-//                 },
-//                 style: ElevatedButton.styleFrom(
-//                   backgroundColor: Colors.black,
-//                   foregroundColor: Colors.white,
-//                   padding: const EdgeInsets.symmetric(vertical: 16),
-//                   shape: RoundedRectangleBorder(
-//                     borderRadius: BorderRadius.circular(12),
-//                   ),
-//                   elevation: 0,
-//                 ),
-//                 child: const Text(
-//                   'Book Now',
-//                   style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-//                 ),
-//               ),
-//             ),
-//           ),
-//         ],
-//       ),
-//     );
-//   }
+// //       File? imageFile;
 
-//   Widget _buildFeatureItem(IconData icon, String label) {
-//     return Column(
-//       children: [
-//         Container(
-//           padding: const EdgeInsets.all(12),
-//           decoration: BoxDecoration(
-//             color: Colors.grey[100],
-//             borderRadius: BorderRadius.circular(12),
-//           ),
-//           child: Icon(icon, size: 28, color: Colors.black),
-//         ),
-//         const SizedBox(height: 8),
-//         Text(label, style: TextStyle(color: Colors.grey[700], fontSize: 13)),
-//       ],
-//     );
-//   }
+// //       if (imageUrl.isNotEmpty) {
+// //         try {
+// //           final response = await http.get(Uri.parse(imageUrl));
 
-//   Widget _buildReviewCard(Map<String, dynamic> review) {
-//     return Container(
-//       margin: const EdgeInsets.only(bottom: 16),
-//       padding: const EdgeInsets.all(16),
-//       decoration: BoxDecoration(
-//         color: Colors.grey[50],
-//         borderRadius: BorderRadius.circular(12),
-//       ),
-//       child: Column(
-//         crossAxisAlignment: CrossAxisAlignment.start,
-//         children: [
-//           Row(
-//             children: [
-//               CircleAvatar(
-//                 backgroundColor: Colors.black,
-//                 child: Text(
-//                   review['avatar'],
-//                   style: const TextStyle(
-//                     color: Colors.white,
-//                     fontWeight: FontWeight.bold,
-//                   ),
-//                 ),
-//               ),
-//               const SizedBox(width: 12),
-//               Expanded(
-//                 child: Column(
-//                   crossAxisAlignment: CrossAxisAlignment.start,
-//                   children: [
-//                     Text(
-//                       review['name'],
-//                       style: const TextStyle(
-//                         fontWeight: FontWeight.bold,
-//                         fontSize: 16,
-//                       ),
-//                     ),
-//                     Text(
-//                       review['date'],
-//                       style: TextStyle(color: Colors.grey[600], fontSize: 12),
-//                     ),
-//                   ],
-//                 ),
-//               ),
-//               Row(
-//                 children: List.generate(
-//                   5,
-//                   (index) => Icon(
-//                     index < review['rating'] ? Icons.star : Icons.star_border,
-//                     color: Colors.amber,
-//                     size: 18,
-//                   ),
-//                 ),
-//               ),
-//             ],
-//           ),
-//           const SizedBox(height: 12),
-//           Text(
-//             review['comment'],
-//             style: TextStyle(
-//               color: Colors.grey[700],
-//               fontSize: 14,
-//               height: 1.5,
-//             ),
-//           ),
-//         ],
-//       ),
-//     );
-//   }
-// }
+// //           if (response.statusCode == 200) {
+// //             final tempDir = await getTemporaryDirectory();
+// //             final fileName = '${farmhouse.name.replaceAll(" ", "_")}.jpg';
+// //             imageFile = File('${tempDir.path}/$fileName');
 
+// //             await imageFile.writeAsBytes(response.bodyBytes);
+// //           }
+// //         } catch (e) {
+// //           print('Error downloading image: $e');
+// //         }
+// //       }
+
+// //       // Close loading dialog
+// //       if (context.mounted) {
+// //         Navigator.of(context).pop();
+// //       }
+
+// //       // Prepare share text
+// //       final shareText = '''
+// //   Check out this amazing farmhouse! 🏡
+
+// //   📍 ${farmhouse.name}
+// //   🌍 ${farmhouse.address}
+// //   ⭐ Rating: ${farmhouse.rating}/5.0
+// //   💰 ₹${farmhouse.pricePerDay.toInt()}/day | ₹${farmhouse.pricePerHour.toInt()}/hour
+
+// //   ✨ ${farmhouse.description}
+
+// //   🎯 Booking for: ${farmhouse.bookingFor}
+// //   🏠 Amenities: ${farmhouse.amenities.join(', ')}
+
+// //   Book now on Farmhouse App!
+// //   ''';
+
+// //       // Share with or without image
+// //       if (imageFile != null && await imageFile.exists()) {
+// //         await Share.shareXFiles(
+// //           [XFile(imageFile.path)],
+// //           text: shareText,
+// //           subject: 'Check out ${farmhouse.name}',
+// //         );
+// //       } else {
+// //         await Share.share(
+// //           shareText,
+// //           subject: 'Check out ${farmhouse.name}',
+// //         );
+// //       }
+// //     } catch (e) {
+// //       print('Share error: $e');
+
+// //       // Show error message
+// //       if (context.mounted) {
+// //         // Close loading dialog if still open
+// //         Navigator.of(context, rootNavigator: true).pop();
+
+// //         ScaffoldMessenger.of(context).showSnackBar(
+// //           SnackBar(
+// //             content: const Text('Failed to share. Please try again.'),
+// //             backgroundColor: Colors.red[700],
+// //             behavior: SnackBarBehavior.floating,
+// //           ),
+// //         );
+// //       }
+// //     }
+// //   }
+
+// //   List<DateTime> getNextSevenDays() {
+// //     final today = DateTime.now();
+// //     return List.generate(7, (index) => today.add(Duration(days: index)));
+// //   }
+
+// //   Future<void> _showDatePicker() async {
+// //     final DateTime? picked = await showDatePicker(
+// //       context: context,
+// //       initialDate: selectedDate,
+// //       firstDate: DateTime.now(),
+// //       lastDate: DateTime.now().add(const Duration(days: 365)),
+// //       builder: (context, child) {
+// //         return Theme(
+// //           data: Theme.of(context).copyWith(
+// //             colorScheme: const ColorScheme.light(
+// //               primary: Color(0xFF6366F1),
+// //               onPrimary: Colors.white,
+// //               onSurface: Colors.black,
+// //             ),
+// //           ),
+// //           child: child!,
+// //         );
+// //       },
+// //     );
+
+// //     if (picked != null && picked != selectedDate) {
+// //       setState(() {
+// //         selectedDate = picked;
+// //       });
+// //     }
+// //   }
+
+// //   // Function to handle wishlist toggle with snackbar
+// //   void _toggleWishlist() {
+// //     final bool wasInWishlist = wishlistManager.isInWishlist(houseData['name']);
+
+// //     wishlistManager.toggleWishlist(houseData);
+
+// //     // Show appropriate snackbar message
+// //     if (wasInWishlist) {
+// //       ScaffoldMessenger.of(context).showSnackBar(
+// //         SnackBar(
+// //           content: Row(
+// //             children: [
+// //               const Icon(Icons.favorite_border, color: Colors.white),
+// //               const SizedBox(width: 8),
+// //               Expanded(
+// //                 child: Text(
+// //                   '${houseData['name']} removed from wishlist',
+// //                   overflow: TextOverflow.ellipsis,
+// //                   maxLines: 2,
+// //                 ),
+// //               ),
+// //             ],
+// //           ),
+// //           backgroundColor: Colors.red,
+// //           behavior: SnackBarBehavior.floating,
+// //           duration: const Duration(seconds: 2),
+// //         ),
+// //       );
+// //     } else {
+// //       // Item was added to wishlist
+// //       ScaffoldMessenger.of(context).showSnackBar(
+// //         SnackBar(
+// //           content: Row(
+// //             children: [
+// //               const Icon(Icons.favorite, color: Colors.white),
+// //               const SizedBox(width: 8),
+// //               Text('${houseData['name']} added to wishlist'),
+// //             ],
+// //           ),
+// //           backgroundColor: Colors.green,
+// //           behavior: SnackBarBehavior.floating,
+// //           duration: const Duration(seconds: 2),
+// //         ),
+// //       );
+// //     }
+// //   }
+
+// //   @override
+// //   Widget build(BuildContext context) {
+// //     final availableDates = getNextSevenDays();
+
+// //     final bool isInWishlist = wishlistManager.isInWishlist(houseData['name']);
+
+// //     return Scaffold(
+// //       backgroundColor: Colors.white,
+// //       body: Stack(
+// //         children: [
+// //           CustomScrollView(
+// //             slivers: [
+// //               // Image Gallery Header
+// //               SliverAppBar(
+// //                 expandedHeight: 400,
+// //                 pinned: true,
+// //                 backgroundColor: Colors.white,
+// //                 elevation: 0,
+// //                 leading: Padding(
+// //                   padding: const EdgeInsets.all(8.0),
+// //                   child: CircleAvatar(
+// //                     backgroundColor: Colors.white,
+// //                     child: IconButton(
+// //                       icon: const Icon(Icons.arrow_back, color: Colors.black),
+// //                       onPressed: () => Navigator.pop(context),
+// //                     ),
+// //                   ),
+// //                 ),
+// //                 actions: [
+// //                   Padding(
+// //                     padding: const EdgeInsets.all(8.0),
+// //                     child: CircleAvatar(
+// //                       backgroundColor: Colors.white,
+// //                       child: IconButton(
+// //                         icon: Icon(
+// //                           isInWishlist ? Icons.favorite : Icons.favorite_border,
+// //                           color: isInWishlist ? Colors.red : Colors.black,
+// //                         ),
+// //                         onPressed: _toggleWishlist, // Use the new function
+// //                       ),
+// //                     ),
+// //                   ),
+// //                   Padding(
+// //                     padding: const EdgeInsets.all(8.0),
+// //                     child: CircleAvatar(
+// //                       backgroundColor: Colors.white,
+// //                       child: IconButton(
+// //                         icon: const Icon(Icons.share, color: Colors.black),
+// //                         onPressed: () {
+// //                           shareFarmhouse(context,widget.farmhouse!);
+// //                         },
+// //                       ),
+// //                     ),
+// //                   ),
+// //                 ],
+// //                 flexibleSpace: FlexibleSpaceBar(
+// //                   background: Stack(
+// //                     fit: StackFit.expand,
+// //                     children: [
+// //                       Image.network(
+// //                         imageUrls[selectedImageIndex],
+// //                         fit: BoxFit.cover,
+// //                       ),
+// //                       Positioned(
+// //                         bottom: 20,
+// //                         right: 20,
+// //                         child: Container(
+// //                           padding: const EdgeInsets.symmetric(
+// //                             horizontal: 12,
+// //                             vertical: 6,
+// //                           ),
+// //                           decoration: BoxDecoration(
+// //                             color: Colors.black.withOpacity(0.7),
+// //                             borderRadius: BorderRadius.circular(20),
+// //                           ),
+// //                           child: Text(
+// //                             '${selectedImageIndex + 1}/${imageUrls.length}',
+// //                             style: const TextStyle(
+// //                               color: Colors.white,
+// //                               fontWeight: FontWeight.w600,
+// //                             ),
+// //                           ),
+// //                         ),
+// //                       ),
+// //                       Positioned(
+// //                         bottom: 20,
+// //                         left: 0,
+// //                         right: 0,
+// //                         child: SizedBox(
+// //                           height: 80,
+// //                           child: ListView.builder(
+// //                             scrollDirection: Axis.horizontal,
+// //                             padding: const EdgeInsets.symmetric(horizontal: 20),
+// //                             itemCount: imageUrls.length,
+// //                             itemBuilder: (context, index) {
+// //                               return GestureDetector(
+// //                                 onTap: () {
+// //                                   setState(() {
+// //                                     selectedImageIndex = index;
+// //                                   });
+// //                                 },
+// //                                 child: Container(
+// //                                   width: 80,
+// //                                   margin: const EdgeInsets.only(right: 10),
+// //                                   decoration: BoxDecoration(
+// //                                     borderRadius: BorderRadius.circular(12),
+// //                                     border: Border.all(
+// //                                       color: selectedImageIndex == index
+// //                                           ? Colors.white
+// //                                           : Colors.transparent,
+// //                                       width: 3,
+// //                                     ),
+// //                                   ),
+// //                                   child: ClipRRect(
+// //                                     borderRadius: BorderRadius.circular(10),
+// //                                     child: Image.network(
+// //                                       imageUrls[index],
+// //                                       fit: BoxFit.cover,
+// //                                     ),
+// //                                   ),
+// //                                 ),
+// //                               );
+// //                             },
+// //                           ),
+// //                         ),
+// //                       ),
+// //                     ],
+// //                   ),
+// //                 ),
+// //               ),
+
+// //               // Content
+// //               SliverToBoxAdapter(
+// //                 child: Padding(
+// //                   padding: const EdgeInsets.all(20.0),
+// //                   child: Column(
+// //                     crossAxisAlignment: CrossAxisAlignment.start,
+// //                     children: [
+// //                       // Title and Rating
+// //                       Row(
+// //                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
+// //                         children: [
+// //                           const Expanded(
+// //                             child: Text(
+// //                               'Luxury Farm House',
+// //                               style: TextStyle(
+// //                                 fontSize: 28,
+// //                                 fontWeight: FontWeight.bold,
+// //                               ),
+// //                             ),
+// //                           ),
+// //                           Container(
+// //                             padding: const EdgeInsets.symmetric(
+// //                               horizontal: 12,
+// //                               vertical: 6,
+// //                             ),
+// //                             decoration: BoxDecoration(
+// //                               color: Colors.amber,
+// //                               borderRadius: BorderRadius.circular(20),
+// //                             ),
+// //                             child: const Row(
+// //                               children: [
+// //                                 Icon(Icons.star, color: Colors.white, size: 18),
+// //                                 SizedBox(width: 4),
+// //                                 Text(
+// //                                   '4.8',
+// //                                   style: TextStyle(
+// //                                     color: Colors.white,
+// //                                     fontWeight: FontWeight.bold,
+// //                                     fontSize: 16,
+// //                                   ),
+// //                                 ),
+// //                               ],
+// //                             ),
+// //                           ),
+// //                         ],
+// //                       ),
+// //                       const SizedBox(height: 8),
+// //                       Row(
+// //                         children: [
+// //                           const Icon(
+// //                             Icons.location_on,
+// //                             size: 20,
+// //                             color: Colors.grey,
+// //                           ),
+// //                           const SizedBox(width: 4),
+// //                           Text(
+// //                             'Green Valley, Countryside',
+// //                             style: TextStyle(
+// //                               color: Colors.grey[600],
+// //                               fontSize: 16,
+// //                             ),
+// //                           ),
+// //                         ],
+// //                       ),
+// //                       const SizedBox(height: 24),
+
+// //                       // Pricing Toggle
+// //                       Container(
+// //                         padding: const EdgeInsets.all(4),
+// //                         decoration: BoxDecoration(
+// //                           color: Colors.grey[100],
+// //                           borderRadius: BorderRadius.circular(12),
+// //                         ),
+// //                         child: Row(
+// //                           children: [
+// //                             Expanded(
+// //                               child: GestureDetector(
+// //                                 onTap: () {
+// //                                   setState(() {
+// //                                     selectedPricing = 'hour';
+// //                                   });
+// //                                 },
+// //                                 child: Container(
+// //                                   padding: const EdgeInsets.symmetric(
+// //                                     vertical: 12,
+// //                                   ),
+// //                                   decoration: BoxDecoration(
+// //                                     color: selectedPricing == 'hour'
+// //                                         ? Colors.white
+// //                                         : Colors.transparent,
+// //                                     borderRadius: BorderRadius.circular(10),
+// //                                     boxShadow: selectedPricing == 'hour'
+// //                                         ? [
+// //                                             BoxShadow(
+// //                                               color: Colors.black.withOpacity(
+// //                                                 0.1,
+// //                                               ),
+// //                                               blurRadius: 8,
+// //                                               offset: const Offset(0, 2),
+// //                                             ),
+// //                                           ]
+// //                                         : null,
+// //                                   ),
+// //                                   child: Column(
+// //                                     children: [
+// //                                       Text(
+// //                                         '\$50',
+// //                                         style: TextStyle(
+// //                                           fontSize: 24,
+// //                                           fontWeight: FontWeight.bold,
+// //                                           color: selectedPricing == 'hour'
+// //                                               ? Colors.black
+// //                                               : Colors.grey,
+// //                                         ),
+// //                                       ),
+// //                                       Text(
+// //                                         'per hour',
+// //                                         style: TextStyle(
+// //                                           color: selectedPricing == 'hour'
+// //                                               ? Colors.grey[600]
+// //                                               : Colors.grey[400],
+// //                                         ),
+// //                                       ),
+// //                                     ],
+// //                                   ),
+// //                                 ),
+// //                               ),
+// //                             ),
+// //                             Expanded(
+// //                               child: GestureDetector(
+// //                                 onTap: () {
+// //                                   setState(() {
+// //                                     selectedPricing = 'day';
+// //                                   });
+// //                                 },
+// //                                 child: Container(
+// //                                   padding: const EdgeInsets.symmetric(
+// //                                     vertical: 12,
+// //                                   ),
+// //                                   decoration: BoxDecoration(
+// //                                     color: selectedPricing == 'day'
+// //                                         ? Colors.white
+// //                                         : Colors.transparent,
+// //                                     borderRadius: BorderRadius.circular(10),
+// //                                     boxShadow: selectedPricing == 'day'
+// //                                         ? [
+// //                                             BoxShadow(
+// //                                               color: Colors.black.withOpacity(
+// //                                                 0.1,
+// //                                               ),
+// //                                               blurRadius: 8,
+// //                                               offset: const Offset(0, 2),
+// //                                             ),
+// //                                           ]
+// //                                         : null,
+// //                                   ),
+// //                                   child: Column(
+// //                                     children: [
+// //                                       Text(
+// //                                         '\$350',
+// //                                         style: TextStyle(
+// //                                           fontSize: 24,
+// //                                           fontWeight: FontWeight.bold,
+// //                                           color: selectedPricing == 'day'
+// //                                               ? Colors.black
+// //                                               : Colors.grey,
+// //                                         ),
+// //                                       ),
+// //                                       Text(
+// //                                         'per day',
+// //                                         style: TextStyle(
+// //                                           color: selectedPricing == 'day'
+// //                                               ? Colors.grey[600]
+// //                                               : Colors.grey[400],
+// //                                         ),
+// //                                       ),
+// //                                     ],
+// //                                   ),
+// //                                 ),
+// //                               ),
+// //                             ),
+// //                           ],
+// //                         ),
+// //                       ),
+// //                       const SizedBox(height: 24),
+
+// //                       // Features
+// //                       const Text(
+// //                         'Features',
+// //                         style: TextStyle(
+// //                           fontSize: 20,
+// //                           fontWeight: FontWeight.bold,
+// //                         ),
+// //                       ),
+// //                       const SizedBox(height: 12),
+// //                       Row(
+// //                         mainAxisAlignment: MainAxisAlignment.spaceAround,
+// //                         children: [
+// //                           _buildFeatureItem(Icons.bed, '4 Bedrooms'),
+// //                           _buildFeatureItem(Icons.bathtub, '3 Bathrooms'),
+// //                           _buildFeatureItem(Icons.square_foot, '2500 sqft'),
+// //                         ],
+// //                       ),
+// //                       const SizedBox(height: 24),
+
+// //                       // Description
+// //                       const Text(
+// //                         'Description',
+// //                         style: TextStyle(
+// //                           fontSize: 20,
+// //                           fontWeight: FontWeight.bold,
+// //                         ),
+// //                       ),
+// //                       const SizedBox(height: 12),
+// //                       Text(
+// //                         'Experience tranquility in this stunning farmhouse nestled in the countryside. Perfect for family gatherings, weekend retreats, or special celebrations. Features include a spacious garden, modern amenities, and breathtaking views.',
+// //                         style: TextStyle(
+// //                           color: Colors.grey[700],
+// //                           fontSize: 15,
+// //                           height: 1.6,
+// //                         ),
+// //                       ),
+// //                       const SizedBox(height: 32),
+
+// //                       // Available Dates Section
+// //                       Row(
+// //                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
+// //                         children: [
+// //                           const Text(
+// //                             'Available Dates',
+// //                             style: TextStyle(
+// //                               fontSize: 20,
+// //                               fontWeight: FontWeight.bold,
+// //                             ),
+// //                           ),
+// //                           IconButton(
+// //                             icon: const Icon(Icons.calendar_month),
+// //                             onPressed: () {
+// //                               _showDatePicker();
+// //                             },
+// //                           ),
+// //                         ],
+// //                       ),
+// //                       const SizedBox(height: 16),
+
+// //                       // Date Selector
+// //                       SizedBox(
+// //                         height: 80,
+// //                         child: ListView.builder(
+// //                           scrollDirection: Axis.horizontal,
+// //                           itemCount: availableDates.length,
+// //                           itemBuilder: (context, index) {
+// //                             final date = availableDates[index];
+// //                             final isSelected = selectedDateIndex == index;
+
+// //                             return GestureDetector(
+// //                               onTap: () {
+// //                                 print('selected date for detail screen $selectedDateIndex');
+// //                                 setState(() {
+// //                                   selectedDateIndex = index;
+// //                                 });
+// //                               },
+// //                               child: Container(
+// //                                 width: 70,
+// //                                 margin: const EdgeInsets.only(right: 12),
+// //                                 decoration: BoxDecoration(
+// //                                   color: isSelected
+// //                                       ? const Color(0xFF5B67F7)
+// //                                       : Colors.white,
+// //                                   borderRadius: BorderRadius.circular(16),
+// //                                   border: Border.all(
+// //                                     color: isSelected
+// //                                         ? const Color(0xFF5B67F7)
+// //                                         : Colors.grey[300]!,
+// //                                     width: 2,
+// //                                   ),
+// //                                 ),
+// //                                 child: Column(
+// //                                   mainAxisAlignment: MainAxisAlignment.center,
+// //                                   children: [
+// //                                     Text(
+// //                                       DateFormat(
+// //                                         'EEE',
+// //                                       ).format(date).substring(0, 3),
+// //                                       style: TextStyle(
+// //                                         color: isSelected
+// //                                             ? Colors.white
+// //                                             : const Color(0xFF5B67F7),
+// //                                         fontSize: 14,
+// //                                         fontWeight: FontWeight.w600,
+// //                                       ),
+// //                                     ),
+// //                                     const SizedBox(height: 8),
+// //                                     Text(
+// //                                       DateFormat('d').format(date),
+// //                                       style: TextStyle(
+// //                                         color: isSelected
+// //                                             ? Colors.white
+// //                                             : Colors.black,
+// //                                         fontSize: 24,
+// //                                         fontWeight: FontWeight.bold,
+// //                                       ),
+// //                                     ),
+// //                                   ],
+// //                                 ),
+// //                               ),
+// //                             );
+// //                           },
+// //                         ),
+// //                       ),
+// //                       const SizedBox(height: 32),
+
+// //                       // Choose Time Section
+// //                       const Text(
+// //                         'Choose Time',
+// //                         style: TextStyle(
+// //                           fontSize: 20,
+// //                           fontWeight: FontWeight.bold,
+// //                         ),
+// //                       ),
+// //                       // const SizedBox(height: 10),
+// //                       GridView.builder(
+// //                         shrinkWrap: true,
+// //                         physics: const NeverScrollableScrollPhysics(),
+// //                         gridDelegate:
+// //                             const SliverGridDelegateWithFixedCrossAxisCount(
+// //                               crossAxisCount: 2,
+// //                               childAspectRatio: 1.60,
+// //                               crossAxisSpacing: 12,
+// //                               mainAxisSpacing: 12,
+// //                             ),
+// //                         itemCount: timeSlots.length,
+// //                         itemBuilder: (context, index) {
+// //                           final slot = timeSlots[index];
+// //                           final isSelected = selectedTimeSlot == slot['label'];
+
+// //                           return GestureDetector(
+// //                             onTap: () {
+// //                               setState(() {
+// //                                 selectedTimeSlot = slot['label'];
+// //                               });
+// //                             },
+// //                             child: Container(
+// //                               padding: const EdgeInsets.all(12),
+// //                               decoration: BoxDecoration(
+// //                                 color: Colors.white,
+// //                                 borderRadius: BorderRadius.circular(16),
+// //                                 border: Border.all(
+// //                                   color: isSelected
+// //                                       ? const Color(0xFF5B67F7)
+// //                                       : Colors.grey[300]!,
+// //                                   width: isSelected ? 2 : 1,
+// //                                 ),
+// //                               ),
+// //                               child: Column(
+// //                                 crossAxisAlignment: CrossAxisAlignment.start,
+// //                                 children: [
+// //                                   Row(
+// //                                     mainAxisAlignment:
+// //                                         MainAxisAlignment.spaceBetween,
+// //                                     children: [
+// //                                       Expanded(
+// //                                         child: Text(
+// //                                           slot['label'],
+// //                                           overflow: TextOverflow.ellipsis,
+// //                                           style: TextStyle(
+// //                                             fontSize: 15,
+// //                                             fontWeight: FontWeight.bold,
+// //                                             color: isSelected
+// //                                                 ? const Color(0xFF5B67F7)
+// //                                                 : Colors.black,
+// //                                           ),
+// //                                         ),
+// //                                       ),
+// //                                       if (isSelected)
+// //                                         const Icon(
+// //                                           Icons.check_circle,
+// //                                           color: Color(0xFF5B67F7),
+// //                                           size: 18,
+// //                                         ),
+// //                                     ],
+// //                                   ),
+// //                                   const SizedBox(height: 4),
+// //                                   Text(
+// //                                     slot['time'],
+// //                                     overflow: TextOverflow.ellipsis,
+// //                                     style: TextStyle(
+// //                                       fontSize: 12,
+// //                                       color: Colors.grey[600],
+// //                                     ),
+// //                                   ),
+// //                                   const Spacer(),
+// //                                   Text(
+// //                                     slot['price'],
+// //                                     style: const TextStyle(
+// //                                       fontSize: 15,
+// //                                       fontWeight: FontWeight.bold,
+// //                                       color: Colors.black,
+// //                                     ),
+// //                                   ),
+// //                                 ],
+// //                               ),
+// //                             ),
+// //                           );
+// //                         },
+// //                       ),
+
+// //                       const SizedBox(height: 32),
+
+// //                       // Booking Summary
+// //                       if (selectedDateIndex != null && selectedTimeSlot != null)
+// //                         Container(
+// //                           padding: const EdgeInsets.all(20),
+// //                           decoration: BoxDecoration(
+// //                             color: Colors.grey[50],
+// //                             borderRadius: BorderRadius.circular(16),
+// //                             border: Border.all(color: Colors.grey[200]!),
+// //                           ),
+// //                           child: Row(
+// //                             children: [
+// //                               Expanded(
+// //                                 child: Column(
+// //                                   crossAxisAlignment: CrossAxisAlignment.start,
+// //                                   children: [
+// //                                     Text(
+// //                                       'Check In :',
+// //                                       style: TextStyle(
+// //                                         color: Colors.grey[600],
+// //                                         fontSize: 14,
+// //                                       ),
+// //                                     ),
+// //                                     const SizedBox(height: 4),
+// //                                     Text(
+// //                                       DateFormat('d MMM, hh:mma').format(
+// //                                         availableDates[selectedDateIndex!],
+// //                                       ),
+// //                                       style: const TextStyle(
+// //                                         fontSize: 16,
+// //                                         fontWeight: FontWeight.bold,
+// //                                       ),
+// //                                     ),
+// //                                   ],
+// //                                 ),
+// //                               ),
+// //                               Container(
+// //                                 padding: const EdgeInsets.symmetric(
+// //                                   horizontal: 16,
+// //                                   vertical: 8,
+// //                                 ),
+// //                                 decoration: BoxDecoration(
+// //                                   color: Colors.white,
+// //                                   borderRadius: BorderRadius.circular(12),
+// //                                 ),
+// //                                 child: Column(
+// //                                   children: [
+// //                                     Text(
+// //                                       'Duration',
+// //                                       style: TextStyle(
+// //                                         color: Colors.grey[600],
+// //                                         fontSize: 12,
+// //                                       ),
+// //                                     ),
+// //                                     const SizedBox(height: 4),
+// //                                     const Text(
+// //                                       '1 Mrng',
+// //                                       style: TextStyle(
+// //                                         fontSize: 14,
+// //                                         fontWeight: FontWeight.bold,
+// //                                       ),
+// //                                     ),
+// //                                   ],
+// //                                 ),
+// //                               ),
+// //                               const SizedBox(width: 12),
+// //                               Expanded(
+// //                                 child: Column(
+// //                                   crossAxisAlignment: CrossAxisAlignment.end,
+// //                                   children: [
+// //                                     Text(
+// //                                       'Check Out :',
+// //                                       style: TextStyle(
+// //                                         color: Colors.grey[600],
+// //                                         fontSize: 14,
+// //                                       ),
+// //                                     ),
+// //                                     const SizedBox(height: 4),
+// //                                     Text(
+// //                                       DateFormat('d MMM, hh:mma').format(
+// //                                         availableDates[selectedDateIndex!].add(
+// //                                           const Duration(hours: 11),
+// //                                         ),
+// //                                       ),
+// //                                       style: const TextStyle(
+// //                                         fontSize: 16,
+// //                                         fontWeight: FontWeight.bold,
+// //                                       ),
+// //                                     ),
+// //                                   ],
+// //                                 ),
+// //                               ),
+// //                             ],
+// //                           ),
+// //                         ),
+// //                       const SizedBox(height: 32),
+
+// //                       // Reviews Header
+// //                       Row(
+// //                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
+// //                         children: [
+// //                           const Text(
+// //                             'Reviews',
+// //                             style: TextStyle(
+// //                               fontSize: 20,
+// //                               fontWeight: FontWeight.bold,
+// //                             ),
+// //                           ),
+// //                           // TextButton(
+// //                           //   onPressed: () {},
+// //                           //   child: const Text('See all'),
+// //                           // ),
+// //                         ],
+// //                       ),
+// //                       const SizedBox(height: 12),
+
+// //                       // Reviews List
+// //                       ...reviews.map((review) => _buildReviewCard(review)),
+// //                       const SizedBox(height: 100),
+// //                     ],
+// //                   ),
+// //                 ),
+// //               ),
+// //             ],
+// //           ),
+
+// //           // Book Now Button (Fixed at bottom)
+// //           Positioned(
+// //             left: 0,
+// //             right: 0,
+// //             bottom: 0,
+// //             child: Container(
+// //               padding: const EdgeInsets.all(20),
+// //               decoration: BoxDecoration(
+// //                 color: Colors.white,
+// //                 boxShadow: [
+// //                   BoxShadow(
+// //                     color: Colors.black.withOpacity(0.1),
+// //                     blurRadius: 10,
+// //                     offset: const Offset(0, -5),
+// //                   ),
+// //                 ],
+// //               ),
+// //               child: ElevatedButton(
+// //                 onPressed: () {
+// //                   if (selectedDateIndex == null || selectedTimeSlot == null) {
+// //                     ScaffoldMessenger.of(context).showSnackBar(
+// //                       const SnackBar(
+// //                         backgroundColor: Colors.red,
+// //                         content: Text('Please select date and time slot'),
+// //                         behavior: SnackBarBehavior.floating,
+// //                       ),
+// //                     );
+// //                     return;
+// //                   }
+
+// //                   Navigator.push(
+// //                     context,
+// //                     MaterialPageRoute(
+// //                       builder: (context) => PaymentScreen(
+// //                         image: imageUrls[0],
+// //                         name: 'Luxury Farm House',
+// //                       ),
+// //                     ),
+// //                   );
+// //                 },
+// //                 style: ElevatedButton.styleFrom(
+// //                   backgroundColor: Colors.black,
+// //                   foregroundColor: Colors.white,
+// //                   padding: const EdgeInsets.symmetric(vertical: 16),
+// //                   shape: RoundedRectangleBorder(
+// //                     borderRadius: BorderRadius.circular(12),
+// //                   ),
+// //                   elevation: 0,
+// //                 ),
+// //                 child: const Text(
+// //                   'Book Now',
+// //                   style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+// //                 ),
+// //               ),
+// //             ),
+// //           ),
+// //         ],
+// //       ),
+// //     );
+// //   }
+
+// //   Widget _buildFeatureItem(IconData icon, String label) {
+// //     return Column(
+// //       children: [
+// //         Container(
+// //           padding: const EdgeInsets.all(12),
+// //           decoration: BoxDecoration(
+// //             color: Colors.grey[100],
+// //             borderRadius: BorderRadius.circular(12),
+// //           ),
+// //           child: Icon(icon, size: 28, color: Colors.black),
+// //         ),
+// //         const SizedBox(height: 8),
+// //         Text(label, style: TextStyle(color: Colors.grey[700], fontSize: 13)),
+// //       ],
+// //     );
+// //   }
+
+// //   Widget _buildReviewCard(Map<String, dynamic> review) {
+// //     return Container(
+// //       margin: const EdgeInsets.only(bottom: 16),
+// //       padding: const EdgeInsets.all(16),
+// //       decoration: BoxDecoration(
+// //         color: Colors.grey[50],
+// //         borderRadius: BorderRadius.circular(12),
+// //       ),
+// //       child: Column(
+// //         crossAxisAlignment: CrossAxisAlignment.start,
+// //         children: [
+// //           Row(
+// //             children: [
+// //               CircleAvatar(
+// //                 backgroundColor: Colors.black,
+// //                 child: Text(
+// //                   review['avatar'],
+// //                   style: const TextStyle(
+// //                     color: Colors.white,
+// //                     fontWeight: FontWeight.bold,
+// //                   ),
+// //                 ),
+// //               ),
+// //               const SizedBox(width: 12),
+// //               Expanded(
+// //                 child: Column(
+// //                   crossAxisAlignment: CrossAxisAlignment.start,
+// //                   children: [
+// //                     Text(
+// //                       review['name'],
+// //                       style: const TextStyle(
+// //                         fontWeight: FontWeight.bold,
+// //                         fontSize: 16,
+// //                       ),
+// //                     ),
+// //                     Text(
+// //                       review['date'],
+// //                       style: TextStyle(color: Colors.grey[600], fontSize: 12),
+// //                     ),
+// //                   ],
+// //                 ),
+// //               ),
+// //               Row(
+// //                 children: List.generate(
+// //                   5,
+// //                   (index) => Icon(
+// //                     index < review['rating'] ? Icons.star : Icons.star_border,
+// //                     color: Colors.amber,
+// //                     size: 18,
+// //                   ),
+// //                 ),
+// //               ),
+// //             ],
+// //           ),
+// //           const SizedBox(height: 12),
+// //           Text(
+// //             review['comment'],
+// //             style: TextStyle(
+// //               color: Colors.grey[700],
+// //               fontSize: 14,
+// //               height: 1.5,
+// //             ),
+// //           ),
+// //         ],
+// //       ),
+// //     );
+// //   }
+// // }
+
+
+
+
+import 'dart:io';
+import 'dart:convert';
+import 'package:farmhouse_app/provider/booking/booking_provider.dart';
+import 'package:farmhouse_app/views/models/farmhouse_model.dart';
 import 'package:farmhouse_app/views/payment/payment_screen.dart';
+import 'package:farmhouse_app/widgets/like_widget.dart';
 import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
 import 'package:intl/intl.dart';
+import 'package:path_provider/path_provider.dart';
+import 'package:provider/provider.dart';
+import 'package:share_plus/share_plus.dart';
 
 class HouseDetailScreen extends StatefulWidget {
-  const HouseDetailScreen({super.key});
+  final Farmhouse? farmhouse;
+  final String? id;
+  const HouseDetailScreen({super.key, this.farmhouse, this.id});
 
   @override
   State<HouseDetailScreen> createState() => _HouseDetailScreenState();
@@ -586,50 +1109,346 @@ class _HouseDetailScreenState extends State<HouseDetailScreen> {
   String selectedPricing = 'hour';
   int? selectedDateIndex;
   String? selectedTimeSlot;
-
   DateTime selectedDate = DateTime.now();
 
-  final List<String> imageUrls = [
-    'https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?w=800',
-    'https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?w=800',
-    'https://images.unsplash.com/photo-1600585154340-be6161a56a0c?w=800',
-    'https://images.unsplash.com/photo-1600566753190-17f0baa2a6c3?w=800',
-  ];
+  List<dynamic> availableSlots = [];
+  bool loadingSlots = false;
 
-  final List<Map<String, dynamic>> reviews = [
-    {
-      'name': 'Sarah Johnson',
-      'rating': 5,
-      'comment':
-          'Amazing place! Perfect for a weekend getaway. The views are breathtaking.',
-      'date': '2 weeks ago',
-      'avatar': 'SJ',
-    },
-    {
-      'name': 'Michael Chen',
-      'rating': 4,
-      'comment':
-          'Beautiful farmhouse with great amenities. Highly recommended for families.',
-      'date': '1 month ago',
-      'avatar': 'MC',
-    },
-    {
-      'name': 'Emma Williams',
-      'rating': 5,
-      'comment':
-          'Peaceful and serene. Exactly what we needed to disconnect from city life.',
-      'date': '2 months ago',
-      'avatar': 'EW',
-    },
-  ];
+  bool isLoading = true;
+  Farmhouse? farmhouseData;
+  String? errorMessage;
 
-  final List<Map<String, dynamic>> timeSlots = [
-    {'label': 'Day', 'time': '9am - 8pm', 'price': '₹ 8000'},
-    {'label': 'Night', 'time': '9pm - 8am', 'price': '₹ 8000'},
-    {'label': 'Full Day', 'time': '12pm - 10am', 'price': '₹ 9000'},
-    {'label': 'Mid-Day', 'time': '3pm - 1pm', 'price': '₹ 9000'},
-    {'label': 'Late-Stay', 'time': '6pm - 4pm', 'price': '₹ 12000'},
-  ];
+  late final WishlistManager wishlistManager = WishlistManager();
+  late final List<DateTime> availableDates = getNextSevenDays();
+
+  @override
+  void initState() {
+    super.initState();
+    wishlistManager.addListener(_onWishlistChanged);
+    _loadFarmhouseData();
+  }
+
+  @override
+  void dispose() {
+    wishlistManager.removeListener(_onWishlistChanged);
+    super.dispose();
+  }
+
+  void _onWishlistChanged() {
+    setState(() {});
+  }
+
+
+  
+
+  Future<void> _handleBooking() async {
+    if (selectedDateIndex == null || selectedTimeSlot == null) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          backgroundColor: Colors.red,
+          content: Text('Please select date and time slot'),
+          behavior: SnackBarBehavior.floating,
+        ),
+      );
+      return;
+    }
+
+    // Get the selected slot details
+    final selectedSlot = availableSlots.firstWhere(
+      (slot) => slot['label'] == selectedTimeSlot,
+    );
+
+    final bookingProvider = Provider.of<BookingProvider>(
+      context,
+      listen: false,
+    );
+
+    final selectedDate = availableDates[selectedDateIndex!];
+    final formattedDate = DateFormat('yyyy-MM-dd').format(selectedDate);
+
+    final success = await bookingProvider.bookFarmhouse(
+      farmhouseId: farmhouseData!.id,
+      date: formattedDate,
+      label: selectedSlot['label'],
+      timing: selectedSlot['timing'],
+    );
+
+    if (success && mounted) {
+      // Navigate to payment screen
+      // Navigator.push(
+      //   context,
+      //   MaterialPageRoute(
+      //     builder: (context) => PaymentScreen(
+      //       images: farmhouseData!.images.isNotEmpty
+      //           ? farmhouseData!.images[0]
+      //           : '',
+      //       name: farmhouseData!.name,
+      //       price: '${selectedSlot['price']}',
+      //       // price: p,
+      //     ),
+      //   ),
+      // );
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => PaymentScreen(
+            images: farmhouseData!.images, // Pass array of images
+            name: farmhouseData!.name,
+            price: '₹${selectedSlot['price']}',
+            address: farmhouseData!.address,
+            verificationId: 'VERIFY_1770115841023_159c4b81bb1472d9',
+          ),
+        ),
+      );
+    } 
+    else if (mounted) {
+      // Show error message
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          backgroundColor: Colors.red,
+          content: Text(
+            bookingProvider.errorMessage ?? 'Booking failed. Please try again.',
+          ),
+          behavior: SnackBarBehavior.floating,
+        ),
+      );
+    }
+  }
+
+  Future<void> _loadFarmhouseData() async {
+    setState(() {
+      isLoading = true;
+      errorMessage = null;
+    });
+
+    try {
+      if (widget.farmhouse != null) {
+        // Use provided farmhouse data
+        setState(() {
+          farmhouseData = widget.farmhouse;
+          isLoading = false;
+        });
+      } else if (widget.id != null) {
+        // Fetch from API
+        final response = await http.get(
+          Uri.parse('http://31.97.206.144:5124/api/get/${widget.id}'),
+        );
+
+        if (response.statusCode == 200) {
+          final data = json.decode(response.body);
+          if (data['success'] == true) {
+            setState(() {
+              farmhouseData = Farmhouse.fromJson(data['farmhouse']);
+              isLoading = false;
+            });
+          } else {
+            throw Exception('Failed to load farmhouse data');
+          }
+        } else {
+          throw Exception('Server error: ${response.statusCode}');
+        }
+      } else {
+        throw Exception('No farmhouse data or ID provided');
+      }
+    } catch (e) {
+      setState(() {
+        errorMessage = 'Failed to load farmhouse: $e';
+        isLoading = false;
+      });
+    }
+  }
+
+  Future<void> shareFarmhouse(BuildContext context, Farmhouse farmhouse) async {
+    try {
+      showDialog(
+        context: context,
+        barrierDismissible: false,
+        builder: (context) => const Center(
+          child: CircularProgressIndicator(color: Color(0xFF6366F1)),
+        ),
+      );
+
+      final String imageUrl = farmhouse.images.isNotEmpty
+          ? farmhouse.images[0]
+          : '';
+
+      File? imageFile;
+
+      if (imageUrl.isNotEmpty) {
+        try {
+          final response = await http.get(Uri.parse(imageUrl));
+
+          if (response.statusCode == 200) {
+            final tempDir = await getTemporaryDirectory();
+            final fileName = '${farmhouse.name.replaceAll(" ", "_")}.jpg';
+            imageFile = File('${tempDir.path}/$fileName');
+
+            await imageFile.writeAsBytes(response.bodyBytes);
+          }
+        } catch (e) {
+          print('Error downloading image: $e');
+        }
+      }
+
+      if (context.mounted) {
+        Navigator.of(context).pop();
+      }
+
+      final shareText =
+          '''
+  Check out this amazing farmhouse! 🏡
+
+  📍 ${farmhouse.name}
+  🌍 ${farmhouse.address}
+  ⭐ Rating: ${farmhouse.rating}/5.0
+  💰 ₹${farmhouse.pricePerDay.toInt()}/day | ₹${farmhouse.pricePerHour.toInt()}/hour
+
+  ✨ ${farmhouse.description}
+
+  🎯 Booking for: ${farmhouse.bookingFor}
+  🏠 Amenities: ${farmhouse.amenities.join(', ')}
+
+  Book now on Farmhouse App!
+  ''';
+
+      if (imageFile != null && await imageFile.exists()) {
+        await Share.shareXFiles(
+          [XFile(imageFile.path)],
+          text: shareText,
+          subject: 'Check out ${farmhouse.name}',
+        );
+      } else {
+        await Share.share(shareText, subject: 'Check out ${farmhouse.name}');
+      }
+    } catch (e) {
+      print('Share error: $e');
+
+      if (context.mounted) {
+        Navigator.of(context, rootNavigator: true).pop();
+
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: const Text('Failed to share. Please try again.'),
+            backgroundColor: Colors.red[700],
+            behavior: SnackBarBehavior.floating,
+          ),
+        );
+      }
+    }
+  }
+
+  Future<void> _fetchAvailableSlots(DateTime date) async {
+    setState(() {
+      loadingSlots = true;
+      selectedTimeSlot = null;
+    });
+
+    try {
+      final formattedDate = DateFormat('yyyy-MM-dd').format(date);
+      print('Fetching slots for date: $formattedDate'); // Debug log
+
+      final response = await http.get(
+        Uri.parse(
+          'http://31.97.206.144:5124/api/${farmhouseData!.id}/slots?date=$formattedDate',
+        ),
+        // Uri.parse(
+        //   'http://31.97.206.144:5124/api/69538c96f988a6c0c99df2af/slots?date=2026-01-04',
+        // ),
+      );
+      print('formatted dateeeeeeeeeeeeeee $formattedDate');
+      print('Response status code: ${response.statusCode}');
+      print('Response body: ${response.body}');
+
+      if (response.statusCode == 200) {
+        final data = json.decode(response.body);
+        if (data['success'] == true) {
+          setState(() {
+            availableSlots = data['slots'] ?? [];
+            loadingSlots = false;
+          });
+
+          // Show message if no slots available
+          if (availableSlots.isEmpty && mounted) {
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(
+                content: Text(
+                  'No slots available for ${DateFormat('MMM d, yyyy').format(date)}',
+                ),
+                backgroundColor: Colors.orange,
+                behavior: SnackBarBehavior.floating,
+                duration: const Duration(seconds: 2),
+              ),
+            );
+          }
+        } else {
+          throw Exception('Failed to load slots');
+        }
+      } else {
+        throw Exception('Server error: ${response.statusCode}');
+      }
+    } catch (e) {
+      print('Error fetching slots: $e'); // Debug log
+      setState(() {
+        loadingSlots = false;
+        availableSlots = [];
+      });
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('Failed to load time slots: $e'),
+            backgroundColor: Colors.red,
+            behavior: SnackBarBehavior.floating,
+          ),
+        );
+      }
+    }
+  }
+
+  // Future<void> _fetchAvailableSlots(DateTime date) async {
+  //   if (farmhouseData == null || farmhouseData!.id.isEmpty) {
+  //     print('Farmhouse data not ready yet');
+  //     return;
+  //   }
+
+  //   setState(() {
+  //     loadingSlots = true;
+  //     selectedTimeSlot = null;
+  //   });
+
+  //   final formattedDate = DateFormat('yyyy-MM-dd').format(date);
+
+  //   final url =
+  //       'http://31.97.206.144:5124/api/${farmhouseData!.id}/slots?date=$formattedDate';
+
+  //   print('Fetching slots URL: $url');
+
+  //   try {
+  //     final response = await http.get(Uri.parse(url));
+
+  //     print('Response status code for slots ${response.statusCode}');
+  //     print('Response boddyyyyyyy for slots ${response.body}');
+
+  //     if (response.statusCode == 200) {
+  //       final data = json.decode(response.body);
+
+  //       if (data['success'] == true) {
+  //         setState(() {
+  //           availableSlots = List.from(data['slots'] ?? []);
+  //           loadingSlots = false;
+  //         });
+  //       } else {
+  //         throw Exception('API returned success=false');
+  //       }
+  //     } else {
+  //       throw Exception('Server error ${response.statusCode}');
+  //     }
+  //   } catch (e) {
+  //     loadingSlots = false;
+  //     availableSlots = [];
+  //     setState(() {});
+  //     debugPrint('Slot fetch error: $e');
+  //   }
+  // }
 
   List<DateTime> getNextSevenDays() {
     final today = DateTime.now();
@@ -663,9 +1482,121 @@ class _HouseDetailScreenState extends State<HouseDetailScreen> {
     }
   }
 
+  void _toggleWishlist() {
+    if (farmhouseData == null) return;
+
+    final houseData = {
+      'name': farmhouseData!.name,
+      'location': farmhouseData!.address,
+      'price': '₹${farmhouseData!.pricePerHour}',
+      'rating': farmhouseData!.rating,
+      'image': farmhouseData!.images.isNotEmpty ? farmhouseData!.images[0] : '',
+    };
+
+    final bool wasInWishlist = wishlistManager.isInWishlist(
+      houseData['name'].toString(),
+    );
+
+    wishlistManager.toggleWishlist(houseData);
+
+    if (wasInWishlist) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Row(
+            children: [
+              const Icon(Icons.favorite_border, color: Colors.white),
+              const SizedBox(width: 8),
+              Expanded(
+                child: Text(
+                  '${houseData['name']} removed from wishlist',
+                  overflow: TextOverflow.ellipsis,
+                  maxLines: 2,
+                ),
+              ),
+            ],
+          ),
+          backgroundColor: Colors.red,
+          behavior: SnackBarBehavior.floating,
+          duration: const Duration(seconds: 2),
+        ),
+      );
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Row(
+            children: [
+              const Icon(Icons.favorite, color: Colors.white),
+              const SizedBox(width: 8),
+              Text('${houseData['name']} added to wishlist'),
+            ],
+          ),
+          backgroundColor: Colors.green,
+          behavior: SnackBarBehavior.floating,
+          duration: const Duration(seconds: 2),
+        ),
+      );
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
+    print('farmhouseeeeeeeeeeeeeeeeeee idddddddddddddddddd ${widget.id}');
+    if (isLoading) {
+      return Scaffold(
+        backgroundColor: Colors.white,
+        appBar: AppBar(
+          backgroundColor: Colors.white,
+          elevation: 0,
+          leading: IconButton(
+            icon: const Icon(Icons.arrow_back, color: Colors.black),
+            onPressed: () => Navigator.pop(context),
+          ),
+        ),
+        body: const Center(
+          child: CircularProgressIndicator(color: Color(0xFF6366F1)),
+        ),
+      );
+    }
+
+    if (errorMessage != null || farmhouseData == null) {
+      return Scaffold(
+        backgroundColor: Colors.white,
+        appBar: AppBar(
+          backgroundColor: Colors.white,
+          elevation: 0,
+          leading: IconButton(
+            icon: const Icon(Icons.arrow_back, color: Colors.black),
+            onPressed: () => Navigator.pop(context),
+          ),
+        ),
+        body: Center(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              const Icon(Icons.error_outline, size: 64, color: Colors.red),
+              const SizedBox(height: 16),
+              Text(
+                errorMessage ?? 'Failed to load farmhouse',
+                textAlign: TextAlign.center,
+                style: const TextStyle(fontSize: 16),
+              ),
+              const SizedBox(height: 24),
+              ElevatedButton(
+                onPressed: _loadFarmhouseData,
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: const Color(0xFF6366F1),
+                  foregroundColor: Colors.white,
+                ),
+                child: const Text('Retry'),
+              ),
+            ],
+          ),
+        ),
+      );
+    }
+
     final availableDates = getNextSevenDays();
+    final bool isInWishlist = wishlistManager.isInWishlist(farmhouseData!.name);
 
     return Scaffold(
       backgroundColor: Colors.white,
@@ -695,11 +1626,11 @@ class _HouseDetailScreenState extends State<HouseDetailScreen> {
                     child: CircleAvatar(
                       backgroundColor: Colors.white,
                       child: IconButton(
-                        icon: const Icon(
-                          Icons.favorite_border,
-                          color: Colors.black,
+                        icon: Icon(
+                          isInWishlist ? Icons.favorite : Icons.favorite_border,
+                          color: isInWishlist ? Colors.red : Colors.black,
                         ),
-                        onPressed: () {},
+                        onPressed: _toggleWishlist,
                       ),
                     ),
                   ),
@@ -709,7 +1640,9 @@ class _HouseDetailScreenState extends State<HouseDetailScreen> {
                       backgroundColor: Colors.white,
                       child: IconButton(
                         icon: const Icon(Icons.share, color: Colors.black),
-                        onPressed: () {},
+                        onPressed: () {
+                          shareFarmhouse(context, farmhouseData!);
+                        },
                       ),
                     ),
                   ),
@@ -719,8 +1652,16 @@ class _HouseDetailScreenState extends State<HouseDetailScreen> {
                     fit: StackFit.expand,
                     children: [
                       Image.network(
-                        imageUrls[selectedImageIndex],
+                        farmhouseData!.images.isNotEmpty
+                            ? farmhouseData!.images[selectedImageIndex]
+                            : 'https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?w=800',
                         fit: BoxFit.cover,
+                        errorBuilder: (context, error, stackTrace) {
+                          return Container(
+                            color: Colors.grey[300],
+                            child: const Icon(Icons.home, size: 64),
+                          );
+                        },
                       ),
                       Positioned(
                         bottom: 20,
@@ -735,7 +1676,7 @@ class _HouseDetailScreenState extends State<HouseDetailScreen> {
                             borderRadius: BorderRadius.circular(20),
                           ),
                           child: Text(
-                            '${selectedImageIndex + 1}/${imageUrls.length}',
+                            '${selectedImageIndex + 1}/${farmhouseData!.images.length}',
                             style: const TextStyle(
                               color: Colors.white,
                               fontWeight: FontWeight.w600,
@@ -743,48 +1684,51 @@ class _HouseDetailScreenState extends State<HouseDetailScreen> {
                           ),
                         ),
                       ),
-                      Positioned(
-                        bottom: 20,
-                        left: 0,
-                        right: 0,
-                        child: SizedBox(
-                          height: 80,
-                          child: ListView.builder(
-                            scrollDirection: Axis.horizontal,
-                            padding: const EdgeInsets.symmetric(horizontal: 20),
-                            itemCount: imageUrls.length,
-                            itemBuilder: (context, index) {
-                              return GestureDetector(
-                                onTap: () {
-                                  setState(() {
-                                    selectedImageIndex = index;
-                                  });
-                                },
-                                child: Container(
-                                  width: 80,
-                                  margin: const EdgeInsets.only(right: 10),
-                                  decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(12),
-                                    border: Border.all(
-                                      color: selectedImageIndex == index
-                                          ? Colors.white
-                                          : Colors.transparent,
-                                      width: 3,
+                      if (farmhouseData!.images.length > 1)
+                        Positioned(
+                          bottom: 20,
+                          left: 0,
+                          right: 0,
+                          child: SizedBox(
+                            height: 80,
+                            child: ListView.builder(
+                              scrollDirection: Axis.horizontal,
+                              padding: const EdgeInsets.symmetric(
+                                horizontal: 20,
+                              ),
+                              itemCount: farmhouseData!.images.length,
+                              itemBuilder: (context, index) {
+                                return GestureDetector(
+                                  onTap: () {
+                                    setState(() {
+                                      selectedImageIndex = index;
+                                    });
+                                  },
+                                  child: Container(
+                                    width: 80,
+                                    margin: const EdgeInsets.only(right: 10),
+                                    decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(12),
+                                      border: Border.all(
+                                        color: selectedImageIndex == index
+                                            ? Colors.white
+                                            : Colors.transparent,
+                                        width: 3,
+                                      ),
+                                    ),
+                                    child: ClipRRect(
+                                      borderRadius: BorderRadius.circular(10),
+                                      child: Image.network(
+                                        farmhouseData!.images[index],
+                                        fit: BoxFit.cover,
+                                      ),
                                     ),
                                   ),
-                                  child: ClipRRect(
-                                    borderRadius: BorderRadius.circular(10),
-                                    child: Image.network(
-                                      imageUrls[index],
-                                      fit: BoxFit.cover,
-                                    ),
-                                  ),
-                                ),
-                              );
-                            },
+                                );
+                              },
+                            ),
                           ),
                         ),
-                      ),
                     ],
                   ),
                 ),
@@ -801,10 +1745,10 @@ class _HouseDetailScreenState extends State<HouseDetailScreen> {
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          const Expanded(
+                          Expanded(
                             child: Text(
-                              'Luxury Farm House',
-                              style: TextStyle(
+                              farmhouseData!.name,
+                              style: const TextStyle(
                                 fontSize: 28,
                                 fontWeight: FontWeight.bold,
                               ),
@@ -819,13 +1763,17 @@ class _HouseDetailScreenState extends State<HouseDetailScreen> {
                               color: Colors.amber,
                               borderRadius: BorderRadius.circular(20),
                             ),
-                            child: const Row(
+                            child: Row(
                               children: [
-                                Icon(Icons.star, color: Colors.white, size: 18),
-                                SizedBox(width: 4),
+                                const Icon(
+                                  Icons.star,
+                                  color: Colors.white,
+                                  size: 18,
+                                ),
+                                const SizedBox(width: 4),
                                 Text(
-                                  '4.8',
-                                  style: TextStyle(
+                                  farmhouseData!.rating.toString(),
+                                  style: const TextStyle(
                                     color: Colors.white,
                                     fontWeight: FontWeight.bold,
                                     fontSize: 16,
@@ -845,11 +1793,13 @@ class _HouseDetailScreenState extends State<HouseDetailScreen> {
                             color: Colors.grey,
                           ),
                           const SizedBox(width: 4),
-                          Text(
-                            'Green Valley, Countryside',
-                            style: TextStyle(
-                              color: Colors.grey[600],
-                              fontSize: 16,
+                          Expanded(
+                            child: Text(
+                              farmhouseData!.address,
+                              style: TextStyle(
+                                color: Colors.grey[600],
+                                fontSize: 16,
+                              ),
                             ),
                           ),
                         ],
@@ -896,7 +1846,7 @@ class _HouseDetailScreenState extends State<HouseDetailScreen> {
                                   child: Column(
                                     children: [
                                       Text(
-                                        '\$50',
+                                        '₹${farmhouseData!.pricePerHour.toInt()}',
                                         style: TextStyle(
                                           fontSize: 24,
                                           fontWeight: FontWeight.bold,
@@ -949,7 +1899,7 @@ class _HouseDetailScreenState extends State<HouseDetailScreen> {
                                   child: Column(
                                     children: [
                                       Text(
-                                        '\$350',
+                                        '₹${farmhouseData!.pricePerDay.toInt()}',
                                         style: TextStyle(
                                           fontSize: 24,
                                           fontWeight: FontWeight.bold,
@@ -976,24 +1926,41 @@ class _HouseDetailScreenState extends State<HouseDetailScreen> {
                       ),
                       const SizedBox(height: 24),
 
-                      // Features
-                      const Text(
-                        'Features',
-                        style: TextStyle(
-                          fontSize: 20,
-                          fontWeight: FontWeight.bold,
+                      // Amenities
+                      if (farmhouseData!.amenities.isNotEmpty) ...[
+                        const Text(
+                          'Amenities',
+                          style: TextStyle(
+                            fontSize: 20,
+                            fontWeight: FontWeight.bold,
+                          ),
                         ),
-                      ),
-                      const SizedBox(height: 12),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceAround,
-                        children: [
-                          _buildFeatureItem(Icons.bed, '4 Bedrooms'),
-                          _buildFeatureItem(Icons.bathtub, '3 Bathrooms'),
-                          _buildFeatureItem(Icons.square_foot, '2500 sqft'),
-                        ],
-                      ),
-                      const SizedBox(height: 24),
+                        const SizedBox(height: 12),
+                        Wrap(
+                          spacing: 8,
+                          runSpacing: 8,
+                          children: farmhouseData!.amenities.map((amenity) {
+                            return Container(
+                              padding: const EdgeInsets.symmetric(
+                                horizontal: 16,
+                                vertical: 8,
+                              ),
+                              decoration: BoxDecoration(
+                                color: Colors.grey[100],
+                                borderRadius: BorderRadius.circular(20),
+                              ),
+                              child: Text(
+                                amenity,
+                                style: TextStyle(
+                                  color: Colors.grey[700],
+                                  fontSize: 14,
+                                ),
+                              ),
+                            );
+                          }).toList(),
+                        ),
+                        const SizedBox(height: 24),
+                      ],
 
                       // Description
                       const Text(
@@ -1005,12 +1972,33 @@ class _HouseDetailScreenState extends State<HouseDetailScreen> {
                       ),
                       const SizedBox(height: 12),
                       Text(
-                        'Experience tranquility in this stunning farmhouse nestled in the countryside. Perfect for family gatherings, weekend retreats, or special celebrations. Features include a spacious garden, modern amenities, and breathtaking views.',
+                        farmhouseData!.description,
                         style: TextStyle(
                           color: Colors.grey[700],
                           fontSize: 15,
                           height: 1.6,
                         ),
+                      ),
+                      const SizedBox(height: 16),
+
+                      // Booking For
+                      Row(
+                        children: [
+                          Icon(
+                            Icons.celebration,
+                            color: Colors.grey[600],
+                            size: 20,
+                          ),
+                          const SizedBox(width: 8),
+                          Text(
+                            'Perfect for: ${farmhouseData!.bookingFor}',
+                            style: TextStyle(
+                              color: Colors.grey[700],
+                              fontSize: 15,
+                              fontWeight: FontWeight.w500,
+                            ),
+                          ),
+                        ],
                       ),
                       const SizedBox(height: 32),
 
@@ -1027,9 +2015,7 @@ class _HouseDetailScreenState extends State<HouseDetailScreen> {
                           ),
                           IconButton(
                             icon: const Icon(Icons.calendar_month),
-                            onPressed: () {
-                              _showDatePicker();
-                            },
+                            onPressed: _showDatePicker,
                           ),
                         ],
                       ),
@@ -1047,9 +2033,15 @@ class _HouseDetailScreenState extends State<HouseDetailScreen> {
 
                             return GestureDetector(
                               onTap: () {
+                                print(
+                                  'selected dateeeeeeeeeeeeeeeeeeee $selectedDate',
+                                );
                                 setState(() {
                                   selectedDateIndex = index;
+
+                                  // selectedDate=date;
                                 });
+                                _fetchAvailableSlots(date);
                               },
                               child: Container(
                                 width: 70,
@@ -1102,6 +2094,245 @@ class _HouseDetailScreenState extends State<HouseDetailScreen> {
                       const SizedBox(height: 32),
 
                       // Choose Time Section
+                      // if (farmhouseData!.timePrices.isNotEmpty) ...[
+                      //   const Text(
+                      //     'Choose Time',
+                      //     style: TextStyle(
+                      //       fontSize: 20,
+                      //       fontWeight: FontWeight.bold,
+                      //     ),
+                      //   ),
+                      //   const SizedBox(height: 12),
+
+                      //   // GridView.builder(
+                      //   //   shrinkWrap: true,
+                      //   //   physics: const NeverScrollableScrollPhysics(),
+                      //   //   gridDelegate:
+                      //   //       const SliverGridDelegateWithFixedCrossAxisCount(
+                      //   //     crossAxisCount: 2,
+                      //   //     childAspectRatio: 1.60,
+                      //   //     crossAxisSpacing: 12,
+                      //   //     mainAxisSpacing: 12,
+                      //   //   ),
+                      //   //   itemCount: farmhouseData!.timePrices.length,
+                      //   //   itemBuilder: (context, index) {
+                      //   //     final slot = farmhouseData!.timePrices[index];
+                      //   //     final isSelected = selectedTimeSlot == slot.label;
+
+                      //   //     return GestureDetector(
+                      //   //       onTap: () {
+                      //   //         setState(() {
+                      //   //           selectedTimeSlot = slot.label;
+                      //   //         });
+                      //   //       },
+                      //   //       child: Container(
+                      //   //         padding: const EdgeInsets.all(12),
+                      //   //         decoration: BoxDecoration(
+                      //   //           color: Colors.white,
+                      //   //           borderRadius: BorderRadius.circular(16),
+                      //   //           border: Border.all(
+                      //   //             color: isSelected
+                      //   //                 ? const Color(0xFF5B67F7)
+                      //   //                 : Colors.grey[300]!,
+                      //   //             width: isSelected ? 2 : 1,
+                      //   //           ),
+                      //   //         ),
+                      //   //         child: Column(
+                      //   //           crossAxisAlignment: CrossAxisAlignment.start,
+                      //   //           children: [
+                      //   //             Row(
+                      //   //               mainAxisAlignment:
+                      //   //                   MainAxisAlignment.spaceBetween,
+                      //   //               children: [
+                      //   //                 Expanded(
+                      //   //                   child: Text(
+                      //   //                     slot.label,
+                      //   //                     overflow: TextOverflow.ellipsis,
+                      //   //                     style: TextStyle(
+                      //   //                       fontSize: 15,
+                      //   //                       fontWeight: FontWeight.bold,
+                      //   //                       color: isSelected
+                      //   //                           ? const Color(0xFF5B67F7)
+                      //   //                           : Colors.black,
+                      //   //                     ),
+                      //   //                   ),
+                      //   //                 ),
+                      //   //                 if (isSelected)
+                      //   //                   const Icon(
+                      //   //                     Icons.check_circle,
+                      //   //                     color: Color(0xFF5B67F7),
+                      //   //                     size: 18,
+                      //   //                   ),
+                      //   //               ],
+                      //   //             ),
+                      //   //             const SizedBox(height: 4),
+                      //   //             Text(
+                      //   //               slot.timing,
+                      //   //               overflow: TextOverflow.ellipsis,
+                      //   //               style: TextStyle(
+                      //   //                 fontSize: 12,
+                      //   //                 color: Colors.grey[600],
+                      //   //               ),
+                      //   //             ),
+                      //   //             const Spacer(),
+                      //   //             Text(
+                      //   //               '₹${slot.price.toInt()}',
+                      //   //               style: const TextStyle(
+                      //   //                 fontSize: 15,
+                      //   //                 fontWeight: FontWeight.bold,
+                      //   //                 color: Colors.black,
+                      //   //               ),
+                      //   //             ),
+                      //   //           ],
+                      //   //         ),
+                      //   //       ),
+                      //   //     );
+                      //   //   },
+                      //   // ),
+                      //   if (loadingSlots)
+                      //     const Center(
+                      //       child: Padding(
+                      //         padding: EdgeInsets.all(20.0),
+                      //         child: CircularProgressIndicator(
+                      //           color: Color(0xFF6366F1),
+                      //         ),
+                      //       ),
+                      //     )
+                      //   else if (availableSlots.isNotEmpty) ...[
+                      //     const Text(
+                      //       'Choose Time',
+                      //       style: TextStyle(
+                      //         fontSize: 20,
+                      //         fontWeight: FontWeight.bold,
+                      //       ),
+                      //     ),
+                      //     const SizedBox(height: 12),
+                      //     GridView.builder(
+                      //       shrinkWrap: true,
+                      //       physics: const NeverScrollableScrollPhysics(),
+                      //       gridDelegate:
+                      //           const SliverGridDelegateWithFixedCrossAxisCount(
+                      //             crossAxisCount: 2,
+                      //             childAspectRatio: 1.60,
+                      //             crossAxisSpacing: 12,
+                      //             mainAxisSpacing: 12,
+                      //           ),
+                      //       itemCount: availableSlots.length,
+                      //       itemBuilder: (context, index) {
+                      //         final slot = availableSlots[index];
+                      //         final isSelected =
+                      //             selectedTimeSlot == slot['label'];
+                      //         final isAvailable = slot['available'] ?? true;
+
+                      //         return GestureDetector(
+                      //           onTap: isAvailable
+                      //               ? () {
+                      //                   setState(() {
+                      //                     selectedTimeSlot = slot['label'];
+                      //                   });
+                      //                 }
+                      //               : null,
+                      //           child: Container(
+                      //             padding: const EdgeInsets.all(12),
+                      //             decoration: BoxDecoration(
+                      //               color: isAvailable
+                      //                   ? Colors.white
+                      //                   : Colors.grey[200],
+                      //               borderRadius: BorderRadius.circular(16),
+                      //               border: Border.all(
+                      //                 color: isSelected
+                      //                     ? const Color(0xFF5B67F7)
+                      //                     : isAvailable
+                      //                     ? Colors.grey[300]!
+                      //                     : Colors.grey[400]!,
+                      //                 width: isSelected ? 2 : 1,
+                      //               ),
+                      //             ),
+                      //             child: Column(
+                      //               crossAxisAlignment:
+                      //                   CrossAxisAlignment.start,
+                      //               children: [
+                      //                 Row(
+                      //                   mainAxisAlignment:
+                      //                       MainAxisAlignment.spaceBetween,
+                      //                   children: [
+                      //                     Expanded(
+                      //                       child: Text(
+                      //                         slot['label'],
+                      //                         overflow: TextOverflow.ellipsis,
+                      //                         style: TextStyle(
+                      //                           fontSize: 15,
+                      //                           fontWeight: FontWeight.bold,
+                      //                           color: isAvailable
+                      //                               ? (isSelected
+                      //                                     ? const Color(
+                      //                                         0xFF5B67F7,
+                      //                                       )
+                      //                                     : Colors.black)
+                      //                               : Colors.grey[600],
+                      //                         ),
+                      //                       ),
+                      //                     ),
+                      //                     if (isSelected)
+                      //                       const Icon(
+                      //                         Icons.check_circle,
+                      //                         color: Color(0xFF5B67F7),
+                      //                         size: 18,
+                      //                       ),
+                      //                     if (!isAvailable)
+                      //                       Icon(
+                      //                         Icons.block,
+                      //                         color: Colors.grey[600],
+                      //                         size: 18,
+                      //                       ),
+                      //                   ],
+                      //                 ),
+                      //                 const SizedBox(height: 4),
+                      //                 Text(
+                      //                   slot['timing'],
+                      //                   overflow: TextOverflow.ellipsis,
+                      //                   style: TextStyle(
+                      //                     fontSize: 12,
+                      //                     color: isAvailable
+                      //                         ? Colors.grey[600]
+                      //                         : Colors.grey[500],
+                      //                   ),
+                      //                 ),
+                      //                 const Spacer(),
+                      //                 Text(
+                      //                   isAvailable
+                      //                       ? '₹${slot['price'].toInt()}'
+                      //                       : 'Not Available',
+                      //                   style: TextStyle(
+                      //                     fontSize: 15,
+                      //                     fontWeight: FontWeight.bold,
+                      //                     color: isAvailable
+                      //                         ? Colors.black
+                      //                         : Colors.grey[600],
+                      //                   ),
+                      //                 ),
+                      //               ],
+                      //             ),
+                      //           ),
+                      //         );
+                      //       },
+                      //     ),
+                      //     const SizedBox(height: 32),
+                      //   ] else if (selectedDateIndex != null)
+                      //     const Center(
+                      //       child: Padding(
+                      //         padding: EdgeInsets.all(20.0),
+                      //         child: Text(
+                      //           'No time slots available for this date',
+                      //           style: TextStyle(
+                      //             color: Colors.grey,
+                      //             fontSize: 16,
+                      //           ),
+                      //         ),
+                      //       ),
+                      //     ),
+                      //   const SizedBox(height: 32),
+                      // ],
                       const Text(
                         'Choose Time',
                         style: TextStyle(
@@ -1109,94 +2340,95 @@ class _HouseDetailScreenState extends State<HouseDetailScreen> {
                           fontWeight: FontWeight.bold,
                         ),
                       ),
-                      // const SizedBox(height: 10),
-                      GridView.builder(
-                        shrinkWrap: true,
-                        physics: const NeverScrollableScrollPhysics(),
-                        gridDelegate:
-                            const SliverGridDelegateWithFixedCrossAxisCount(
-                              crossAxisCount: 2,
-                              childAspectRatio: 1.60,
-                              crossAxisSpacing: 12,
-                              mainAxisSpacing: 12,
-                            ),
-                        itemCount: timeSlots.length,
-                        itemBuilder: (context, index) {
-                          final slot = timeSlots[index];
-                          final isSelected = selectedTimeSlot == slot['label'];
+                      const SizedBox(height: 12),
 
-                          return GestureDetector(
-                            onTap: () {
-                              setState(() {
-                                selectedTimeSlot = slot['label'];
-                              });
-                            },
-                            child: Container(
-                              padding: const EdgeInsets.all(12),
-                              decoration: BoxDecoration(
-                                color: Colors.white,
-                                borderRadius: BorderRadius.circular(16),
-                                border: Border.all(
-                                  color: isSelected
-                                      ? const Color(0xFF5B67F7)
-                                      : Colors.grey[300]!,
-                                  width: isSelected ? 2 : 1,
+                      if (loadingSlots)
+                        const Center(
+                          child: Padding(
+                            padding: EdgeInsets.all(20.0),
+                            child: CircularProgressIndicator(
+                              color: Color(0xFF6366F1),
+                            ),
+                          ),
+                        )
+                      else if (availableSlots.isNotEmpty)
+                        GridView.builder(
+                          shrinkWrap: true,
+                          physics: const NeverScrollableScrollPhysics(),
+                          gridDelegate:
+                              const SliverGridDelegateWithFixedCrossAxisCount(
+                                crossAxisCount: 2,
+                                childAspectRatio: 1.6,
+                                crossAxisSpacing: 12,
+                                mainAxisSpacing: 12,
+                              ),
+                          itemCount: availableSlots.length,
+                          itemBuilder: (context, index) {
+                            final slot = availableSlots[index];
+                            final isSelected =
+                                selectedTimeSlot == slot['label'];
+                            final isAvailable = slot['available'] == true;
+
+                            return GestureDetector(
+                              onTap: isAvailable
+                                  ? () {
+                                      setState(() {
+                                        selectedTimeSlot = slot['label'];
+                                      });
+                                    }
+                                  : null,
+                              child: Container(
+                                padding: const EdgeInsets.all(12),
+                                decoration: BoxDecoration(
+                                  color: isAvailable
+                                      ? Colors.white
+                                      : Colors.grey[200],
+                                  borderRadius: BorderRadius.circular(16),
+                                  border: Border.all(
+                                    color: isSelected
+                                        ? const Color(0xFF5B67F7)
+                                        : Colors.grey[300]!,
+                                    width: isSelected ? 2 : 1,
+                                  ),
+                                ),
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text(
+                                      slot['label'],
+                                      style: TextStyle(
+                                        fontWeight: FontWeight.bold,
+                                        color: isSelected
+                                            ? const Color(0xFF5B67F7)
+                                            : Colors.black,
+                                      ),
+                                    ),
+                                    const SizedBox(height: 6),
+                                    Text(
+                                      slot['timing'],
+                                      style: TextStyle(color: Colors.grey[600]),
+                                    ),
+                                    const Spacer(),
+                                    Text(
+                                      '₹${slot['price']}',
+                                      style: const TextStyle(
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                    ),
+                                  ],
                                 ),
                               ),
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Row(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceBetween,
-                                    children: [
-                                      Expanded(
-                                        child: Text(
-                                          slot['label'],
-                                          overflow: TextOverflow.ellipsis,
-                                          style: TextStyle(
-                                            fontSize: 15,
-                                            fontWeight: FontWeight.bold,
-                                            color: isSelected
-                                                ? const Color(0xFF5B67F7)
-                                                : Colors.black,
-                                          ),
-                                        ),
-                                      ),
-                                      if (isSelected)
-                                        const Icon(
-                                          Icons.check_circle,
-                                          color: Color(0xFF5B67F7),
-                                          size: 18,
-                                        ),
-                                    ],
-                                  ),
-                                  const SizedBox(height: 4),
-                                  Text(
-                                    slot['time'],
-                                    overflow: TextOverflow.ellipsis,
-                                    style: TextStyle(
-                                      fontSize: 12,
-                                      color: Colors.grey[600],
-                                    ),
-                                  ),
-                                  const Spacer(),
-                                  Text(
-                                    slot['price'],
-                                    style: const TextStyle(
-                                      fontSize: 15,
-                                      fontWeight: FontWeight.bold,
-                                      color: Colors.black,
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ),
-                          );
-                        },
-                      ),
-
-                      const SizedBox(height: 32),
+                            );
+                          },
+                        )
+                      else if (selectedDateIndex != null)
+                        const Padding(
+                          padding: EdgeInsets.all(20),
+                          child: Text(
+                            'No time slots available for this date',
+                            style: TextStyle(color: Colors.grey),
+                          ),
+                        ),
 
                       // Booking Summary
                       if (selectedDateIndex != null && selectedTimeSlot != null)
@@ -1252,9 +2484,9 @@ class _HouseDetailScreenState extends State<HouseDetailScreen> {
                                       ),
                                     ),
                                     const SizedBox(height: 4),
-                                    const Text(
-                                      '1 Mrng',
-                                      style: TextStyle(
+                                    Text(
+                                      selectedTimeSlot ?? 'N/A',
+                                      style: const TextStyle(
                                         fontSize: 14,
                                         fontWeight: FontWeight.bold,
                                       ),
@@ -1294,27 +2526,48 @@ class _HouseDetailScreenState extends State<HouseDetailScreen> {
                         ),
                       const SizedBox(height: 32),
 
-                      // Reviews Header
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          const Text(
-                            'Reviews',
-                            style: TextStyle(
-                              fontSize: 20,
-                              fontWeight: FontWeight.bold,
-                            ),
+                      // Reviews Section
+                      if (farmhouseData!.reviews.isNotEmpty) ...[
+                        const Text(
+                          'Reviews',
+                          style: TextStyle(
+                            fontSize: 20,
+                            fontWeight: FontWeight.bold,
                           ),
-                          TextButton(
-                            onPressed: () {},
-                            child: const Text('See all'),
-                          ),
-                        ],
-                      ),
-                      const SizedBox(height: 12),
+                        ),
+                        const SizedBox(height: 12),
+                        ...farmhouseData!.reviews.map(
+                          (review) => _buildReviewCard(review),
+                        ),
+                      ],
 
-                      // Reviews List
-                      ...reviews.map((review) => _buildReviewCard(review)),
+                      // Feedback Summary
+                      // if (farmhouseData!.feedbackSummary.isNotEmpty) ...[
+                      //   Container(
+                      //     margin: const EdgeInsets.only(top: 16),
+                      //     padding: const EdgeInsets.all(16),
+                      //     decoration: BoxDecoration(
+                      //       color: Colors.blue[50],
+                      //       borderRadius: BorderRadius.circular(12),
+                      //       border: Border.all(color: Colors.blue[100]!),
+                      //     ),
+                      //     child: Row(
+                      //       children: [
+                      //         Icon(Icons.info_outline, color: Colors.blue[700]),
+                      //         const SizedBox(width: 12),
+                      //         Expanded(
+                      //           child: Text(
+                      //             farmhouseData!.feedbackSummary,
+                      //             style: TextStyle(
+                      //               color: Colors.blue[900],
+                      //               fontSize: 14,
+                      //             ),
+                      //           ),
+                      //         ),
+                      //       ],
+                      //     ),
+                      //   ),
+                      // ],
                       const SizedBox(height: 100),
                     ],
                   ),
@@ -1324,6 +2577,63 @@ class _HouseDetailScreenState extends State<HouseDetailScreen> {
           ),
 
           // Book Now Button (Fixed at bottom)
+          // Positioned(
+          //   left: 0,
+          //   right: 0,
+          //   bottom: 0,
+          //   child: Container(
+          //     padding: const EdgeInsets.all(20),
+          //     decoration: BoxDecoration(
+          //       color: Colors.white,
+          //       boxShadow: [
+          //         BoxShadow(
+          //           color: Colors.black.withOpacity(0.1),
+          //           blurRadius: 10,
+          //           offset: const Offset(0, -5),
+          //         ),
+          //       ],
+          //     ),
+          //     child: ElevatedButton(
+          //       onPressed: () {
+          //         if (selectedDateIndex == null || selectedTimeSlot == null) {
+          //           ScaffoldMessenger.of(context).showSnackBar(
+          //             const SnackBar(
+          //               backgroundColor: Colors.red,
+          //               content: Text('Please select date and time slot'),
+          //               behavior: SnackBarBehavior.floating,
+          //             ),
+          //           );
+          //           return;
+          //         }
+
+          //         Navigator.push(
+          //           context,
+          //           MaterialPageRoute(
+          //             builder: (context) => PaymentScreen(
+          //               image: farmhouseData!.images.isNotEmpty
+          //                   ? farmhouseData!.images[0]
+          //                   : '',
+          //               name: farmhouseData!.name,
+          //             ),
+          //           ),
+          //         );
+          //       },
+          //       style: ElevatedButton.styleFrom(
+          //         backgroundColor: Colors.black,
+          //         foregroundColor: Colors.white,
+          //         padding: const EdgeInsets.symmetric(vertical: 16),
+          //         shape: RoundedRectangleBorder(
+          //           borderRadius: BorderRadius.circular(12),
+          //         ),
+          //         elevation: 0,
+          //       ),
+          //       child: const Text(
+          //         'Book Now',
+          //         style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+          //       ),
+          //     ),
+          //   ),
+          // ),
           Positioned(
             left: 0,
             right: 0,
@@ -1340,41 +2650,39 @@ class _HouseDetailScreenState extends State<HouseDetailScreen> {
                   ),
                 ],
               ),
-              child: ElevatedButton(
-                onPressed: () {
-                  if (selectedDateIndex == null || selectedTimeSlot == null) {
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      const SnackBar(
-                        content: Text('Please select date and time slot'),
-                        behavior: SnackBarBehavior.floating,
+              child: Consumer<BookingProvider>(
+                builder: (context, bookingProvider, child) {
+                  return ElevatedButton(
+                    onPressed: bookingProvider.isLoading
+                        ? null
+                        : _handleBooking,
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.black,
+                      foregroundColor: Colors.white,
+                      padding: const EdgeInsets.symmetric(vertical: 16),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(12),
                       ),
-                    );
-                    return;
-                  }
-
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => PaymentScreen(
-                        image: imageUrls[0],
-                        name: 'Luxury Farm House',
-                      ),
+                      elevation: 0,
                     ),
+                    child: bookingProvider.isLoading
+                        ? const SizedBox(
+                            height: 20,
+                            width: 20,
+                            child: CircularProgressIndicator(
+                              color: Colors.white,
+                              strokeWidth: 2,
+                            ),
+                          )
+                        : const Text(
+                            'Book Now',
+                            style: TextStyle(
+                              fontSize: 18,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
                   );
                 },
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.black,
-                  foregroundColor: Colors.white,
-                  padding: const EdgeInsets.symmetric(vertical: 16),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(12),
-                  ),
-                  elevation: 0,
-                ),
-                child: const Text(
-                  'Book Now',
-                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-                ),
               ),
             ),
           ),
@@ -1383,24 +2691,7 @@ class _HouseDetailScreenState extends State<HouseDetailScreen> {
     );
   }
 
-  Widget _buildFeatureItem(IconData icon, String label) {
-    return Column(
-      children: [
-        Container(
-          padding: const EdgeInsets.all(12),
-          decoration: BoxDecoration(
-            color: Colors.grey[100],
-            borderRadius: BorderRadius.circular(12),
-          ),
-          child: Icon(icon, size: 28, color: Colors.black),
-        ),
-        const SizedBox(height: 8),
-        Text(label, style: TextStyle(color: Colors.grey[700], fontSize: 13)),
-      ],
-    );
-  }
-
-  Widget _buildReviewCard(Map<String, dynamic> review) {
+  Widget _buildReviewCard(review) {
     return Container(
       margin: const EdgeInsets.only(bottom: 16),
       padding: const EdgeInsets.all(16),
@@ -1416,7 +2707,9 @@ class _HouseDetailScreenState extends State<HouseDetailScreen> {
               CircleAvatar(
                 backgroundColor: Colors.black,
                 child: Text(
-                  review['avatar'],
+                  review.name.isNotEmpty
+                      ? review.name.substring(0, 1).toUpperCase()
+                      : 'U',
                   style: const TextStyle(
                     color: Colors.white,
                     fontWeight: FontWeight.bold,
@@ -1429,14 +2722,14 @@ class _HouseDetailScreenState extends State<HouseDetailScreen> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      review['name'],
+                      review.name.isNotEmpty ? review.name : 'Anonymous',
                       style: const TextStyle(
                         fontWeight: FontWeight.bold,
                         fontSize: 16,
                       ),
                     ),
                     Text(
-                      review['date'],
+                      review.date,
                       style: TextStyle(color: Colors.grey[600], fontSize: 12),
                     ),
                   ],
@@ -1446,7 +2739,7 @@ class _HouseDetailScreenState extends State<HouseDetailScreen> {
                 children: List.generate(
                   5,
                   (index) => Icon(
-                    index < review['rating'] ? Icons.star : Icons.star_border,
+                    index < review.rating ? Icons.star : Icons.star_border,
                     color: Colors.amber,
                     size: 18,
                   ),
@@ -1456,7 +2749,7 @@ class _HouseDetailScreenState extends State<HouseDetailScreen> {
           ),
           const SizedBox(height: 12),
           Text(
-            review['comment'],
+            review.comment,
             style: TextStyle(
               color: Colors.grey[700],
               fontSize: 14,

@@ -24,7 +24,7 @@ class _NearestHousesState extends State<NearestHouses> {
 //     'imageUrl': farmhouse.imageUrl,
 //     'distance': farmhouse.distance,
 //     'rating': farmhouse.rating,
-//   };
+//   }; 
   
 //   setState(() {
 //     wishlistManager.toggleWishlist(farmhouseMap);
@@ -325,7 +325,7 @@ class _NearestHousesState extends State<NearestHouses> {
                     ),
                     ElevatedButton(
                       onPressed: () {
-                        Navigator.push(context, MaterialPageRoute(builder: (context)=>PaymentScreen(image: farmhouse.imageUrl,price: farmhouse.price,name: farmhouse.name,)));
+                        // Navigator.push(context, MaterialPageRoute(builder: (context)=>PaymentScreen(image: farmhouse.imageUrl,price: farmhouse.price,name: farmhouse.name,)));
                       },
                       style: ElevatedButton.styleFrom(
                         backgroundColor: const Color(0xFFFF5A5F),

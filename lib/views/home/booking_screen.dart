@@ -1,5 +1,4 @@
 import 'package:farmhouse_app/views/details/house_detail_screen.dart';
-import 'package:farmhouse_app/views/payment/payment_screen.dart';
 import 'package:flutter/material.dart';
 
 class BookingScreen extends StatelessWidget {
@@ -75,7 +74,6 @@ class BookingScreen extends StatelessWidget {
         const SizedBox(height: 16),
         _buildBookingCard(
           context: context,
-
           title: 'Sunset Paradise Villa',
           location: 'Lonavala, Maharashtra',
           date: 'Dec 15 - Dec 17, 2025',
@@ -309,12 +307,12 @@ class BookingScreen extends StatelessWidget {
                         children: [
                           OutlinedButton(
                             onPressed: () {
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (context) => HouseDetailScreen(),
-                                ),
-                              );
+                              // Navigator.push(
+                              //   context,
+                              //   MaterialPageRoute(
+                              //     builder: (context) => HouseDetailScreen(),
+                              //   ),
+                              // );
                             },
                             style: OutlinedButton.styleFrom(
                               side: const BorderSide(color: Color(0xFFFF5A5F)),
@@ -346,13 +344,13 @@ class BookingScreen extends StatelessWidget {
                     else
                       ElevatedButton.icon(
                         onPressed: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) =>
-                                  PaymentScreen(image: imageUrl,name: title,),
-                            ),
-                          );
+                          // Navigator.push(
+                          //   context,
+                          //   MaterialPageRoute(
+                          //     builder: (context) =>
+                          //         PaymentScreen(image: imageUrl,name: title,),
+                          //   ),
+                          // );
                         },
                         icon: const Icon(Icons.refresh, size: 18),
                         label: const Text('Book Again'),

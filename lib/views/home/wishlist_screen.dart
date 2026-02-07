@@ -1126,10 +1126,11 @@ class _WishlistScreenState extends State<WishlistScreen> {
   }
 
   void _removeFromWishlist(Map<String, dynamic> item) {
+    final itemname = item['name'];
     wishlistManager.removeFromWishlist(item['name']);
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
-        content: const Text('Removed from wishlist'),
+        content: Text('$itemname Removed from wishlist'),
         backgroundColor: Colors.red,
         behavior: SnackBarBehavior.floating,
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
@@ -1277,10 +1278,10 @@ class _WishlistScreenState extends State<WishlistScreen> {
       ),
       child: InkWell(
         onTap: () {
-          Navigator.push(
-            context,
-            MaterialPageRoute(builder: (context) => const HouseDetailScreen()),
-          );
+          // Navigator.push(
+          //   context,
+          //   MaterialPageRoute(builder: (context) =>  HouseDetailScreen(farmhouse: item[0],)),
+          // );
         },
         borderRadius: BorderRadius.circular(20),
         child: Padding(
@@ -1450,13 +1451,13 @@ class _WishlistScreenState extends State<WishlistScreen> {
                         const SizedBox(width: 8),
                         ElevatedButton(
                           onPressed: () {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) =>
-                                    PaymentScreen(image: imageUrl),
-                              ),
-                            );
+                            // Navigator.push(
+                            //   context,
+                            //   MaterialPageRoute(
+                            //     builder: (context) =>
+                            //         PaymentScreen(image: imageUrl,name: title),
+                            //   ),
+                            // );
                           },
                           style: ElevatedButton.styleFrom(
                             backgroundColor: const Color(0xFFFF5A5F),

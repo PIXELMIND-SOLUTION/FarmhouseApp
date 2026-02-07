@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "19834464413",
+    "project_id": "farmhouseapp",
+    "storage_bucket": "farmhouseapp.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:19834464413:android:62d2fd556a54fc35e94c74",
+        "android_client_info": {
+          "package_name": "com.farmhouse.farmhouse_app"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "19834464413-2ciarlfmin0tmctuvopgjvc5vpodo9u8.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.farmhouse.farmhouse_app",
+            "certificate_hash": "6eb0b9df054881c7264904926dde58142c0a3683"
+          }
+        },
+        {
+          "client_id": "19834464413-n7mi4seljibbpbp3lqvmbgdd479a2vfp.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCh3S7FEFw-PI9bkXb9jh90dMpKnnRSpdI"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "19834464413-n7mi4seljibbpbp3lqvmbgdd479a2vfp.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
