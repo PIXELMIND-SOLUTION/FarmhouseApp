@@ -36,7 +36,7 @@ class WishlistService {
   }) async {
     try {
       final Response response =
-          await _dio.post("$_baseUrl/$farmhouseId/wishlist/$userId");
+          await _dio.put("$_baseUrl/$farmhouseId/wishlist/$userId");
 
           
       print('Response status code for add to  wishlist ${response.statusCode}');

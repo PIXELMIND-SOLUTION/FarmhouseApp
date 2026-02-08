@@ -1754,34 +1754,34 @@ class _HouseDetailScreenState extends State<HouseDetailScreen> {
                               ),
                             ),
                           ),
-                          Container(
-                            padding: const EdgeInsets.symmetric(
-                              horizontal: 12,
-                              vertical: 6,
-                            ),
-                            decoration: BoxDecoration(
-                              color: Colors.amber,
-                              borderRadius: BorderRadius.circular(20),
-                            ),
-                            child: Row(
-                              children: [
-                                const Icon(
-                                  Icons.star,
-                                  color: Colors.white,
-                                  size: 18,
-                                ),
-                                const SizedBox(width: 4),
-                                Text(
-                                  farmhouseData!.rating.toString(),
-                                  style: const TextStyle(
-                                    color: Colors.white,
-                                    fontWeight: FontWeight.bold,
-                                    fontSize: 16,
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
+                          // Container(
+                          //   padding: const EdgeInsets.symmetric(
+                          //     horizontal: 12,
+                          //     vertical: 6,
+                          //   ),
+                          //   decoration: BoxDecoration(
+                          //     color: Colors.amber,
+                          //     borderRadius: BorderRadius.circular(20),
+                          //   ),
+                          //   child: Row(
+                          //     children: [
+                          //       const Icon(
+                          //         Icons.star,
+                          //         color: Colors.white,
+                          //         size: 18,
+                          //       ),
+                          //       const SizedBox(width: 4),
+                          //       Text(
+                          //         farmhouseData!.rating.toString(),
+                          //         style: const TextStyle(
+                          //           color: Colors.white,
+                          //           fontWeight: FontWeight.bold,
+                          //           fontSize: 16,
+                          //         ),
+                          //       ),
+                          //     ],
+                          //   ),
+                          // ),
                         ],
                       ),
                       const SizedBox(height: 8),
@@ -1868,59 +1868,59 @@ class _HouseDetailScreenState extends State<HouseDetailScreen> {
                                 ),
                               ),
                             ),
-                            Expanded(
-                              child: GestureDetector(
-                                onTap: () {
-                                  setState(() {
-                                    selectedPricing = 'day';
-                                  });
-                                },
-                                child: Container(
-                                  padding: const EdgeInsets.symmetric(
-                                    vertical: 12,
-                                  ),
-                                  decoration: BoxDecoration(
-                                    color: selectedPricing == 'day'
-                                        ? Colors.white
-                                        : Colors.transparent,
-                                    borderRadius: BorderRadius.circular(10),
-                                    boxShadow: selectedPricing == 'day'
-                                        ? [
-                                            BoxShadow(
-                                              color: Colors.black.withOpacity(
-                                                0.1,
-                                              ),
-                                              blurRadius: 8,
-                                              offset: const Offset(0, 2),
-                                            ),
-                                          ]
-                                        : null,
-                                  ),
-                                  child: Column(
-                                    children: [
-                                      Text(
-                                        '₹${farmhouseData!.pricePerDay.toInt()}',
-                                        style: TextStyle(
-                                          fontSize: 24,
-                                          fontWeight: FontWeight.bold,
-                                          color: selectedPricing == 'day'
-                                              ? Colors.black
-                                              : Colors.grey,
-                                        ),
-                                      ),
-                                      Text(
-                                        'per day',
-                                        style: TextStyle(
-                                          color: selectedPricing == 'day'
-                                              ? Colors.grey[600]
-                                              : Colors.grey[400],
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                              ),
-                            ),
+                            // Expanded(
+                            //   child: GestureDetector(
+                            //     onTap: () {
+                            //       setState(() {
+                            //         selectedPricing = 'day';
+                            //       });
+                            //     },
+                            //     child: Container(
+                            //       padding: const EdgeInsets.symmetric(
+                            //         vertical: 12,
+                            //       ),
+                            //       decoration: BoxDecoration(
+                            //         color: selectedPricing == 'day'
+                            //             ? Colors.white
+                            //             : Colors.transparent,
+                            //         borderRadius: BorderRadius.circular(10),
+                            //         boxShadow: selectedPricing == 'day'
+                            //             ? [
+                            //                 BoxShadow(
+                            //                   color: Colors.black.withOpacity(
+                            //                     0.1,
+                            //                   ),
+                            //                   blurRadius: 8,
+                            //                   offset: const Offset(0, 2),
+                            //                 ),
+                            //               ]
+                            //             : null,
+                            //       ),
+                            //       child: Column(
+                            //         children: [
+                            //           Text(
+                            //             '₹${farmhouseData!.pricePerDay.toInt()}',
+                            //             style: TextStyle(
+                            //               fontSize: 24,
+                            //               fontWeight: FontWeight.bold,
+                            //               color: selectedPricing == 'day'
+                            //                   ? Colors.black
+                            //                   : Colors.grey,
+                            //             ),
+                            //           ),
+                            //           Text(
+                            //             'per day',
+                            //             style: TextStyle(
+                            //               color: selectedPricing == 'day'
+                            //                   ? Colors.grey[600]
+                            //                   : Colors.grey[400],
+                            //             ),
+                            //           ),
+                            //         ],
+                            //       ),
+                            //     ),
+                            //   ),
+                            // ),
                           ],
                         ),
                       ),

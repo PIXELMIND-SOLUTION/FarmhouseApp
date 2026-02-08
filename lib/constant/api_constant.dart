@@ -10,7 +10,6 @@ class ApiConstants {
   static const String livelocation = '$baseUrl/auth/userId/live-location';
   static const String updateAddress = '$baseUrl/auth/userId/update-address';
   static const String nearbyfarmhouse = '$baseUrl/nearby/user/userId';
-  // static const String bookfarmhouse = '$baseUrl/farmhouseId/book';
   static const String bookfarmhouse = '$baseUrl/order/verify-slot';
 
   static const String addtowishlist = '$baseUrl/farmhouseId/wishlist/userId';
