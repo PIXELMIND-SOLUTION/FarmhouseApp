@@ -1240,7 +1240,7 @@ class _SplashScreenState extends State<SplashScreen>
                                   ).createShader(bounds);
                                 },
                                 child: const Text(
-                                  'Farm House App',
+                                  'V FARM',
                                   style: TextStyle(
                                     fontSize: 36,
                                     fontWeight: FontWeight.w800,

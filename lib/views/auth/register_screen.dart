@@ -402,6 +402,24 @@ class _RegisterScreenState extends State<RegisterScreen> {
                             ],
                           ),
                           const SizedBox(height: 20),
+
+                          _buildTextField(
+                            'Phone',
+                            controller: _phoneController,
+                            isPhone: true,
+                            validator: (value) {
+                              if (value == null || value.isEmpty) {
+                                return 'Phone number is required';
+                              }
+                              if (value.length != 10) {
+                                return 'Enter a valid 10-digit phone number';
+                              }
+                              return null;
+                            },
+                          ),
+
+                          const SizedBox(height: 20),
+
                           _buildTextField(
                             'Email',
                             controller: _emailController,
@@ -430,21 +448,6 @@ class _RegisterScreenState extends State<RegisterScreen> {
                           //     return null;
                           //   },
                           // ),
-                          _buildTextField(
-                            'Phone',
-                            controller: _phoneController,
-                            isPhone: true,
-                            validator: (value) {
-                              if (value == null || value.isEmpty) {
-                                return 'Phone number is required';
-                              }
-                              if (value.length != 10) {
-                                return 'Enter a valid 10-digit phone number';
-                              }
-                              return null;
-                            },
-                          ),
-
                           const SizedBox(height: 20),
                           _buildTextField(
                             'Password',
