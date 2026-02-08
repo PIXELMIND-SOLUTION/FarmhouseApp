@@ -26,9 +26,6 @@ class _BannerSliderState extends State<BannerSlider> {
     try {
       final response = await http.get(Uri.parse(url));
 
-      print('response status code for banners ${response.statusCode}');
-      print('response body for banner ${response.body}');
-
       if (response.statusCode == 200) {
         final data = json.decode(response.body);
 
@@ -47,49 +44,33 @@ class _BannerSliderState extends State<BannerSlider> {
   @override
   Widget build(BuildContext context) {
     return SizedBox(
-      height: 200,
+      height: 220,
+      width: double.infinity,
       child: isLoading
           ? const Center(child: CircularProgressIndicator())
           : bannerImages.isEmpty
-          ? const Center(child: Text("No banners found"))
-          : CarouselSlider(
-              items: bannerImages.map((image) {
-                return Container(
-                  margin: const EdgeInsets.symmetric(
-                    horizontal: 8,
-                    vertical: 10,
-                  ),
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(20),
-                    boxShadow: [
-                      BoxShadow(
-                        color: Colors.black.withOpacity(0.15),
-                        blurRadius: 12,
-                        offset: const Offset(0, 4),
+              ? const Center(child: Text("No banners found"))
+              : CarouselSlider(
+                  items: bannerImages.map((image) {
+                    return ClipRRect(
+                      borderRadius: BorderRadius.circular(0), // No rounding
+                      child: Image.network(
+                        image,
+                        fit: BoxFit.cover,
+                        width: double.infinity,
+                        errorBuilder: (context, error, stackTrace) =>
+                            const Icon(Icons.broken_image, size: 40),
                       ),
-                    ],
+                    );
+                  }).toList(),
+                  options: CarouselOptions(
+                    height: 220,
+                    autoPlay: true,
+                    viewportFraction: 1.0, // Full width
+                    enlargeCenterPage: false,
+                    autoPlayInterval: const Duration(seconds: 3),
                   ),
-                  child: ClipRRect(
-                    borderRadius: BorderRadius.circular(20),
-                    child: Image.network(
-                      image,
-                      fit: BoxFit.cover,
-                      width: double.infinity,
-                      errorBuilder: (context, error, stackTrace) =>
-                          const Icon(Icons.broken_image, size: 40),
-                    ),
-                  ),
-                );
-              }).toList(),
-              options: CarouselOptions(
-                height: 280,
-                autoPlay: true,
-                enlargeCenterPage: true,
-                viewportFraction: 0.92,
-                autoPlayInterval: const Duration(seconds: 3),
-                autoPlayCurve: Curves.easeInOut,
-              ),
-            ),
+                ),
     );
   }
 }
