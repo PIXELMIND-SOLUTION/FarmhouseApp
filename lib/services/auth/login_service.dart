@@ -5,39 +5,56 @@ import 'package:http/http.dart' as http;
 import 'package:farmhouse_app/views/models/user_model.dart';
 
 class LoginService {
-  Future<UserModel?> login(String phoneNumber, String password) async {
+  Future<Map<String, dynamic>> login(String phoneNumber, String password) async {
     try {
       final response = await http.post(
         Uri.parse(ApiConstants.login),
         headers: {"Content-Type": "application/json"},
-        body: jsonEncode({"phoneNumber": phoneNumber, "password": password}),
+        body: jsonEncode({
+          "phoneNumber": phoneNumber,
+          "password": password,
+        }),
       );
-      print('response status code for login ${response.statusCode}');
-      print('response bodyyyyyyyyyyyy for login ${response.body}');
 
-      final data = jsonDecode(response.body);
+      print('🔹 Login status code: ${response.statusCode}');
+      print('🔹 Login response body: ${response.body}');
+
+      final data = jsonDecode(response.body) as Map<String, dynamic>;
 
       if (data["success"] == true) {
-        final userJson = data["user"];
+        final userJson = data["user"] as Map<String, dynamic>;
 
         final user = UserModel(
-          id: userJson["_id"],
-          firstName: userJson["firstName"],
-          lastName: userJson["lastName"],
-          email: userJson["email"],
-          phoneNumber: userJson["phoneNumber"],
+          id: userJson["_id"] as String,
+          firstName: userJson["firstName"] as String,
+          lastName: userJson["lastName"] as String,
+          email: userJson["email"] as String,
+          phoneNumber: userJson["phoneNumber"] as String,
         );
 
         // Save user locally
         await SharedPrefs.saveUser(user);
 
-        return user;
+        return {
+          'success': true,
+          'user': user,
+          'message': 'Login successful',
+        };
       } else {
-        return null;
+        // Return backend error message
+        return {
+          'success': false,
+          'user': null,
+          'message': data['message'] as String? ?? 'Invalid credentials',
+        };
       }
     } catch (e) {
-      print("Login error: $e");
-      return null;
+      print("❌ Login error: $e");
+      return {
+        'success': false,
+        'user': null,
+        'message': 'Network error. Please try again.',
+      };
     }
   }
 }

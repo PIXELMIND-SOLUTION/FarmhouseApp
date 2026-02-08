@@ -63,44 +63,43 @@ import 'package:http/http.dart' as http;
 
 class AuthService {
   // Changed return type from UserModel? to Map<String, dynamic>?
-  Future<Map<String, dynamic>?> register({
-    required String firstName,
-    required String lastName,
-    required String email,
-    required String phoneNumber,
-    required String password,
-    required String confirmpassword,
-  }) async {
-    try {
-      final response = await http.post(
-        Uri.parse(ApiConstants.register),
-        headers: {'Content-Type': 'application/json'},
-        body: jsonEncode({
-          "firstName": firstName,
-          "lastName": lastName,
-          "email": email,
-          "phoneNumber": phoneNumber,
-          "password": password,
-          "confirmPassword": confirmpassword
-        }),
-      );
-        
-      print('Response status code for registration: ${response.statusCode}');
-      print('Response body for registration: ${response.body}');
+Future<Map<String, dynamic>?> register({
+  required String firstName,
+  required String lastName,
+  required String email,
+  required String phoneNumber,
+  required String password,
+  required String confirmpassword,
+}) async {
+  try {
+    final response = await http.post(
+      Uri.parse(ApiConstants.register),
+      headers: {'Content-Type': 'application/json'},
+      body: jsonEncode({
+        "firstName": firstName,
+        "lastName": lastName,
+        "email": email,
+        "phoneNumber": phoneNumber,
+        "password": password,
+        "confirmPassword": confirmpassword
+      }),
+    );
 
-      if (response.statusCode == 200 || response.statusCode == 201) {
-        final data = jsonDecode(response.body);
+    print('Status: ${response.statusCode}');
+    print('Body: ${response.body}');
 
-        if (data["success"] == true) {
-          // Return the entire response instead of just the user
-          return data;
-        }
-      }
+    final data = jsonDecode(response.body);
 
-      return null;
-    } catch (e) {
-      print("Register Error: $e");
-      return null;
-    }
+    // ✅ Always return backend data
+    return data;
+
+  } catch (e) {
+    print("Register Error: $e");
+    return {
+      "success": false,
+      "message": "Something went wrong"
+    };
   }
+}
+
 }
