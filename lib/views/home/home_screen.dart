@@ -1485,26 +1485,6 @@
 //   }
 // }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 import 'dart:io';
 import 'package:farmhouse_app/provider/Location/location_provider.dart';
 import 'package:farmhouse_app/provider/Location/nearby_farmhouse_provider.dart';
@@ -1527,6 +1507,7 @@ import 'package:path_provider/path_provider.dart';
 import 'package:provider/provider.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:carousel_slider/carousel_slider.dart';
+import 'package:shimmer/shimmer.dart';
 
 class FarmhouseHomePage extends StatefulWidget {
   const FarmhouseHomePage({super.key});
@@ -1807,7 +1788,8 @@ class _FarmhouseHomePageState extends State<FarmhouseHomePage> {
         Navigator.of(context).pop();
       }
 
-      final shareText = '''
+      final shareText =
+          '''
 Check out this amazing farmhouse! 🏡
 
 📍 ${farmhouse.name}
@@ -1917,10 +1899,7 @@ Book now on Farmhouse App!
                       clipBehavior: Clip.none,
                       children: [
                         /// 🖼 API BANNER
-                        SizedBox(
-                          height: 220,
-                          child: BannerSlider(),
-                        ),
+                        SizedBox(height: 220, child: BannerSlider()),
 
                         /// 🌑 Gradient overlay
                         Container(
@@ -1951,8 +1930,9 @@ Book now on Farmhouse App!
                                 builder: (context, locationProvider, child) {
                                   final rawAddress =
                                       locationProvider.address ?? '';
-                                  final bool noLocation =
-                                      rawAddress.trim().isEmpty;
+                                  final bool noLocation = rawAddress
+                                      .trim()
+                                      .isEmpty;
 
                                   final addressParts = rawAddress
                                       .split(',')
@@ -1961,8 +1941,8 @@ Book now on Farmhouse App!
 
                                   final primaryAddress =
                                       !noLocation && addressParts.isNotEmpty
-                                          ? addressParts[0]
-                                          : 'Set Location';
+                                      ? addressParts[0]
+                                      : 'Set Location';
 
                                   return GestureDetector(
                                     onTap: () async {
@@ -1972,8 +1952,8 @@ Book now on Farmhouse App!
                                           MaterialPageRoute(
                                             builder: (context) =>
                                                 LocationScreen(
-                                              userId: user.id.toString(),
-                                            ),
+                                                  userId: user.id.toString(),
+                                                ),
                                           ),
                                         );
                                         if (result == true && mounted) {
@@ -2012,7 +1992,7 @@ Book now on Farmhouse App!
                               GestureDetector(
                                 onTap: () {
                                   themeProvider.toggleTheme(!isDarkMode);
-                                  
+
                                   // Optional: Show a quick feedback
                                   ScaffoldMessenger.of(context).showSnackBar(
                                     SnackBar(
@@ -2037,7 +2017,12 @@ Book now on Farmhouse App!
                                       duration: Duration(milliseconds: 800),
                                       backgroundColor: isDarkMode
                                           ? Colors.amber[700]
-                                          : Colors.indigo[900],
+                                          : const Color.fromARGB(
+                                              255,
+                                              143,
+                                              152,
+                                              255,
+                                            ),
                                       behavior: SnackBarBehavior.floating,
                                       shape: RoundedRectangleBorder(
                                         borderRadius: BorderRadius.circular(8),
@@ -2162,7 +2147,7 @@ Book now on Farmhouse App!
 
   // Widget _buildPropertyCardsList() {
   //   final isDarkMode = Provider.of<ThemeProvider>(context).isDarkMode;
-    
+
   //   return Consumer3<FarmhouseProvider, LocationProvider, WishlistProvider>(
   //     builder: (context, farmhouseProvider, locationProvider,
   //         wishlistProvider, child) {
@@ -2752,527 +2737,591 @@ Book now on Farmhouse App!
   //   );
   // }
 
-
-
-
-
-  Widget _buildPropertyCardsList() {
-  final isDarkMode = Provider.of<ThemeProvider>(context).isDarkMode;
-  
-  return Consumer3<FarmhouseProvider, LocationProvider, WishlistProvider>(
-    builder: (context, farmhouseProvider, locationProvider,
-        wishlistProvider, child) {
-      // Show location prompt if no location set
-      if (locationProvider.address == null ||
-          locationProvider.address!.trim().isEmpty) {
-        return Center(
-          child: Padding(
-            padding: const EdgeInsets.all(32.0),
-            child: Column(
-              children: [
-                Icon(
-                  Icons.location_off_outlined,
-                  size: 64,
-                  color: isDarkMode ? Colors.grey[600] : Colors.grey[400],
-                ),
-                const SizedBox(height: 16),
-                Text(
-                  'Set your location to find nearby farmhouses',
-                  style: TextStyle(
-                    color: isDarkMode ? Colors.grey[400] : Colors.grey[600],
-                    fontSize: 16,
-                  ),
-                  textAlign: TextAlign.center,
-                ),
-                const SizedBox(height: 16),
-                ElevatedButton.icon(
-                  onPressed: () async {
-                    final authProvider = Provider.of<AuthProvider>(
-                      context,
-                      listen: false,
-                    );
-                    final user = authProvider.user;
-                    if (user != null) {
-                      final result = await Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) =>
-                              LocationScreen(userId: user.id.toString()),
-                        ),
-                      );
-                      if (result == true) {
-                        await _fetchNearbyFarmhouses();
-                      }
-                    }
-                  },
-                  icon: const Icon(Icons.location_on),
-                  label: const Text('Set Location'),
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: const Color(0xFF6366F1),
-                    foregroundColor: Colors.white,
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: 24,
-                      vertical: 12,
-                    ),
-                  ),
-                ),
-              ],
-            ),
+  Widget _buildSkeletonCard() {
+    return Padding(
+      padding: const EdgeInsets.only(left: 16, right: 16, bottom: 20),
+      child: Shimmer.fromColors(
+        baseColor: Colors.grey[300]!,
+        highlightColor: Colors.grey[100]!,
+        child: Container(
+          height: 480,
+          decoration: BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.circular(24),
           ),
-        );
-      }
+          child: Stack(
+            children: [
+              // Image skeleton
+              Container(
+                height: 480,
+                decoration: BoxDecoration(
+                  color: Colors.grey,
+                  borderRadius: BorderRadius.circular(24),
+                ),
+              ),
 
-      // Show loading indicator
-      if (farmhouseProvider.isLoading) {
-        return const Center(
-          child: Padding(
-            padding: EdgeInsets.all(32.0),
-            child: CircularProgressIndicator(color: Color(0xFF6366F1)),
-          ),
-        );
-      }
-
-      // Show error message
-      if (farmhouseProvider.hasError) {
-        return Center(
-          child: Padding(
-            padding: const EdgeInsets.all(32.0),
-            child: Column(
-              children: [
-                Icon(
-                  Icons.error_outline,
-                  size: 48,
-                  color: isDarkMode ? Colors.grey[600] : Colors.grey[400],
-                ),
-                const SizedBox(height: 16),
-                Text(
-                  farmhouseProvider.errorMessage ??
-                      'Failed to load farmhouses',
-                  style: TextStyle(
-                    color: isDarkMode ? Colors.grey[400] : Colors.grey[600],
-                  ),
-                  textAlign: TextAlign.center,
-                ),
-                const SizedBox(height: 16),
-                ElevatedButton(
-                  onPressed: _fetchNearbyFarmhouses,
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: const Color(0xFF6366F1),
-                  ),
-                  child: const Text('Retry'),
-                ),
-              ],
-            ),
-          ),
-        );
-      }
-
-      // Show empty state
-      if (farmhouseProvider.farmhouses.isEmpty) {
-        return Center(
-          child: Padding(
-            padding: const EdgeInsets.all(32.0),
-            child: Column(
-              children: [
-                Icon(
-                  Icons.home_outlined,
-                  size: 64,
-                  color: isDarkMode ? Colors.grey[600] : Colors.grey[400],
-                ),
-                const SizedBox(height: 16),
-                Text(
-                  'No farmhouses available',
-                  style: TextStyle(
-                    color: isDarkMode ? Colors.grey[300] : Colors.grey[700],
-                    fontSize: 16,
-                    fontWeight: FontWeight.w500,
-                  ),
-                ),
-                const SizedBox(height: 8),
-                Text(
-                  'for ${DateFormat('MMM dd, yyyy').format(selectedDate)}',
-                  style: TextStyle(
-                    color: isDarkMode ? Colors.grey[400] : Colors.grey[600],
-                    fontSize: 14,
-                  ),
-                ),
-                if (locationProvider.address != null)
-                  Padding(
-                    padding: const EdgeInsets.only(top: 4),
-                    child: Text(
-                      'Near ${locationProvider.address!.split(',').first}',
-                      style: TextStyle(
-                        color:
-                            isDarkMode ? Colors.grey[500] : Colors.grey[500],
-                        fontSize: 14,
-                      ),
-                    ),
-                  ),
-                const SizedBox(height: 16),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
+              // Bottom info skeleton
+              Positioned(
+                bottom: 20,
+                left: 16,
+                right: 16,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    TextButton.icon(
-                      onPressed: () {
-                        setState(() {
-                          selectedDate = DateTime.now();
-                        });
-                        _fetchNearbyFarmhouses();
-                      },
-                      icon: const Icon(Icons.today),
-                      label: const Text('Try Today'),
-                      style: TextButton.styleFrom(
-                        foregroundColor: const Color(0xFF6366F1),
-                      ),
-                    ),
-                    const SizedBox(width: 8),
-                    TextButton.icon(
-                      onPressed: () async {
-                        final authProvider = Provider.of<AuthProvider>(
-                          context,
-                          listen: false,
-                        );
-                        final user = authProvider.user;
-                        if (user != null) {
-                          final result = await Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => LocationScreen(
-                                  userId: user.id.toString()),
-                            ),
-                          );
-                          if (result == true) {
-                            await _fetchNearbyFarmhouses();
-                          }
-                        }
-                      },
-                      icon: const Icon(Icons.location_searching),
-                      label: const Text('Change Location'),
-                      style: TextButton.styleFrom(
-                        foregroundColor: const Color(0xFF6366F1),
-                      ),
-                    ),
+                    Container(height: 20, width: 150, color: Colors.white),
+                    const SizedBox(height: 10),
+                    Container(height: 14, width: 200, color: Colors.white),
+                    const SizedBox(height: 10),
+                    Container(height: 14, width: 100, color: Colors.white),
                   ],
                 ),
-              ],
-            ),
+              ),
+            ],
           ),
-        );
-      }
+        ),
+      ),
+    );
+  }
 
-      // Show farmhouse list
-      final farmhouses = farmhouseProvider.farmhouses;
+  Widget _buildPropertyCardsList() {
+    final isDarkMode = Provider.of<ThemeProvider>(context).isDarkMode;
 
-      return Column(
-        children: [
-          // Farmhouse cards
-          ...List.generate(farmhouses.length, (index) {
-            final farmhouse = farmhouses[index];
-            final images = farmhouse.images;
-            final currentImageIndex = currentImageIndexMap[index] ?? 0;
-            final isInWishlist = wishlistProvider.isWishlisted(farmhouse.id);
-
-            return Padding(
-              padding: const EdgeInsets.only(left: 16, right: 16, bottom: 20),
-              child: GestureDetector(
-                onTap: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => HouseDetailScreen(
-                        farmhouse: farmhouse,
-                        id: farmhouse.id,
+    return Consumer3<FarmhouseProvider, LocationProvider, WishlistProvider>(
+      builder: (context, farmhouseProvider, locationProvider, wishlistProvider, child) {
+        // Show location prompt if no location set
+        if (locationProvider.address == null ||
+            locationProvider.address!.trim().isEmpty) {
+          return Center(
+            child: Padding(
+              padding: const EdgeInsets.all(32.0),
+              child: Column(
+                children: [
+                  Icon(
+                    Icons.location_off_outlined,
+                    size: 64,
+                    color: isDarkMode ? Colors.grey[600] : Colors.grey[400],
+                  ),
+                  const SizedBox(height: 16),
+                  Text(
+                    'Set your location to find nearby farmhouses',
+                    style: TextStyle(
+                      color: isDarkMode ? Colors.grey[400] : Colors.grey[600],
+                      fontSize: 16,
+                    ),
+                    textAlign: TextAlign.center,
+                  ),
+                  const SizedBox(height: 16),
+                  ElevatedButton.icon(
+                    onPressed: () async {
+                      final authProvider = Provider.of<AuthProvider>(
+                        context,
+                        listen: false,
+                      );
+                      final user = authProvider.user;
+                      if (user != null) {
+                        final result = await Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) =>
+                                LocationScreen(userId: user.id.toString()),
+                          ),
+                        );
+                        if (result == true) {
+                          await _fetchNearbyFarmhouses();
+                        }
+                      }
+                    },
+                    icon: const Icon(Icons.location_on),
+                    label: const Text('Set Location'),
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: const Color(0xFF6366F1),
+                      foregroundColor: Colors.white,
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 24,
+                        vertical: 12,
                       ),
                     ),
-                  );
-                },
-                child: Container(
-                  height: 480,
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(24),
-                    boxShadow: [
-                      BoxShadow(
-                        color: Colors.black.withOpacity(0.15),
-                        blurRadius: 15,
-                        offset: const Offset(0, 5),
+                  ),
+                ],
+              ),
+            ),
+          );
+        }
+
+        // Show loading indicator
+        if (farmhouseProvider.isLoading) {
+          return Column(
+            children: List.generate(
+              3, // number of skeleton cards
+              (index) => _buildSkeletonCard(),
+            ),
+          );
+        }
+
+        // Show error message
+        if (farmhouseProvider.hasError) {
+          return Center(
+            child: Padding(
+              padding: const EdgeInsets.all(32.0),
+              child: Column(
+                children: [
+                  Icon(
+                    Icons.error_outline,
+                    size: 48,
+                    color: isDarkMode ? Colors.grey[600] : Colors.grey[400],
+                  ),
+                  const SizedBox(height: 16),
+                  Text(
+                    farmhouseProvider.errorMessage ??
+                        'Failed to load farmhouses',
+                    style: TextStyle(
+                      color: isDarkMode ? Colors.grey[400] : Colors.grey[600],
+                    ),
+                    textAlign: TextAlign.center,
+                  ),
+                  const SizedBox(height: 16),
+                  ElevatedButton(
+                    onPressed: _fetchNearbyFarmhouses,
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: const Color(0xFF6366F1),
+                    ),
+                    child: const Text('Retry'),
+                  ),
+                ],
+              ),
+            ),
+          );
+        }
+
+        // Show empty state
+        if (farmhouseProvider.farmhouses.isEmpty) {
+          return Center(
+            child: Padding(
+              padding: const EdgeInsets.all(32.0),
+              child: Column(
+                children: [
+                  Icon(
+                    Icons.home_outlined,
+                    size: 64,
+                    color: isDarkMode ? Colors.grey[600] : Colors.grey[400],
+                  ),
+                  const SizedBox(height: 16),
+                  Text(
+                    'No farmhouses available',
+                    style: TextStyle(
+                      color: isDarkMode ? Colors.grey[300] : Colors.grey[700],
+                      fontSize: 16,
+                      fontWeight: FontWeight.w500,
+                    ),
+                  ),
+                  const SizedBox(height: 8),
+                  Text(
+                    'for ${DateFormat('MMM dd, yyyy').format(selectedDate)}',
+                    style: TextStyle(
+                      color: isDarkMode ? Colors.grey[400] : Colors.grey[600],
+                      fontSize: 14,
+                    ),
+                  ),
+                  if (locationProvider.address != null)
+                    Padding(
+                      padding: const EdgeInsets.only(top: 4),
+                      child: Text(
+                        'Near ${locationProvider.address!.split(',').first}',
+                        style: TextStyle(
+                          color: isDarkMode
+                              ? Colors.grey[500]
+                              : Colors.grey[500],
+                          fontSize: 14,
+                        ),
+                      ),
+                    ),
+                  const SizedBox(height: 16),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      TextButton.icon(
+                        onPressed: () {
+                          setState(() {
+                            selectedDate = DateTime.now();
+                          });
+                          _fetchNearbyFarmhouses();
+                        },
+                        icon: const Icon(Icons.today),
+                        label: const Text('Try Today'),
+                        style: TextButton.styleFrom(
+                          foregroundColor: const Color(0xFF6366F1),
+                        ),
+                      ),
+                      const SizedBox(width: 8),
+                      TextButton.icon(
+                        onPressed: () async {
+                          final authProvider = Provider.of<AuthProvider>(
+                            context,
+                            listen: false,
+                          );
+                          final user = authProvider.user;
+                          if (user != null) {
+                            final result = await Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) =>
+                                    LocationScreen(userId: user.id.toString()),
+                              ),
+                            );
+                            if (result == true) {
+                              await _fetchNearbyFarmhouses();
+                            }
+                          }
+                        },
+                        icon: const Icon(Icons.location_searching),
+                        label: const Text('Change Location'),
+                        style: TextButton.styleFrom(
+                          foregroundColor: const Color(0xFF6366F1),
+                        ),
                       ),
                     ],
                   ),
-                  child: Stack(
-                    children: [
-                      // Image Carousel
-                      ClipRRect(
-                        borderRadius: BorderRadius.circular(24),
-                        child: CarouselSlider.builder(
-                          itemCount: images.length,
-                          options: CarouselOptions(
-                            height: 480,
-                            viewportFraction: 1.0,
-                            enableInfiniteScroll: false,
-                            onPageChanged: (imgIndex, reason) {
-                              setState(() {
-                                currentImageIndexMap[index] = imgIndex;
-                              });
+                ],
+              ),
+            ),
+          );
+        }
+
+        // Show farmhouse list
+        final farmhouses = farmhouseProvider.farmhouses;
+
+        return Column(
+          children: [
+            // Farmhouse cards
+            ...List.generate(farmhouses.length, (index) {
+              final farmhouse = farmhouses[index];
+              final images = farmhouse.images;
+              final currentImageIndex = currentImageIndexMap[index] ?? 0;
+              final isInWishlist = wishlistProvider.isWishlisted(farmhouse.id);
+
+              return Padding(
+                padding: const EdgeInsets.only(left: 16, right: 16, bottom: 20),
+                child: GestureDetector(
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => HouseDetailScreen(
+                          farmhouse: farmhouse,
+                          id: farmhouse.id,
+                        ),
+                      ),
+                    );
+                  },
+                  child: Container(
+                    height: 480,
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(24),
+                      boxShadow: [
+                        BoxShadow(
+                          color: Colors.black.withOpacity(0.15),
+                          blurRadius: 15,
+                          offset: const Offset(0, 5),
+                        ),
+                      ],
+                    ),
+                    child: Stack(
+                      children: [
+                        // Image Carousel
+                        ClipRRect(
+                          borderRadius: BorderRadius.circular(24),
+                          child: CarouselSlider.builder(
+                            itemCount: images.length,
+                            options: CarouselOptions(
+                              height: 480,
+                              viewportFraction: 1.0,
+                              enableInfiniteScroll: false,
+                              onPageChanged: (imgIndex, reason) {
+                                setState(() {
+                                  currentImageIndexMap[index] = imgIndex;
+                                });
+                              },
+                            ),
+                            itemBuilder: (context, imageIndex, realIndex) {
+                              return Stack(
+                                children: [
+                                  // Image
+                                  Image.network(
+                                    images[imageIndex],
+                                    width: double.infinity,
+                                    height: double.infinity,
+                                    fit: BoxFit.cover,
+                                    loadingBuilder: (context, child, loadingProgress) {
+                                      if (loadingProgress == null) return child;
+                                      return Container(
+                                        color: Colors.grey[300],
+                                        child: Center(
+                                          child: CircularProgressIndicator(
+                                            value:
+                                                loadingProgress
+                                                        .expectedTotalBytes !=
+                                                    null
+                                                ? loadingProgress
+                                                          .cumulativeBytesLoaded /
+                                                      loadingProgress
+                                                          .expectedTotalBytes!
+                                                : null,
+                                            color: const Color(0xFF6366F1),
+                                          ),
+                                        ),
+                                      );
+                                    },
+                                    errorBuilder: (context, error, stackTrace) {
+                                      return Container(
+                                        color: Colors.grey[300],
+                                        child: const Center(
+                                          child: Icon(
+                                            Icons.home,
+                                            size: 80,
+                                            color: Colors.grey,
+                                          ),
+                                        ),
+                                      );
+                                    },
+                                  ),
+                                  // Dark gradient overlay
+                                  Container(
+                                    decoration: BoxDecoration(
+                                      gradient: LinearGradient(
+                                        begin: Alignment.topCenter,
+                                        end: Alignment.bottomCenter,
+                                        colors: [
+                                          Colors.transparent,
+                                          Colors.black.withOpacity(0.3),
+                                          Colors.black.withOpacity(0.8),
+                                        ],
+                                        stops: const [0.4, 0.7, 1.0],
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              );
                             },
                           ),
-                          itemBuilder: (context, imageIndex, realIndex) {
-                            return Stack(
-                              children: [
-                                // Image
-                                Image.network(
-                                  images[imageIndex],
-                                  width: double.infinity,
-                                  height: double.infinity,
-                                  fit: BoxFit.cover,
-                                  loadingBuilder:
-                                      (context, child, loadingProgress) {
-                                    if (loadingProgress == null) return child;
-                                    return Container(
-                                      color: Colors.grey[300],
-                                      child: Center(
-                                        child: CircularProgressIndicator(
-                                          value: loadingProgress
-                                                      .expectedTotalBytes !=
-                                                  null
-                                              ? loadingProgress
-                                                      .cumulativeBytesLoaded /
-                                                  loadingProgress
-                                                      .expectedTotalBytes!
-                                              : null,
-                                          color: const Color(0xFF6366F1),
-                                        ),
-                                      ),
-                                    );
-                                  },
-                                  errorBuilder: (context, error, stackTrace) {
-                                    return Container(
-                                      color: Colors.grey[300],
-                                      child: const Center(
-                                        child: Icon(
-                                          Icons.home,
-                                          size: 80,
-                                          color: Colors.grey,
-                                        ),
-                                      ),
-                                    );
-                                  },
-                                ),
-                                // Dark gradient overlay
-                                Container(
-                                  decoration: BoxDecoration(
-                                    gradient: LinearGradient(
-                                      begin: Alignment.topCenter,
-                                      end: Alignment.bottomCenter,
-                                      colors: [
-                                        Colors.transparent,
-                                        Colors.black.withOpacity(0.3),
-                                        Colors.black.withOpacity(0.8),
-                                      ],
-                                      stops: const [0.4, 0.7, 1.0],
-                                    ),
-                                  ),
-                                ),
-                              ],
-                            );
-                          },
                         ),
-                      ),
 
-                      // Top Right Actions (Wishlist & Share)
-                      Positioned(
-                        top: 16,
-                        right: 16,
-                        child: Row(
-                          children: [
-                            // Wishlist Button
-                            GestureDetector(
-                              onTap: () {
-                                _handleWishlistToggle(
-                                  context,
-                                  farmhouse.id,
-                                  farmhouse.name,
-                                  isInWishlist,
-                                );
-                              },
-                              child: Container(
-                                padding: const EdgeInsets.all(10),
-                                decoration: BoxDecoration(
-                                  color: Colors.white.withOpacity(0.25),
-                                  shape: BoxShape.circle,
-                                  border: Border.all(
-                                    color: Colors.white.withOpacity(0.3),
-                                    width: 1,
-                                  ),
-                                ),
-                                child: Icon(
-                                  isInWishlist
-                                      ? Icons.favorite
-                                      : Icons.favorite_border,
-                                  color: isInWishlist
-                                      ? Colors.red
-                                      : Colors.white,
-                                  size: 22,
-                                ),
-                              ),
-                            ),
-                            const SizedBox(width: 10),
-                            // Share Button
-                            GestureDetector(
-                              onTap: () {
-                                shareFarmhouseWithMultipleImages(
-                                  context,
-                                  farmhouse,
-                                );
-                              },
-                              child: Container(
-                                padding: const EdgeInsets.all(10),
-                                decoration: BoxDecoration(
-                                  color: Colors.white.withOpacity(0.25),
-                                  shape: BoxShape.circle,
-                                  border: Border.all(
-                                    color: Colors.white.withOpacity(0.3),
-                                    width: 1,
-                                  ),
-                                ),
-                                child: const Icon(
-                                  Icons.send,
-                                  color: Colors.white,
-                                  size: 22,
-                                ),
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-
-                      // Bottom Info Card
-                      Positioned(
-                        bottom: 16,
-                        left: 16,
-                        right: 16,
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            // Property Name & BHK
-                            Row(
-                              children: [
-                                Expanded(
-                                  child: Text(
-                                    '${farmhouse.name}',
-                                    style: const TextStyle(
-                                      color: Colors.white,
-                                      fontSize: 20,
-                                      fontWeight: FontWeight.w700,
-                                      letterSpacing: 0.3,
-                                    ),
-                                    maxLines: 1,
-                                    overflow: TextOverflow.ellipsis,
-                                  ),
-                                ),
-                              ],
-                            ),
-                            const SizedBox(height: 8),
-
-                            // Location & Distance
-                            Row(
-                              children: [
-                                const Icon(
-                                  Icons.location_on_outlined,
-                                  color: Colors.white70,
-                                  size: 16,
-                                ),
-                                const SizedBox(width: 4),
-                                Expanded(
-                                  child: Text(
-                                    '${farmhouse.address.split(',').first}',
-                                    style: const TextStyle(
-                                      color: Colors.white70,
-                                      fontSize: 13,
-                                      fontWeight: FontWeight.w400,
-                                    ),
-                                    maxLines: 1,
-                                    overflow: TextOverflow.ellipsis,
-                                  ),
-                                ),
-                              ],
-                            ),
-                            const SizedBox(height: 8),
-
-            
-                            const SizedBox(height: 12),
-
-                            // Image Indicators
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: List.generate(
-                                images.length > 5 ? 5 : images.length,
-                                (dotIndex) => Container(
-                                  margin: const EdgeInsets.symmetric(
-                                    horizontal: 3,
-                                  ),
-                                  width: currentImageIndex == dotIndex ? 8 : 6,
-                                  height: currentImageIndex == dotIndex ? 8 : 6,
-                                  decoration: BoxDecoration(
-                                    color: currentImageIndex == dotIndex
-                                        ? Colors.white
-                                        : Colors.white.withOpacity(0.4),
-                                    shape: BoxShape.circle,
-                                  ),
-                                ),
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-
-                      // Price Tag (Top Right Corner of Info)
-                      Positioned(
-                        bottom: 16,
-                        right: 16,
-                        child: Container(
-                          padding: const EdgeInsets.symmetric(
-                            horizontal: 12,
-                            vertical: 8,
-                          ),
-                          decoration: BoxDecoration(
-                            color: Colors.white.withOpacity(0.15),
-                            borderRadius: BorderRadius.circular(12),
-                            border: Border.all(
-                              color: Colors.white.withOpacity(0.3),
-                              width: 1,
-                            ),
-                          ),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.end,
-                            mainAxisSize: MainAxisSize.min,
+                        // Top Right Actions (Wishlist & Share)
+                        Positioned(
+                          top: 16,
+                          right: 16,
+                          child: Row(
                             children: [
-                              Text(
-                                '₹ ${farmhouse.pricePerDay.toInt()}',
-                                style: const TextStyle(
-                                  color: Colors.white,
-                                  fontSize: 18,
-                                  fontWeight: FontWeight.bold,
+                              // Wishlist Button
+                              GestureDetector(
+                                onTap: () {
+                                  _handleWishlistToggle(
+                                    context,
+                                    farmhouse.id,
+                                    farmhouse.name,
+                                    isInWishlist,
+                                  );
+                                },
+                                child: Container(
+                                  padding: const EdgeInsets.all(10),
+                                  decoration: BoxDecoration(
+                                    color: Colors.white.withOpacity(0.25),
+                                    shape: BoxShape.circle,
+                                    border: Border.all(
+                                      color: Colors.white.withOpacity(0.3),
+                                      width: 1,
+                                    ),
+                                    boxShadow: [
+                                      BoxShadow(
+                                        color: Colors.black, // light black
+                                        blurRadius: 8,
+                                        spreadRadius: 1,
+                                        offset: const Offset(0, 3),
+                                      ),
+                                    ],
+                                  ),
+                                  child: Icon(
+                                    isInWishlist
+                                        ? Icons.favorite
+                                        : Icons.favorite_border,
+                                    color: isInWishlist
+                                        ? Colors.red
+                                        : Colors.white,
+                                    size: 22,
+                                  ),
+                                ),
+                              ),
+                              const SizedBox(width: 10),
+                              // Share Button
+                              GestureDetector(
+                                onTap: () {
+                                  shareFarmhouseWithMultipleImages(
+                                    context,
+                                    farmhouse,
+                                  );
+                                },
+                                child: Container(
+                                  padding: const EdgeInsets.all(10),
+                                  decoration: BoxDecoration(
+                                    boxShadow: [
+                                      BoxShadow(
+                                        color: Colors.black, // light black
+                                        blurRadius: 8,
+                                        spreadRadius: 1,
+                                        offset: const Offset(0, 3),
+                                      ),
+                                    ],
+                                    color: Colors.white.withOpacity(0.25),
+                                    shape: BoxShape.circle,
+                                    border: Border.all(
+                                      color: Colors.white.withOpacity(0.3),
+                                      width: 1,
+                                    ),
+                                  ),
+                                  child:Transform.rotate(
+  angle: -0.5, // radians (negative = tilt up)
+  child: Icon(
+    Icons.send,
+    color: Colors.blue,
+  ),
+)
+
                                 ),
                               ),
                             ],
                           ),
                         ),
-                      ),
-                    ],
+
+                        // Bottom Info Card
+                        Positioned(
+                          bottom: 16,
+                          left: 16,
+                          right: 16,
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              // Property Name & BHK
+                              Row(
+                                children: [
+                                  Expanded(
+                                    child: Text(
+                                      '${farmhouse.name}',
+                                      style: const TextStyle(
+                                        color: Colors.white,
+                                        fontSize: 20,
+                                        fontWeight: FontWeight.w700,
+                                        letterSpacing: 0.3,
+                                      ),
+                                      maxLines: 1,
+                                      overflow: TextOverflow.ellipsis,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                              const SizedBox(height: 8),
+
+                              // Location & Distance
+                              Row(
+                                children: [
+                                  const Icon(
+                                    Icons.location_on_outlined,
+                                    color: Colors.white70,
+                                    size: 16,
+                                  ),
+                                  const SizedBox(width: 4),
+                                  Expanded(
+                                    child: Text(
+                                      '${farmhouse.address.split(',').first}',
+                                      style: const TextStyle(
+                                        color: Colors.white70,
+                                        fontSize: 13,
+                                        fontWeight: FontWeight.w400,
+                                      ),
+                                      maxLines: 1,
+                                      overflow: TextOverflow.ellipsis,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                              const SizedBox(height: 8),
+
+                              const SizedBox(height: 12),
+
+                              // Image Indicators
+                              Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: List.generate(
+                                  images.length > 5 ? 5 : images.length,
+                                  (dotIndex) => Container(
+                                    margin: const EdgeInsets.symmetric(
+                                      horizontal: 3,
+                                    ),
+                                    width: currentImageIndex == dotIndex
+                                        ? 8
+                                        : 6,
+                                    height: currentImageIndex == dotIndex
+                                        ? 8
+                                        : 6,
+                                    decoration: BoxDecoration(
+                                      color: currentImageIndex == dotIndex
+                                          ? Colors.white
+                                          : Colors.white.withOpacity(0.4),
+                                      shape: BoxShape.circle,
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+
+                        // Price Tag (Top Right Corner of Info)
+                        // Positioned(
+                        //   bottom: 16,
+                        //   right: 16,
+                        //   child: Container(
+                        //     padding: const EdgeInsets.symmetric(
+                        //       horizontal: 12,
+                        //       vertical: 8,
+                        //     ),
+                        //     decoration: BoxDecoration(
+                        //       color: Colors.white.withOpacity(0.15),
+                        //       borderRadius: BorderRadius.circular(12),
+                        //       border: Border.all(
+                        //         color: Colors.white.withOpacity(0.3),
+                        //         width: 1,
+                        //       ),
+                        //     ),
+                        //     child: Column(
+                        //       crossAxisAlignment: CrossAxisAlignment.end,
+                        //       mainAxisSize: MainAxisSize.min,
+                        //       children: [
+                        //         Text(
+                        //           '₹ ${farmhouse.pricePerDay.toInt()}',
+                        //           style: const TextStyle(
+                        //             color: Colors.white,
+                        //             fontSize: 18,
+                        //             fontWeight: FontWeight.bold,
+                        //           ),
+                        //         ),
+                        //       ],
+                        //     ),
+                        //   ),
+                        // ),
+                      ],
+                    ),
                   ),
                 ),
-              ),
-            );
-          }),
-        ],
-      );
-    },
-  );
-}
+              );
+            }),
+          ],
+        );
+      },
+    );
+  }
 
   Widget _buildFixedDateSelector() {
     final isDarkMode = Provider.of<ThemeProvider>(context).isDarkMode;
-    
+
     // Always start from today and show next 7 days
     final dateList = List.generate(
       8,
@@ -3305,32 +3354,34 @@ Book now on Farmhouse App!
                   return GestureDetector(
                     onTap: _showDatePicker,
                     child: Container(
-                      width: 60,
+                      width: 50,
                       margin: const EdgeInsets.only(left: 8),
                       decoration: BoxDecoration(
-                        color: Theme.of(context).cardColor,
-                        borderRadius: BorderRadius.circular(16),
+                        color: Colors.transparent,
+                        borderRadius: BorderRadius.circular(12),
                         border: Border.all(
                           color: isDarkMode
                               ? Colors.grey[700]!
                               : Colors.grey[300]!,
-                          width: 1.5,
+                          width: 1,
                         ),
                       ),
                       child: Icon(
-                        Icons.calendar_today_rounded,
-                        color: isDarkMode ? Colors.grey[400] : Colors.grey[700],
-                        size: 28,
+                        Icons.calendar_today_outlined,
+                        color: isDarkMode ? Colors.grey[400] : Colors.grey[600],
+                        size: 20,
                       ),
                     ),
                   );
                 }
 
                 final date = dateList[index];
-                final isToday = date.day == DateTime.now().day &&
+                final isToday =
+                    date.day == DateTime.now().day &&
                     date.month == DateTime.now().month &&
                     date.year == DateTime.now().year;
-                final isSelected = date.day == selectedDate.day &&
+                final isSelected =
+                    date.day == selectedDate.day &&
                     date.month == selectedDate.month &&
                     date.year == selectedDate.year;
 
@@ -3343,60 +3394,42 @@ Book now on Farmhouse App!
                     _fetchNearbyFarmhouses();
                   },
                   child: Container(
-                    width: 63,
-                    margin: const EdgeInsets.only(right: 10),
+                    width: 50,
+                    margin: const EdgeInsets.only(right: 8),
                     decoration: BoxDecoration(
-                      color: isSelected
-                          ? (isDarkMode ? Colors.white : Colors.black)
-                          : Theme.of(context).cardColor,
-                      borderRadius: BorderRadius.circular(16),
+                      color: Colors.transparent,
+                      borderRadius: BorderRadius.circular(12),
                       border: Border.all(
                         color: isSelected
                             ? (isDarkMode ? Colors.white : Colors.black)
-                            : (isDarkMode
-                                ? Colors.grey[700]!
-                                : Colors.grey[300]!),
-                        width: 1.5,
+                            : Colors.transparent,
+                        width: 1,
                       ),
                     ),
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         Text(
-                          _getDayName(date),
+                          _getDayName(
+                            date,
+                          ).substring(0, 3), // First 3 letters only
                           style: TextStyle(
-                            color: isSelected
-                                ? (isDarkMode ? Colors.black : Colors.white)
-                                : (isDarkMode
-                                    ? Colors.grey[400]
-                                    : Colors.grey[600]),
-                            fontSize: 13,
-                            fontWeight: FontWeight.w500,
+                            color: isDarkMode
+                                ? Colors.grey[400]
+                                : Colors.grey[600],
+                            fontSize: 12,
+                            fontWeight: FontWeight.w400,
                           ),
                         ),
-                        const SizedBox(height: 6),
+                        const SizedBox(height: 8),
                         Text(
                           date.day.toString(),
                           style: TextStyle(
-                            color: isSelected
-                                ? (isDarkMode ? Colors.black : Colors.white)
-                                : (isDarkMode ? Colors.white : Colors.black),
-                            fontSize: 18,
-                            fontWeight: FontWeight.bold,
+                            color: isDarkMode ? Colors.white : Colors.black,
+                            fontSize: 16,
+                            fontWeight: FontWeight.w600,
                           ),
                         ),
-                        if (isToday)
-                          Text(
-                            'Today',
-                            style: TextStyle(
-                              color: isSelected
-                                  ? (isDarkMode ? Colors.black : Colors.white)
-                                  : (isDarkMode
-                                      ? Colors.grey[400]
-                                      : Colors.grey[600]),
-                              fontSize: 10,
-                            ),
-                          ),
                       ],
                     ),
                   ),

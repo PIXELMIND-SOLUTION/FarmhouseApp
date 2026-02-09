@@ -27,7 +27,9 @@ class PaymentProvider with ChangeNotifier {
   /// [transactionId] from Razorpay onSuccess callback
   /// [userId] from SharedPrefs
   Future<void> createPayment({
-    required String verificationId,
+    required String farmId,
+        required String slotId,
+
     required String transactionId,
     required String userId,
   }) async {
@@ -35,14 +37,13 @@ class PaymentProvider with ChangeNotifier {
 
     try {
       _paymentResponse = await _service.createPayment(
-        verificationId: verificationId,
+        farmId: farmId,
+                slotId: slotId,
+
         transactionId: transactionId,
         userId: userId,
       );
 
-      print(
-        'verificaaaaaaaaaaaaaaaaaaaaaaaaation idddddddddddddddd $verificationId',
-      );
       print('transaction idddddddddddddddd $transactionId');
       print('userrrrrrrrrrrrrrrrrrrrrrrrr iddddddddddddddddd $userId');
 

@@ -57,6 +57,7 @@ dependencies:
   cloud_firestore: ^6.1.2
   dio: ^5.9.1
   flutter_launcher_icons: ^0.14.4
+  shimmer: ^3.0.0
 
 dev_dependencies:
   flutter_test:
@@ -95,6 +96,7 @@ flutter:
     - assets\farmimages.jpg
     - assets\farmhouse.png
     - assets\farmhouselogo.png
+    - assets\splash.png
   
 
   # An image asset can refer to one or more resolution-specific "variants", see

@@ -1,5 +1,7 @@
 // wishlist_model.dart
 
+import 'package:farmhouse_app/views/models/farmhouse_model.dart';
+
 class FarmhouseModel {
   final String id;
   final String name;
@@ -30,6 +32,32 @@ class FarmhouseModel {
     required this.latitude,
     required this.longitude,
   });
+
+  // Add this method inside FarmhouseModel class
+Farmhouse toFarmhouse() {
+  return Farmhouse(
+    id: id,
+    name: name,
+    images: images,
+    address: address,
+    description: description,
+    amenities: amenities,
+    bookingFor: bookingFor,
+    pricePerHour: pricePerHour,
+    pricePerDay: pricePerDay,
+    timePrices: [], // Empty list if not available in wishlist
+    rating: rating,
+    feedbackSummary: feedbackSummary ?? '',
+    location: Location(
+      type: 'Point',
+      coordinates: [longitude, latitude],
+    ),
+    wishlist: [],
+    reviews: [],
+    bookedSlots: [],
+    createdAt: '',
+  );
+}
 
   factory FarmhouseModel.fromJson(Map<String, dynamic> json) {
     final location = json['location'] as Map<String, dynamic>;

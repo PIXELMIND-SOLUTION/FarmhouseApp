@@ -40,18 +40,15 @@ class BookingService {
         'Response bodyyyyyyyyyyyyyyyyyyy for booking farmhouse ${response.body}',
       );
 
-      if (response.statusCode == 200 || response.statusCode == 201) {
-        return {
-          'success': true,
-          'message': data['message'] ?? 'Booking successful',
-          'booking': data['booking'],
-        };
-      } else {
-        return {
-          'success': false,
-          'message': data['message'] ?? 'Booking failed',
-        };
-      }
+if (response.statusCode == 200 || response.statusCode == 201) {
+  return data; // return full API response
+} else {
+  return {
+    'success': false,
+    'message': data['message'] ?? 'Booking failed',
+  };
+}
+
     } catch (e) {
       return {'success': false, 'message': 'Error: ${e.toString()}'};
     }

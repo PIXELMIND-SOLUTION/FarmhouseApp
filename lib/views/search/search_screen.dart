@@ -1,7 +1,9 @@
 import 'package:farmhouse_app/views/details/house_detail_screen.dart';
+import 'package:farmhouse_app/views/models/farmhouse_model.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
+import 'dart:async';
 
 class SearchScreen extends StatefulWidget {
   const SearchScreen({super.key});
@@ -18,6 +20,10 @@ class _SearchScreenState extends State<SearchScreen> {
   bool _hasSearched = false;
   String? _errorMessage;
 
+  // Debouncer
+  Timer? _debounce;
+  final Duration _debounceDuration = const Duration(milliseconds: 500);
+
   // Filter variables
   RangeValues _priceRange = const RangeValues(0, 10000);
   double _minRating = 0.0;
@@ -27,9 +33,38 @@ class _SearchScreenState extends State<SearchScreen> {
   final List<String> _allAmenities = ['pool', 'bbq', 'garden'];
 
   @override
+  void initState() {
+    super.initState();
+    // Add listener to search controller
+    _searchController.addListener(_onSearchChanged);
+  }
+
+  @override
   void dispose() {
+    _searchController.removeListener(_onSearchChanged);
     _searchController.dispose();
+    _debounce?.cancel();
     super.dispose();
+  }
+
+  void _onSearchChanged() {
+    // Cancel the previous timer
+    if (_debounce?.isActive ?? false) _debounce!.cancel();
+
+    // Start a new timer
+    _debounce = Timer(_debounceDuration, () {
+      if (_searchController.text.trim().isNotEmpty) {
+        _searchFarmhouses(_searchController.text);
+      } else {
+        // Clear results if search is empty
+        setState(() {
+          _hasSearched = false;
+          _allFarmhouses = [];
+          _filteredFarmhouses = [];
+          _errorMessage = null;
+        });
+      }
+    });
   }
 
   Future<void> _searchFarmhouses(String query) async {
@@ -51,10 +86,8 @@ class _SearchScreenState extends State<SearchScreen> {
         ),
       );
 
-
       print('Response status code for search api ${response.statusCode}');
-            print('Response bodyyyyyyyyy code for search api ${response.body}');
-
+      print('Response body for search api ${response.body}');
 
       if (response.statusCode == 200) {
         final data = json.decode(response.body);
@@ -282,58 +315,58 @@ class _SearchScreenState extends State<SearchScreen> {
                           const SizedBox(height: 30),
 
                           // Sort By
-                          const Text(
-                            'Sort By',
-                            style: TextStyle(
-                              fontSize: 18,
-                              fontWeight: FontWeight.w600,
-                            ),
-                          ),
-                          const SizedBox(height: 10),
-                          Column(
-                            children: [
-                              RadioListTile(
-                                title: const Text('None'),
-                                value: 'none',
-                                groupValue: _sortBy,
-                                onChanged: (value) {
-                                  setModalState(() {
-                                    _sortBy = value!;
-                                  });
-                                },
-                              ),
-                              RadioListTile(
-                                title: const Text('Price: Low to High'),
-                                value: 'price_low',
-                                groupValue: _sortBy,
-                                onChanged: (value) {
-                                  setModalState(() {
-                                    _sortBy = value!;
-                                  });
-                                },
-                              ),
-                              RadioListTile(
-                                title: const Text('Price: High to Low'),
-                                value: 'price_high',
-                                groupValue: _sortBy,
-                                onChanged: (value) {
-                                  setModalState(() {
-                                    _sortBy = value!;
-                                  });
-                                },
-                              ),
-                              RadioListTile(
-                                title: const Text('Rating: High to Low'),
-                                value: 'rating',
-                                groupValue: _sortBy,
-                                onChanged: (value) {
-                                  setModalState(() {
-                                    _sortBy = value!;
-                                  });
-                                },
-                              ),
-                            ],
-                          ),
+                          // const Text(
+                          //   'Sort By',
+                          //   style: TextStyle(
+                          //     fontSize: 18,
+                          //     fontWeight: FontWeight.w600,
+                          //   ),
+                          // ),
+                          // const SizedBox(height: 10),
+                          // Column(
+                          //   children: [
+                          //     RadioListTile(
+                          //       title: const Text('None'),
+                          //       value: 'none',
+                          //       groupValue: _sortBy,
+                          //       onChanged: (value) {
+                          //         setModalState(() {
+                          //           _sortBy = value!;
+                          //         });
+                          //       },
+                          //     ),
+                          //     RadioListTile(
+                          //       title: const Text('Price: Low to High'),
+                          //       value: 'price_low',
+                          //       groupValue: _sortBy,
+                          //       onChanged: (value) {
+                          //         setModalState(() {
+                          //           _sortBy = value!;
+                          //         });
+                          //       },
+                          //     ),
+                          //     RadioListTile(
+                          //       title: const Text('Price: High to Low'),
+                          //       value: 'price_high',
+                          //       groupValue: _sortBy,
+                          //       onChanged: (value) {
+                          //         setModalState(() {
+                          //           _sortBy = value!;
+                          //         });
+                          //       },
+                          //     ),
+                          //     RadioListTile(
+                          //       title: const Text('Rating: High to Low'),
+                          //       value: 'rating',
+                          //       groupValue: _sortBy,
+                          //       onChanged: (value) {
+                          //         setModalState(() {
+                          //           _sortBy = value!;
+                          //         });
+                          //       },
+                          //     ),
+                          //   ],
+                          // ),
                         ],
                       ),
                     ),
@@ -374,12 +407,19 @@ class _SearchScreenState extends State<SearchScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Search Farmhouses',style: TextStyle(fontWeight: FontWeight.bold),),
-      leading: IconButton(onPressed: (){
-        Navigator.of(context).pop();
-      }, icon: Icon(Icons.arrow_back_ios)),
-       elevation: 0),
-      
+      appBar: AppBar(
+        title: const Text(
+          'Search Farmhouses',
+          style: TextStyle(fontWeight: FontWeight.bold),
+        ),
+        leading: IconButton(
+          onPressed: () {
+            Navigator.of(context).pop();
+          },
+          icon: const Icon(Icons.arrow_back_ios),
+        ),
+        elevation: 0,
+      ),
       body: Column(
         children: [
           // Search Bar and Filter Button
@@ -412,16 +452,13 @@ class _SearchScreenState extends State<SearchScreen> {
                       filled: true,
                       fillColor: Colors.grey[100],
                     ),
-                    onSubmitted: _searchFarmhouses,
-                    onChanged: (value) {
-                      setState(() {});
-                    },
+                    // Removed onSubmitted as we're using auto-search now
                   ),
                 ),
                 const SizedBox(width: 10),
                 Container(
                   decoration: BoxDecoration(
-                    color: Colors.blue,
+                    color: _hasSearched ? Colors.blue : Colors.grey,
                     borderRadius: BorderRadius.circular(12),
                   ),
                   child: IconButton(
@@ -501,90 +538,91 @@ class _SearchScreenState extends State<SearchScreen> {
             child: _isLoading
                 ? const Center(child: CircularProgressIndicator())
                 : _errorMessage != null
-                ? Center(
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        const Icon(
-                          Icons.error_outline,
-                          size: 64,
-                          color: Colors.red,
+                    ? Center(
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            const Icon(
+                              Icons.error_outline,
+                              size: 64,
+                              color: Colors.red,
+                            ),
+                            const SizedBox(height: 16),
+                            Text(_errorMessage!),
+                            const SizedBox(height: 16),
+                            ElevatedButton(
+                              onPressed: () =>
+                                  _searchFarmhouses(_searchController.text),
+                              child: const Text('Retry'),
+                            ),
+                          ],
                         ),
-                        const SizedBox(height: 16),
-                        Text(_errorMessage!),
-                        const SizedBox(height: 16),
-                        ElevatedButton(
-                          onPressed: () =>
-                              _searchFarmhouses(_searchController.text),
-                          child: const Text('Retry'),
-                        ),
-                      ],
-                    ),
-                  )
-                : !_hasSearched
-                ? Center(
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Icon(Icons.search, size: 80, color: Colors.grey[300]),
-                        const SizedBox(height: 16),
-                        Text(
-                          'Search for farmhouses',
-                          style: TextStyle(
-                            fontSize: 20,
-                            fontWeight: FontWeight.w500,
-                            color: Colors.grey[600],
-                          ),
-                        ),
-                        const SizedBox(height: 8),
-                        Text(
-                          'Enter a location or keyword to find farmhouses',
-                          style: TextStyle(
-                            fontSize: 14,
-                            color: Colors.grey[500],
-                          ),
-                          textAlign: TextAlign.center,
-                        ),
-                      ],
-                    ),
-                  )
-                : _filteredFarmhouses.isEmpty
-                ? Center(
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Icon(
-                          Icons.search_off,
-                          size: 64,
-                          color: Colors.grey[400],
-                        ),
-                        const SizedBox(height: 16),
-                        Text(
-                          'No farmhouses found',
-                          style: TextStyle(
-                            fontSize: 18,
-                            color: Colors.grey[600],
-                          ),
-                        ),
-                        const SizedBox(height: 8),
-                        Text(
-                          'Try adjusting your filters',
-                          style: TextStyle(
-                            fontSize: 14,
-                            color: Colors.grey[500],
-                          ),
-                        ),
-                      ],
-                    ),
-                  )
-                : ListView.builder(
-                    padding: const EdgeInsets.all(16),
-                    itemCount: _filteredFarmhouses.length,
-                    itemBuilder: (context, index) {
-                      final farmhouse = _filteredFarmhouses[index];
-                      return FarmhouseCard(farmhouse: farmhouse);
-                    },
-                  ),
+                      )
+                    : !_hasSearched
+                        ? Center(
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Icon(Icons.search,
+                                    size: 80, color: Colors.grey[300]),
+                                const SizedBox(height: 16),
+                                Text(
+                                  'Search for farmhouses',
+                                  style: TextStyle(
+                                    fontSize: 20,
+                                    fontWeight: FontWeight.w500,
+                                    color: Colors.grey[600],
+                                  ),
+                                ),
+                                const SizedBox(height: 8),
+                                Text(
+                                  'Start typing to search for farmhouses',
+                                  style: TextStyle(
+                                    fontSize: 14,
+                                    color: Colors.grey[500],
+                                  ),
+                                  textAlign: TextAlign.center,
+                                ),
+                              ],
+                            ),
+                          )
+                        : _filteredFarmhouses.isEmpty
+                            ? Center(
+                                child: Column(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    Icon(
+                                      Icons.search_off,
+                                      size: 64,
+                                      color: Colors.grey[400],
+                                    ),
+                                    const SizedBox(height: 16),
+                                    Text(
+                                      'No farmhouses found',
+                                      style: TextStyle(
+                                        fontSize: 18,
+                                        color: Colors.grey[600],
+                                      ),
+                                    ),
+                                    const SizedBox(height: 8),
+                                    Text(
+                                      'Try adjusting your filters or search query',
+                                      style: TextStyle(
+                                        fontSize: 14,
+                                        color: Colors.grey[500],
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              )
+                            : ListView.builder(
+                                padding: const EdgeInsets.all(16),
+                                itemCount: _filteredFarmhouses.length,
+                                itemBuilder: (context, index) {
+                                  final farmhouse = _filteredFarmhouses[index];
+                                  return FarmhouseCard(farmhouse: farmhouse);
+                                },
+                              ),
           ),
         ],
       ),
@@ -661,19 +699,19 @@ class FarmhouseCard extends StatelessWidget {
                         ),
                       ),
                     ),
-                    Row(
-                      children: [
-                        const Icon(Icons.star, color: Colors.amber, size: 20),
-                        const SizedBox(width: 4),
-                        Text(
-                          farmhouse.rating.toString(),
-                          style: const TextStyle(
-                            fontSize: 16,
-                            fontWeight: FontWeight.w600,
-                          ),
-                        ),
-                      ],
-                    ),
+                    // Row(
+                    //   children: [
+                    //     const Icon(Icons.star, color: Colors.amber, size: 20),
+                    //     const SizedBox(width: 4),
+                    //     Text(
+                    //       farmhouse.rating.toString(),
+                    //       style: const TextStyle(
+                    //         fontSize: 16,
+                    //         fontWeight: FontWeight.w600,
+                    //       ),
+                    //     ),
+                    //   ],
+                    // ),
                   ],
                 ),
                 const SizedBox(height: 8),
@@ -734,44 +772,49 @@ class FarmhouseCard extends StatelessWidget {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          '₹${farmhouse.pricePerDay}',
-                          style: const TextStyle(
-                            fontSize: 24,
-                            fontWeight: FontWeight.bold,
-                            color: Colors.blue,
-                          ),
-                        ),
-                        Text(
-                          'per day',
-                          style: TextStyle(
-                            fontSize: 12,
-                            color: Colors.grey[600],
-                          ),
-                        ),
-                      ],
-                    ),
-
-                    // ElevatedButton(
-                    //   onPressed: () {
-
-                    //     Navigator.push(context, MaterialPageRoute(builder: (context)=>HouseDetailScreen(id: farmhouse.id,)));
-                    //     // Navigate to details or booking page
-                    //   },
-                    //   style: ElevatedButton.styleFrom(
-                    //     padding: const EdgeInsets.symmetric(
-                    //       horizontal: 24,
-                    //       vertical: 12,
+                    // Column(
+                    //   crossAxisAlignment: CrossAxisAlignment.start,
+                    //   children: [
+                    //     Text(
+                    //       '₹${farmhouse.pricePerDay}',
+                    //       style: const TextStyle(
+                    //         fontSize: 24,
+                    //         fontWeight: FontWeight.bold,
+                    //         color: Colors.blue,
+                    //       ),
                     //     ),
-                    //     shape: RoundedRectangleBorder(
-                    //       borderRadius: BorderRadius.circular(12),
+                    //     Text(
+                    //       'per day',
+                    //       style: TextStyle(
+                    //         fontSize: 12,
+                    //         color: Colors.grey[600],
+                    //       ),
                     //     ),
-                    //   ),
-                    //   child: const Text('Book Now'),
+                    //   ],
                     // ),
+     ElevatedButton(
+  onPressed: () {
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => HouseDetailScreen(
+          farmhouse: farmhouse.toFarmhouse(), // Add conversion here
+          id: farmhouse.id,
+        ),
+      ),
+    );
+  },
+  style: ElevatedButton.styleFrom(
+    padding: const EdgeInsets.symmetric(
+      horizontal: 24,
+      vertical: 12,
+    ),
+    shape: RoundedRectangleBorder(
+      borderRadius: BorderRadius.circular(12),
+    ),
+  ),
+  child: const Text('View Details'),
+),
                   ],
                 ),
               ],
@@ -782,8 +825,6 @@ class FarmhouseCard extends StatelessWidget {
     );
   }
 }
-
-// Farmhouse Model
 class FarmhouseModel {
   final String id;
   final String name;
@@ -821,6 +862,32 @@ class FarmhouseModel {
       pricePerDay: json['pricePerDay'] ?? 0,
       rating: (json['rating'] ?? 0).toDouble(),
       feedbackSummary: json['feedbackSummary'] ?? '',
+    );
+  }
+
+  // Add this conversion method
+  Farmhouse toFarmhouse() {
+    return Farmhouse(
+      id: id,
+      name: name,
+      images: images,
+      address: address,
+      description: description,
+      amenities: amenities,
+      bookingFor: '',
+      pricePerHour: pricePerHour.toDouble(),
+      pricePerDay: pricePerDay.toDouble(),
+      timePrices: [],
+      rating: rating,
+      feedbackSummary: feedbackSummary,
+      location: Location(
+        type: 'Point',
+        coordinates: [0.0, 0.0], // Default coordinates if not available
+      ),
+      wishlist: [],
+      reviews: [],
+      bookedSlots: [],
+      createdAt: '',
     );
   }
 }

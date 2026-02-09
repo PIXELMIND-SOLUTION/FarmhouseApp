@@ -1,13 +1,108 @@
-import 'package:farmhouse_app/views/details/house_detail_screen.dart';
+import 'package:farmhouse_app/provider/auth/profile_provider.dart';
+import 'package:farmhouse_app/provider/auth/register_provider.dart';
 import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
+import 'dart:convert';
 
-class BookingScreen extends StatelessWidget {
+import 'package:provider/provider.dart';
+
+class BookingScreen extends StatefulWidget {
+  
   const BookingScreen({super.key});
+
+  @override
+  State<BookingScreen> createState() => _BookingScreenState();
+}
+
+class _BookingScreenState extends State<BookingScreen> {
+
+  String? userId;
+
+  Map<String, List<dynamic>> bookingsData = {
+    'upcoming': [],
+    'active': [],
+    'completed': [],
+    'canceled': [],
+  };
+  
+  bool isLoading = true;
+
+  @override
+  void initState() {
+    super.initState();
+    _initialize();
+  }
+
+  Future<void> _initialize() async {
+    await _loadProfileData();
+    if (userId != null) {
+      await _fetchAllBookings();
+    } else {
+      setState(() {
+        isLoading = false;
+      });
+    }
+  }
+
+  Future<void> _loadProfileData() async {
+    final authProvider = Provider.of<AuthProvider>(context, listen: false);
+    await authProvider.loadUserFromPrefs();
+
+    final user = authProvider.user;
+    if (user != null) {
+      setState(() {
+        userId = user.id;
+      });
+      print("✅ User ID loaded: $userId");
+    } else {
+      print("❌ User ID is null");
+    }
+  }
+
+  Future<void> _fetchAllBookings() async {
+    if (userId == null) {
+      print("❌ Cannot fetch bookings: userId is null");
+      return;
+    }
+
+    setState(() {
+      isLoading = true;
+    });
+
+    final statuses = ['upcoming', 'active', 'completed', 'canceled'];
+    
+    for (String status in statuses) {
+      try {
+        print("📡 Fetching $status bookings for userId: $userId");
+        final response = await http.get(
+          Uri.parse('http://31.97.206.144:5124/api/order/all?userId=$userId&status=$status'),
+        );
+
+        print("📥 Response for $status: ${response.body}");
+
+        if (response.statusCode == 200) {
+          final data = json.decode(response.body);
+          if (data['success'] == true) {
+            setState(() {
+              bookingsData[status] = data['bookings'] ?? [];
+            });
+            print("✅ ${data['bookings']?.length ?? 0} $status bookings loaded");
+          }
+        }
+      } catch (e) {
+        print('❌ Error fetching $status bookings: $e');
+      }
+    }
+
+    setState(() {
+      isLoading = false;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
     return DefaultTabController(
-      length: 2,
+      length: 4,
       child: Scaffold(
         backgroundColor: Colors.grey[50],
         appBar: AppBar(
@@ -31,141 +126,117 @@ class BookingScreen extends StatelessWidget {
                 labelColor: const Color(0xFFFF5A5F),
                 unselectedLabelColor: Colors.grey,
                 labelStyle: const TextStyle(
-                  fontSize: 16,
+                  fontSize: 14,
                   fontWeight: FontWeight.w600,
                 ),
                 indicatorColor: const Color(0xFFFF5A5F),
                 indicatorWeight: 3,
+                isScrollable: true,
                 tabs: const [
                   Tab(text: 'Upcoming'),
-                  Tab(text: 'Past Bookings'),
+                  Tab(text: 'Active'),
+                  Tab(text: 'Completed'),
+                  Tab(text: 'Canceled'),
                 ],
               ),
             ),
           ),
         ),
-        body: TabBarView(
-          children: [
-            _buildUpcomingBookings(context),
-            _buildPastBookings(context),
-          ],
-        ),
+        body: isLoading
+            ? const Center(child: CircularProgressIndicator(color: Color(0xFFFF5A5F)))
+            : TabBarView(
+                children: [
+                  _buildBookingsList('upcoming'),
+                  _buildBookingsList('active'),
+                  _buildBookingsList('completed'),
+                  _buildBookingsList('canceled'),
+                ],
+              ),
       ),
     );
   }
 
-  Widget _buildUpcomingBookings(BuildContext context) {
-    return ListView(
-      padding: const EdgeInsets.all(16),
-      children: [
-        _buildBookingCard(
-          context: context,
-          title: 'Green Valley Farm House',
-          location: 'Hyderabad, Telangana',
-          date: 'Nov 20 - Nov 22, 2025',
-          guests: '6 Guests',
-          price: '₹12,500',
-          imageUrl:
-              'https://images.unsplash.com/photo-1600585154340-be6161a56a0c?w=800',
-          status: 'Confirmed',
-          statusColor: const Color(0xFFFF5A5F),
-          isUpcoming: true,
+  Widget _buildBookingsList(String status) {
+    final bookings = bookingsData[status] ?? [];
+
+    if (bookings.isEmpty) {
+      return Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Icon(
+              Icons.calendar_today_outlined,
+              size: 80,
+              color: Colors.grey[300],
+            ),
+            const SizedBox(height: 16),
+            Text(
+              'No ${status} bookings',
+              style: TextStyle(
+                fontSize: 18,
+                color: Colors.grey[600],
+                fontWeight: FontWeight.w500,
+              ),
+            ),
+          ],
         ),
-        const SizedBox(height: 16),
-        _buildBookingCard(
-          context: context,
-          title: 'Sunset Paradise Villa',
-          location: 'Lonavala, Maharashtra',
-          date: 'Dec 15 - Dec 17, 2025',
-          guests: '8 Guests',
-          price: '₹18,000',
-          imageUrl:
-              'https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?w=800',
-          status: 'Pending',
-          statusColor: Colors.orange,
-          isUpcoming: true,
-        ),
-        const SizedBox(height: 16),
-        _buildBookingCard(
-          title: 'Riverside Retreat',
-          location: 'Coorg, Karnataka',
-          date: 'Jan 10 - Jan 12, 2026',
-          guests: '4 Guests',
-          price: '₹9,500',
-          imageUrl:
-              'https://images.unsplash.com/photo-1613490493576-7fde63acd811?w=800',
-          status: 'Confirmed',
-          statusColor: const Color(0xFF2E7D32),
-          isUpcoming: true,
-          context: context,
-        ),
-      ],
+      );
+    }
+
+    return RefreshIndicator(
+      onRefresh: _fetchAllBookings,
+      color: const Color(0xFFFF5A5F),
+      child: ListView.builder(
+        padding: const EdgeInsets.all(16),
+        itemCount: bookings.length,
+        itemBuilder: (context, index) {
+          final booking = bookings[index];
+          return Padding(
+            padding: EdgeInsets.only(bottom: index < bookings.length - 1 ? 16 : 0),
+            child: _buildBookingCard(booking, status),
+          );
+        },
+      ),
     );
   }
 
-  Widget _buildPastBookings(BuildContext context) {
-    return ListView(
-      padding: const EdgeInsets.all(16),
-      children: [
-        _buildBookingCard(
-          context: context,
+  Widget _buildBookingCard(dynamic booking, String statusType) {
+    final farmhouse = booking['farmhouseId'];
+    final bookingDetails = booking['bookingDetails'];
+    final formattedDates = booking['formattedDates'];
+    final actions = booking['actions'];
+    
+    String title = farmhouse['name'] ?? 'Unknown Farmhouse';
+    String location = farmhouse['address'] ?? 'Unknown Location';
+    String imageUrl = (farmhouse['images'] != null && farmhouse['images'].isNotEmpty) 
+        ? farmhouse['images'][0] 
+        : '';
+    
+    String date = '${formattedDates['checkIn']} - ${formattedDates['checkOut']}';
+    String price = '₹${booking['totalAmount']}';
+    String status = booking['status'] ?? 'Unknown';
+    
+    Color statusColor;
+    switch (statusType) {
+      case 'upcoming':
+        statusColor = const Color(0xFFFF5A5F);
+        break;
+      case 'active':
+        statusColor = const Color(0xFF2E7D32);
+        break;
+      case 'completed':
+        statusColor = Colors.grey;
+        break;
+      case 'canceled':
+        statusColor = Colors.red;
+        break;
+      default:
+        statusColor = Colors.grey;
+    }
 
-          title: 'Mountain View Farm House',
-          location: 'Shimla, Himachal Pradesh',
-          date: 'Oct 5 - Oct 7, 2025',
-          guests: '5 Guests',
-          price: '₹11,000',
-          imageUrl:
-              'https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?w=800',
-          status: 'Completed',
-          statusColor: Colors.grey,
-          isUpcoming: false,
-        ),
-        const SizedBox(height: 16),
-        _buildBookingCard(
-          context: context,
+    bool isUpcoming = statusType == 'upcoming';
+    bool isActive = statusType == 'active';
 
-          title: 'Tranquil Meadows Estate',
-          location: 'Ooty, Tamil Nadu',
-          date: 'Sep 12 - Sep 14, 2025',
-          guests: '7 Guests',
-          price: '₹14,500',
-          imageUrl:
-              'https://images.unsplash.com/photo-1600607687644-c7171b42498f?w=800',
-          status: 'Completed',
-          statusColor: Colors.grey,
-          isUpcoming: false,
-        ),
-        const SizedBox(height: 16),
-        _buildBookingCard(
-          context: context,
-          title: 'Lakeside Farm Cottage',
-          location: 'Nainital, Uttarakhand',
-          date: 'Aug 20 - Aug 22, 2025',
-          guests: '4 Guests',
-          price: '₹8,500',
-          imageUrl:
-              'https://images.unsplash.com/photo-1600566753086-00f18fb6b3ea?w=800',
-          status: 'Completed',
-          statusColor: Colors.grey,
-          isUpcoming: false,
-        ),
-      ],
-    );
-  }
-
-  Widget _buildBookingCard({
-    required BuildContext context,
-    required String title,
-    required String location,
-    required String date,
-    required String guests,
-    required String price,
-    required String imageUrl,
-    required String status,
-    required Color statusColor,
-    required bool isUpcoming,
-  }) {
     return Container(
       decoration: BoxDecoration(
         color: Colors.white,
@@ -188,46 +259,56 @@ class BookingScreen extends StatelessWidget {
                 borderRadius: const BorderRadius.vertical(
                   top: Radius.circular(16),
                 ),
-                child: Image.network(
-                  imageUrl,
-                  height: 150,
-                  width: double.infinity,
-                  fit: BoxFit.cover,
-                  errorBuilder: (context, error, stackTrace) {
-                    return Container(
-                      height: 200,
-                      color: Colors.grey[300],
-                      child: const Icon(
-                        Icons.house,
-                        size: 80,
-                        color: Colors.grey,
+                child: imageUrl.isNotEmpty
+                    ? Image.network(
+                        imageUrl,
+                        height: 150,
+                        width: double.infinity,
+                        fit: BoxFit.cover,
+                        errorBuilder: (context, error, stackTrace) {
+                          return Container(
+                            height: 150,
+                            color: Colors.grey[300],
+                            child: const Icon(
+                              Icons.house,
+                              size: 80,
+                              color: Colors.grey,
+                            ),
+                          );
+                        },
+                      )
+                    : Container(
+                        height: 150,
+                        color: Colors.grey[300],
+                        child: const Icon(
+                          Icons.house,
+                          size: 80,
+                          color: Colors.grey,
+                        ),
                       ),
-                    );
-                  },
-                ),
               ),
-              Positioned(
-                top: 12,
-                right: 12,
-                child: Container(
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: 12,
-                    vertical: 6,
-                  ),
-                  decoration: BoxDecoration(
-                    color: statusColor,
-                    borderRadius: BorderRadius.circular(20),
-                  ),
-                  child: Text(
-                    status,
-                    style: const TextStyle(
-                      color: Colors.white,
-                      fontSize: 12,
-                      fontWeight: FontWeight.w600,
-                    ),
-                  ),
-                ),
-              ),
+              // Positioned(
+              //   top: 12,
+              //   right: 12,
+              //   child: Container(
+              //     padding: const EdgeInsets.symmetric(
+              //       horizontal: 12,
+              //       vertical: 6,
+              //     ),
+              //     decoration: BoxDecoration(
+              //       color: statusColor,
+              //       borderRadius: BorderRadius.circular(20),
+              //     ),
+              //     child: Text(
+              //       status.toUpperCase(),
+              //       style: const TextStyle(
+              //         color: Colors.white,
+              //         fontSize: 12,
+              //         fontWeight: FontWeight.w600,
+              //       ),
+              //     ),
+              //   ),
+              // ),
             ],
           ),
 
@@ -250,9 +331,12 @@ class BookingScreen extends StatelessWidget {
                   children: [
                     const Icon(Icons.location_on, size: 16, color: Colors.grey),
                     const SizedBox(width: 4),
-                    Text(
-                      location,
-                      style: TextStyle(fontSize: 14, color: Colors.grey[600]),
+                    Expanded(
+                      child: Text(
+                        location,
+                        style: TextStyle(fontSize: 14, color: Colors.grey[600]),
+                        overflow: TextOverflow.ellipsis,
+                      ),
                     ),
                   ],
                 ),
@@ -265,23 +349,30 @@ class BookingScreen extends StatelessWidget {
                       color: Color(0xFFFF5A5F),
                     ),
                     const SizedBox(width: 6),
-                    Text(
-                      date,
-                      style: const TextStyle(
-                        fontSize: 14,
-                        fontWeight: FontWeight.w500,
-                        color: Colors.black87,
+                    Expanded(
+                      child: Text(
+                        date,
+                        style: const TextStyle(
+                          fontSize: 14,
+                          fontWeight: FontWeight.w500,
+                          color: Colors.black87,
+                        ),
+                        overflow: TextOverflow.ellipsis,
                       ),
                     ),
-                    const SizedBox(width: 16),
+                  ],
+                ),
+                const SizedBox(height: 8),
+                Row(
+                  children: [
                     const Icon(
-                      Icons.people,
+                      Icons.access_time,
                       size: 16,
                       color: Color(0xFFFF5A5F),
                     ),
                     const SizedBox(width: 6),
                     Text(
-                      guests,
+                      '${bookingDetails['label']} (${bookingDetails['timing']})',
                       style: const TextStyle(
                         fontSize: 14,
                         fontWeight: FontWeight.w500,
@@ -299,69 +390,44 @@ class BookingScreen extends StatelessWidget {
                       style: const TextStyle(
                         fontSize: 22,
                         fontWeight: FontWeight.bold,
-                        color: const Color(0xFFFF5A5F),
+                        color: Color(0xFFFF5A5F),
                       ),
                     ),
-                    if (isUpcoming)
-                      Row(
-                        children: [
-                          OutlinedButton(
-                            onPressed: () {
-                              // Navigator.push(
-                              //   context,
-                              //   MaterialPageRoute(
-                              //     builder: (context) => HouseDetailScreen(),
-                              //   ),
-                              // );
-                            },
-                            style: OutlinedButton.styleFrom(
-                              side: const BorderSide(color: Color(0xFFFF5A5F)),
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(8),
-                              ),
-                            ),
-                            child: const Text(
-                              'Details',
-                              style: TextStyle(color: Color(0xFFFF5A5F)),
-                            ),
-                          ),
-                          // const SizedBox(width: 8),
-                          // ElevatedButton(
-                          //   onPressed: () {},
-                          //   style: ElevatedButton.styleFrom(
-                          //     backgroundColor: const Color(0xFFFF5A5F),
-                          //     shape: RoundedRectangleBorder(
-                          //       borderRadius: BorderRadius.circular(8),
-                          //     ),
-                          //   ),
-                          //   child: const Text(
-                          //     'Modify',
-                          //     style: TextStyle(color: Colors.white),
-                          //   ),
-                          // ),
-                        ],
-                      )
-                    else
-                      ElevatedButton.icon(
-                        onPressed: () {
-                          // Navigator.push(
-                          //   context,
-                          //   MaterialPageRoute(
-                          //     builder: (context) =>
-                          //         PaymentScreen(image: imageUrl,name: title,),
-                          //   ),
-                          // );
-                        },
-                        icon: const Icon(Icons.refresh, size: 18),
-                        label: const Text('Book Again'),
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: const Color(0xFFFF5A5F),
-                          foregroundColor: Colors.white,
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(8),
-                          ),
-                        ),
-                      ),
+                    // if (isUpcoming || isActive)
+                    //   Row(
+                    //     children: [
+                    //       OutlinedButton(
+                    //         onPressed: () {
+                    //           // Navigate to details
+                    //         },
+                    //         style: OutlinedButton.styleFrom(
+                    //           side: const BorderSide(color: Color(0xFFFF5A5F)),
+                    //           shape: RoundedRectangleBorder(
+                    //             borderRadius: BorderRadius.circular(8),
+                    //           ),
+                    //         ),
+                    //         child: const Text(
+                    //           'Details',
+                    //           style: TextStyle(color: Color(0xFFFF5A5F)),
+                    //         ),
+                    //       ),
+                    //     ],
+                    //   )
+                    // else if (statusType == 'completed')
+                    //   ElevatedButton.icon(
+                    //     onPressed: () {
+                    //       // Book again functionality
+                    //     },
+                    //     icon: const Icon(Icons.refresh, size: 18),
+                    //     label: const Text('Book Again'),
+                    //     style: ElevatedButton.styleFrom(
+                    //       backgroundColor: const Color(0xFFFF5A5F),
+                    //       foregroundColor: Colors.white,
+                    //       shape: RoundedRectangleBorder(
+                    //         borderRadius: BorderRadius.circular(8),
+                    //       ),
+                    //     ),
+                    //   ),
                   ],
                 ),
               ],
