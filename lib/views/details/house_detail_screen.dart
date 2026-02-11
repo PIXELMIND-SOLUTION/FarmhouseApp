@@ -54,9 +54,6 @@
 //     setState(() {});
 //   }
 
-
-  
-
 //   Future<void> _handleBooking() async {
 //     if (selectedDateIndex == null || selectedTimeSlot == null) {
 //       ScaffoldMessenger.of(context).showSnackBar(
@@ -98,7 +95,6 @@
 //         print("llllllllllllllllllllllllllllllllllll$slotId");
 //                 print("llllllllllllllllllllllllllllllllllll$farmhouseId");
 
-
 //   Navigator.push(
 //     context,
 //     MaterialPageRoute(
@@ -115,7 +111,7 @@
 //       ),
 //     ),
 //   );
-//     } 
+//     }
 //     else if (mounted) {
 //       // Show error message
 //       ScaffoldMessenger.of(context).showSnackBar(
@@ -1679,22 +1675,6 @@
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 import 'dart:io';
 import 'dart:convert';
 import 'package:farmhouse_app/provider/booking/booking_provider.dart';
@@ -1769,7 +1749,9 @@ class _HouseDetailScreenState extends State<HouseDetailScreen> {
             ],
           ),
           behavior: SnackBarBehavior.floating,
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(12),
+          ),
           margin: const EdgeInsets.all(16),
         ),
       );
@@ -1780,8 +1762,8 @@ class _HouseDetailScreenState extends State<HouseDetailScreen> {
       (slot) => slot['label'] == selectedTimeSlot,
     );
 
-        final slotId = selectedSlot['slotId']; // or slot['id']
-final farmhouseId = farmhouseData!.id;
+    final slotId = selectedSlot['slotId']; // or slot['id']
+    final farmhouseId = farmhouseData!.id;
 
     final bookingProvider = Provider.of<BookingProvider>(
       context,
@@ -1812,8 +1794,9 @@ final farmhouseId = farmhouseData!.id;
             cleaningFee: booking['priceBreakdown']['cleaningFee'],
             serviceFee: booking['priceBreakdown']['serviceFee'],
             totalAmount: booking['priceBreakdown']['totalAmount'],
-                          slotId: slotId,
-      farmhouseId: farmhouseId,
+            slotId: slotId,
+            farmhouseId: farmhouseId,
+            
           ),
         ),
       );
@@ -1827,14 +1810,17 @@ final farmhouseId = farmhouseData!.id;
               const SizedBox(width: 12),
               Expanded(
                 child: Text(
-                  bookingProvider.errorMessage ?? 'Booking failed. Please try again.',
+                  bookingProvider.errorMessage ??
+                      'Booking failed. Please try again.',
                   style: const TextStyle(fontWeight: FontWeight.w500),
                 ),
               ),
             ],
           ),
           behavior: SnackBarBehavior.floating,
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(12),
+          ),
           margin: const EdgeInsets.all(16),
         ),
       );
@@ -1918,12 +1904,12 @@ final farmhouseId = farmhouseData!.id;
         Navigator.of(context).pop();
       }
 
-      final shareText = '''
+      final shareText =
+          '''
 Check out this amazing farmhouse! 🏡
 
 📍 ${farmhouse.name}
 🌍 ${farmhouse.address}
-⭐ Rating: ${farmhouse.rating}/5.0
 💰 ₹${farmhouse.pricePerDay.toInt()}/day | ₹${farmhouse.pricePerHour.toInt()}/hour
 
 ✨ ${farmhouse.description}
@@ -1931,7 +1917,7 @@ Check out this amazing farmhouse! 🏡
 🎯 Booking for: ${farmhouse.bookingFor}
 🏠 Amenities: ${farmhouse.amenities.join(', ')}
 
-Book now on Farmhouse App!
+Book now on V FARMS!
 ''';
 
       if (imageFile != null && await imageFile.exists()) {
@@ -2005,7 +1991,9 @@ Book now on Farmhouse App!
                 backgroundColor: const Color(0xFFF59E0B),
                 behavior: SnackBarBehavior.floating,
                 duration: const Duration(seconds: 2),
-                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(12),
+                ),
                 margin: const EdgeInsets.all(16),
               ),
             );
@@ -2039,7 +2027,9 @@ Book now on Farmhouse App!
             ),
             backgroundColor: const Color(0xFFDC2626),
             behavior: SnackBarBehavior.floating,
-            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(12),
+            ),
             margin: const EdgeInsets.all(16),
           ),
         );
@@ -2116,7 +2106,9 @@ Book now on Farmhouse App!
           backgroundColor: const Color(0xFFDC2626),
           behavior: SnackBarBehavior.floating,
           duration: const Duration(seconds: 2),
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(12),
+          ),
           margin: const EdgeInsets.all(16),
         ),
       );
@@ -2136,7 +2128,9 @@ Book now on Farmhouse App!
           backgroundColor: const Color(0xFF10B981),
           behavior: SnackBarBehavior.floating,
           duration: const Duration(seconds: 2),
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(12),
+          ),
           margin: const EdgeInsets.all(16),
         ),
       );
@@ -2153,7 +2147,11 @@ Book now on Farmhouse App!
           backgroundColor: Colors.white,
           elevation: 0,
           leading: IconButton(
-            icon: const Icon(Icons.arrow_back_ios_new, color: Colors.black, size: 20),
+            icon: const Icon(
+              Icons.arrow_back_ios_new,
+              color: Colors.black,
+              size: 20,
+            ),
             onPressed: () => Navigator.pop(context),
           ),
         ),
@@ -2173,7 +2171,11 @@ Book now on Farmhouse App!
           backgroundColor: Colors.white,
           elevation: 0,
           leading: IconButton(
-            icon: const Icon(Icons.arrow_back_ios_new, color: Colors.black, size: 20),
+            icon: const Icon(
+              Icons.arrow_back_ios_new,
+              color: Colors.black,
+              size: 20,
+            ),
             onPressed: () => Navigator.pop(context),
           ),
         ),
@@ -2211,7 +2213,10 @@ Book now on Farmhouse App!
                   style: ElevatedButton.styleFrom(
                     backgroundColor: const Color(0xFF6366F1),
                     foregroundColor: Colors.white,
-                    padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 16),
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 32,
+                      vertical: 16,
+                    ),
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(12),
                     ),
@@ -2219,10 +2224,7 @@ Book now on Farmhouse App!
                   ),
                   child: const Text(
                     'Retry',
-                    style: TextStyle(
-                      fontSize: 16,
-                      fontWeight: FontWeight.w600,
-                    ),
+                    style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
                   ),
                 ),
               ],
@@ -2262,7 +2264,11 @@ Book now on Farmhouse App!
                       ],
                     ),
                     child: IconButton(
-                      icon: const Icon(Icons.arrow_back_ios_new, color: Colors.black, size: 18),
+                      icon: const Icon(
+                        Icons.arrow_back_ios_new,
+                        color: Colors.black,
+                        size: 18,
+                      ),
                       onPressed: () => Navigator.pop(context),
                     ),
                   ),
@@ -2306,7 +2312,10 @@ Book now on Farmhouse App!
                         ],
                       ),
                       child: IconButton(
-                        icon: const Icon(Icons.share_outlined, color: Colors.black),
+                        icon: const Icon(
+                          Icons.share_outlined,
+                          color: Colors.black,
+                        ),
                         onPressed: () {
                           shareFarmhouse(context, farmhouseData!);
                         },
@@ -2405,7 +2414,9 @@ Book now on Farmhouse App!
                             height: 70,
                             child: ListView.builder(
                               scrollDirection: Axis.horizontal,
-                              padding: const EdgeInsets.symmetric(horizontal: 20),
+                              padding: const EdgeInsets.symmetric(
+                                horizontal: 20,
+                              ),
                               itemCount: farmhouseData!.images.length,
                               itemBuilder: (context, index) {
                                 final isSelected = selectedImageIndex == index;
@@ -2430,7 +2441,9 @@ Book now on Farmhouse App!
                                       boxShadow: isSelected
                                           ? [
                                               BoxShadow(
-                                                color: Colors.white.withOpacity(0.3),
+                                                color: Colors.white.withOpacity(
+                                                  0.3,
+                                                ),
                                                 blurRadius: 8,
                                                 spreadRadius: 1,
                                               ),
@@ -2511,10 +2524,7 @@ Book now on Farmhouse App!
                         const SizedBox(height: 24),
 
                         // Divider
-                        Container(
-                          height: 1,
-                          color: const Color(0xFFE5E7EB),
-                        ),
+                        Container(height: 1, color: const Color(0xFFE5E7EB)),
                         const SizedBox(height: 24),
 
                         // Amenities Section
@@ -2670,10 +2680,7 @@ Book now on Farmhouse App!
                         const SizedBox(height: 32),
 
                         // Divider
-                        Container(
-                          height: 1,
-                          color: const Color(0xFFE5E7EB),
-                        ),
+                        Container(height: 1, color: const Color(0xFFE5E7EB)),
                         const SizedBox(height: 32),
 
                         // Available Dates Section
@@ -2767,7 +2774,9 @@ Book now on Farmhouse App!
                                     boxShadow: isSelected
                                         ? [
                                             BoxShadow(
-                                              color: const Color(0xFF6366F1).withOpacity(0.3),
+                                              color: const Color(
+                                                0xFF6366F1,
+                                              ).withOpacity(0.3),
                                               blurRadius: 12,
                                               offset: const Offset(0, 4),
                                             ),
@@ -2777,10 +2786,13 @@ Book now on Farmhouse App!
                                   child: Stack(
                                     children: [
                                       Column(
-                                        mainAxisAlignment: MainAxisAlignment.center,
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.center,
                                         children: [
                                           Text(
-                                            DateFormat('EEE').format(date).substring(0, 3),
+                                            DateFormat(
+                                              'EEE',
+                                            ).format(date).substring(0, 3),
                                             style: TextStyle(
                                               color: isSelected
                                                   ? Colors.white
@@ -2805,7 +2817,9 @@ Book now on Farmhouse App!
                                             DateFormat('MMM').format(date),
                                             style: TextStyle(
                                               color: isSelected
-                                                  ? Colors.white.withOpacity(0.9)
+                                                  ? Colors.white.withOpacity(
+                                                      0.9,
+                                                    )
                                                   : const Color(0xFF9CA3AF),
                                               fontSize: 11,
                                               fontWeight: FontWeight.w500,
@@ -2838,10 +2852,7 @@ Book now on Farmhouse App!
                         const SizedBox(height: 32),
 
                         // Divider
-                        Container(
-                          height: 1,
-                          color: const Color(0xFFE5E7EB),
-                        ),
+                        Container(height: 1, color: const Color(0xFFE5E7EB)),
                         const SizedBox(height: 32),
 
                         // Time Slots Section
@@ -2898,16 +2909,18 @@ Book now on Farmhouse App!
                           GridView.builder(
                             shrinkWrap: true,
                             physics: const NeverScrollableScrollPhysics(),
-                            gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                              crossAxisCount: 2,
-                              childAspectRatio: 1.5,
-                              crossAxisSpacing: 12,
-                              mainAxisSpacing: 12,
-                            ),
+                            gridDelegate:
+                                const SliverGridDelegateWithFixedCrossAxisCount(
+                                  crossAxisCount: 2,
+                                  childAspectRatio: 1.1,
+                                  crossAxisSpacing: 12,
+                                  mainAxisSpacing: 13,
+                                ),
                             itemCount: availableSlots.length,
                             itemBuilder: (context, index) {
                               final slot = availableSlots[index];
-                              final isSelected = selectedTimeSlot == slot['label'];
+                              final isSelected =
+                                  selectedTimeSlot == slot['label'];
                               final isAvailable = slot['available'] == true;
 
                               return GestureDetector(
@@ -2935,21 +2948,23 @@ Book now on Farmhouse App!
                                     color: isSelected
                                         ? null
                                         : (isAvailable
-                                            ? Colors.white
-                                            : const Color(0xFFF9FAFB)),
+                                              ? Colors.white
+                                              : const Color(0xFFF9FAFB)),
                                     borderRadius: BorderRadius.circular(16),
                                     border: Border.all(
                                       color: isSelected
                                           ? const Color(0xFF6366F1)
                                           : (isAvailable
-                                              ? const Color(0xFFE5E7EB)
-                                              : const Color(0xFFD1D5DB)),
+                                                ? const Color(0xFFE5E7EB)
+                                                : const Color(0xFFD1D5DB)),
                                       width: isSelected ? 2 : 1.5,
                                     ),
                                     boxShadow: isSelected
                                         ? [
                                             BoxShadow(
-                                              color: const Color(0xFF6366F1).withOpacity(0.25),
+                                              color: const Color(
+                                                0xFF6366F1,
+                                              ).withOpacity(0.25),
                                               blurRadius: 12,
                                               offset: const Offset(0, 4),
                                             ),
@@ -2957,11 +2972,14 @@ Book now on Farmhouse App!
                                         : null,
                                   ),
                                   child: Column(
-                                    crossAxisAlignment: CrossAxisAlignment.start,
-                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
                                     children: [
                                       Row(
-                                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.spaceBetween,
                                         children: [
                                           Expanded(
                                             child: Text(
@@ -2973,8 +2991,12 @@ Book now on Farmhouse App!
                                                 color: isSelected
                                                     ? Colors.white
                                                     : (isAvailable
-                                                        ? const Color(0xFF111827)
-                                                        : const Color(0xFF9CA3AF)),
+                                                          ? const Color(
+                                                              0xFF111827,
+                                                            )
+                                                          : const Color(
+                                                              0xFF9CA3AF,
+                                                            )),
                                               ),
                                             ),
                                           ),
@@ -3017,7 +3039,9 @@ Book now on Farmhouse App!
                                               style: TextStyle(
                                                 fontSize: 12,
                                                 color: isSelected
-                                                    ? Colors.white.withOpacity(0.9)
+                                                    ? Colors.white.withOpacity(
+                                                        0.9,
+                                                      )
                                                     : const Color(0xFF6B7280),
                                                 fontWeight: FontWeight.w500,
                                               ),
@@ -3035,9 +3059,11 @@ Book now on Farmhouse App!
                                           color: isSelected
                                               ? Colors.white.withOpacity(0.2)
                                               : (isAvailable
-                                                  ? const Color(0xFFF3F4F6)
-                                                  : const Color(0xFFE5E7EB)),
-                                          borderRadius: BorderRadius.circular(8),
+                                                    ? const Color(0xFFF3F4F6)
+                                                    : const Color(0xFFE5E7EB)),
+                                          borderRadius: BorderRadius.circular(
+                                            8,
+                                          ),
                                         ),
                                         child: Text(
                                           isAvailable
@@ -3049,8 +3075,10 @@ Book now on Farmhouse App!
                                             color: isSelected
                                                 ? Colors.white
                                                 : (isAvailable
-                                                    ? const Color(0xFF111827)
-                                                    : const Color(0xFF9CA3AF)),
+                                                      ? const Color(0xFF111827)
+                                                      : const Color(
+                                                          0xFF9CA3AF,
+                                                        )),
                                           ),
                                         ),
                                       ),
@@ -3135,10 +3163,7 @@ Book now on Farmhouse App!
 
                         // Reviews Section
                         if (farmhouseData!.reviews.isNotEmpty) ...[
-                          Container(
-                            height: 1,
-                            color: const Color(0xFFE5E7EB),
-                          ),
+                          Container(height: 1, color: const Color(0xFFE5E7EB)),
                           const SizedBox(height: 32),
                           Row(
                             children: [
@@ -3210,10 +3235,7 @@ Book now on Farmhouse App!
                         gradient: const LinearGradient(
                           begin: Alignment.topLeft,
                           end: Alignment.bottomRight,
-                          colors: [
-                            Color(0xFF111827),
-                            Color(0xFF1F2937),
-                          ],
+                          colors: [Color(0xFF111827), Color(0xFF1F2937)],
                         ),
                         borderRadius: BorderRadius.circular(16),
                         boxShadow: [
@@ -3227,7 +3249,9 @@ Book now on Farmhouse App!
                       child: Material(
                         color: Colors.transparent,
                         child: InkWell(
-                          onTap: bookingProvider.isLoading ? null : _handleBooking,
+                          onTap: bookingProvider.isLoading
+                              ? null
+                              : _handleBooking,
                           borderRadius: BorderRadius.circular(16),
                           child: Container(
                             padding: const EdgeInsets.symmetric(vertical: 18),
@@ -3295,10 +3319,7 @@ Book now on Farmhouse App!
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(16),
-        border: Border.all(
-          color: const Color(0xFFE5E7EB),
-          width: 1.5,
-        ),
+        border: Border.all(color: const Color(0xFFE5E7EB), width: 1.5),
         boxShadow: [
           BoxShadow(
             color: Colors.black.withOpacity(0.03),
@@ -3319,10 +3340,7 @@ Book now on Farmhouse App!
                   gradient: const LinearGradient(
                     begin: Alignment.topLeft,
                     end: Alignment.bottomRight,
-                    colors: [
-                      Color(0xFF6366F1),
-                      Color(0xFF8B5CF6),
-                    ],
+                    colors: [Color(0xFF6366F1), Color(0xFF8B5CF6)],
                   ),
                   shape: BoxShape.circle,
                   boxShadow: [
@@ -3372,7 +3390,10 @@ Book now on Farmhouse App!
                 ),
               ),
               Container(
-                padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 10,
+                  vertical: 6,
+                ),
                 decoration: BoxDecoration(
                   color: const Color(0xFFFEF3C7),
                   borderRadius: BorderRadius.circular(8),

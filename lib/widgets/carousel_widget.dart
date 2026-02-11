@@ -53,7 +53,7 @@ class _BannerSliderState extends State<BannerSlider> {
               : CarouselSlider(
                   items: bannerImages.map((image) {
                     return ClipRRect(
-                      borderRadius: BorderRadius.circular(0), // No rounding
+                      borderRadius: BorderRadius.circular(0),
                       child: Image.network(
                         image,
                         fit: BoxFit.cover,

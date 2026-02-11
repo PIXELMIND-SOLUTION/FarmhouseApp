@@ -216,8 +216,6 @@
 //   }
 // }
 
-
-
 // import 'dart:io';
 // import 'package:farmhouse_app/provider/auth/profile_provider.dart';
 // import 'package:farmhouse_app/utils/helper_function.dart';
@@ -621,19 +619,6 @@
 //   }
 // }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
 import 'dart:io';
 import 'package:farmhouse_app/provider/auth/profile_provider.dart';
 import 'package:farmhouse_app/provider/firebase/google_provider.dart';
@@ -669,7 +654,10 @@ class _EditProfileState extends State<EditProfile> {
 
   Future<void> _loadProfile() async {
     final user = await SharedPrefs.getUser();
-    final googleAuthProvider = Provider.of<GoogleAuthenticationProvider>(context, listen: false);
+    final googleAuthProvider = Provider.of<GoogleAuthenticationProvider>(
+      context,
+      listen: false,
+    );
     final googleUser = googleAuthProvider.user;
 
     if (googleUser != null) {
@@ -705,7 +693,9 @@ class _EditProfileState extends State<EditProfile> {
     if (_isGoogleUser) {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
-          content: Text('Profile picture cannot be changed for Google accounts'),
+          content: Text(
+            'Profile picture cannot be changed for Google accounts',
+          ),
           backgroundColor: Colors.orange,
         ),
       );
@@ -726,9 +716,9 @@ class _EditProfileState extends State<EditProfile> {
         });
       }
     } catch (e) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Error picking image: $e')),
-      );
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(content: Text('Error picking image: $e')));
     }
   }
 
@@ -744,9 +734,9 @@ class _EditProfileState extends State<EditProfile> {
     }
 
     if (_userId == null) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('User ID not found')),
-      );
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(const SnackBar(content: Text('User ID not found')));
       return;
     }
 
@@ -772,8 +762,12 @@ class _EditProfileState extends State<EditProfile> {
       Navigator.pop(context, true);
     } else {
       ScaffoldMessenger.of(context).showSnackBar(
+        // SnackBar(
+        //   content: Text(provider.errorMessage ?? 'Failed to update profile'),
+        //   backgroundColor: Colors.red,
+        // ),
         SnackBar(
-          content: Text(provider.errorMessage ?? 'Failed to update profile'),
+          content: Text('Something went wrong while updating your profile'),
           backgroundColor: Colors.red,
         ),
       );
@@ -810,7 +804,9 @@ class _EditProfileState extends State<EditProfile> {
       ),
       body: Consumer<ProfileProvider>(
         builder: (context, provider, child) {
-          if (provider.isLoading && provider.profileData == null && !_isGoogleUser) {
+          if (provider.isLoading &&
+              provider.profileData == null &&
+              !_isGoogleUser) {
             return const Center(child: CircularProgressIndicator());
           }
 
@@ -820,7 +816,7 @@ class _EditProfileState extends State<EditProfile> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 const SizedBox(height: 20),
-                
+
                 // Profile Picture Section
                 Center(
                   child: Stack(
@@ -843,7 +839,8 @@ class _EditProfileState extends State<EditProfile> {
                                 )
                               : null,
                         ),
-                        child: _selectedImage == null && _currentImageUrl == null
+                        child:
+                            _selectedImage == null && _currentImageUrl == null
                             ? const Icon(
                                 Icons.person,
                                 size: 50,
@@ -858,8 +855,8 @@ class _EditProfileState extends State<EditProfile> {
                           width: 32,
                           height: 32,
                           decoration: BoxDecoration(
-                            color: _isGoogleUser 
-                                ? Colors.grey 
+                            color: _isGoogleUser
+                                ? Colors.grey
                                 : const Color(0xFFFF5A5F),
                             shape: BoxShape.circle,
                             border: Border.all(color: Colors.white, width: 2),
@@ -878,7 +875,7 @@ class _EditProfileState extends State<EditProfile> {
                     ],
                   ),
                 ),
-                
+
                 // Google Account Badge
                 if (_isGoogleUser) ...[
                   const SizedBox(height: 12),
@@ -915,37 +912,37 @@ class _EditProfileState extends State<EditProfile> {
                     ),
                   ),
                 ],
-                
+
                 const SizedBox(height: 32),
-                
+
                 // Name Field
                 _buildLabel('Name'),
                 const SizedBox(height: 8),
                 _buildTextField(nameController, readOnly: _isGoogleUser),
-                
+
                 const SizedBox(height: 24),
-                
+
                 // Phone Number Field
                 _buildLabel('Phone Number'),
                 const SizedBox(height: 8),
                 _buildTextField(phoneController, readOnly: true),
-                
+
                 const SizedBox(height: 24),
-                
+
                 // Email Field
                 _buildLabel('Email'),
                 const SizedBox(height: 8),
                 _buildTextField(emailController, readOnly: true),
-                
+
                 const SizedBox(height: 40),
-                
+
                 // Save Button
                 SizedBox(
                   width: double.infinity,
                   height: 56,
                   child: ElevatedButton(
-                    onPressed: (_isGoogleUser || provider.isLoading) 
-                        ? null 
+                    onPressed: (_isGoogleUser || provider.isLoading)
+                        ? null
                         : _saveProfile,
                     style: ElevatedButton.styleFrom(
                       backgroundColor: const Color(0xFFFF5A5F),
@@ -965,12 +962,12 @@ class _EditProfileState extends State<EditProfile> {
                             ),
                           )
                         : Text(
-                            _isGoogleUser 
-                                ? 'Google Account (Read Only)' 
+                            _isGoogleUser
+                                ? 'Google Account (Read Only)'
                                 : 'Save',
                             style: TextStyle(
-                              color: _isGoogleUser 
-                                  ? Colors.grey.shade600 
+                              color: _isGoogleUser
+                                  ? Colors.grey.shade600
                                   : Colors.white,
                               fontSize: 16,
                               fontWeight: FontWeight.w600,
@@ -1021,11 +1018,7 @@ class _EditProfileState extends State<EditProfile> {
             vertical: 16,
           ),
           prefixIcon: readOnly
-              ? Icon(
-                  Icons.lock_outline,
-                  size: 20,
-                  color: Colors.grey.shade500,
-                )
+              ? Icon(Icons.lock_outline, size: 20, color: Colors.grey.shade500)
               : null,
         ),
       ),

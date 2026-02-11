@@ -35,14 +35,6 @@ class _NotificationScreenState extends State<NotificationScreen>
       color: Colors.orange,
       isRead: true,
     ),
-    // NotificationItem(
-    //   title: 'Event Reminder',
-    //   description: 'Your meeting starts in 30 minutes',
-    //   time: '5 hours ago',
-    //   icon: Icons.event,
-    //   color: Colors.purple,
-    //   isRead: true,
-    // ),
   ];
 
   @override

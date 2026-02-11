@@ -514,21 +514,6 @@
 //   }
 // }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 import 'package:farmhouse_app/provider/auth/profile_provider.dart';
 import 'package:farmhouse_app/provider/auth/register_provider.dart';
 import 'package:farmhouse_app/provider/firebase/google_provider.dart';
@@ -639,23 +624,49 @@ class _ProfileScreenState extends State<ProfileScreen> {
               Stack(
                 clipBehavior: Clip.none,
                 children: [
+                  // Container(
+                  //   height: 300,
+                  //   decoration: BoxDecoration(
+                  //     image: DecorationImage(
+                  //       image: profileImageUrl != null
+                  //           ? NetworkImage(profileImageUrl)
+                  //           : const NetworkImage(
+                  //               'https://images.unsplash.com/photo-1540553016722-983e48a2cd10?w=800',
+                  //             ),
+                  //       fit: BoxFit.cover,
+                  //       colorFilter: ColorFilter.mode(
+                  //         Colors.black.withOpacity(0.3),
+                  //         BlendMode.darken,
+                  //       ),
+                  //     ),
+                  //   ),
+                  // ),
                   Container(
                     height: 300,
-                    decoration: BoxDecoration(
-                      image: DecorationImage(
-                        image: profileImageUrl != null
-                            ? NetworkImage(profileImageUrl)
-                            : const NetworkImage(
-                                'https://images.unsplash.com/photo-1540553016722-983e48a2cd10?w=800',
+                    decoration:
+                        profileImageUrl != null && profileImageUrl!.isNotEmpty
+                        ? BoxDecoration(
+                            image: DecorationImage(
+                              image: NetworkImage(profileImageUrl!),
+                              fit: BoxFit.cover,
+                              colorFilter: ColorFilter.mode(
+                                Colors.black.withOpacity(0.3),
+                                BlendMode.darken,
                               ),
-                        fit: BoxFit.cover,
-                        colorFilter: ColorFilter.mode(
-                          Colors.black.withOpacity(0.3),
-                          BlendMode.darken,
-                        ),
-                      ),
-                    ),
+                            ),
+                          )
+                        : BoxDecoration(color: Colors.grey[300]),
+                    child: (profileImageUrl == null || profileImageUrl!.isEmpty)
+                        ? const Center(
+                            child: Icon(
+                              Icons.person,
+                              size: 80,
+                              color: Colors.grey,
+                            ),
+                          )
+                        : null,
                   ),
+
                   Positioned(
                     bottom: -50,
                     left: MediaQuery.of(context).size.width / 2 - 50,
@@ -674,22 +685,22 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                 fit: BoxFit.cover,
                                 loadingBuilder:
                                     (context, child, loadingProgress) {
-                                  if (loadingProgress == null) return child;
-                                  return Center(
-                                    child: CircularProgressIndicator(
-                                      value:
-                                          loadingProgress
-                                                  .expectedTotalBytes !=
-                                              null
-                                          ? loadingProgress
-                                                    .cumulativeBytesLoaded /
-                                                loadingProgress
-                                                    .expectedTotalBytes!
-                                          : null,
-                                      strokeWidth: 2,
-                                    ),
-                                  );
-                                },
+                                      if (loadingProgress == null) return child;
+                                      return Center(
+                                        child: CircularProgressIndicator(
+                                          value:
+                                              loadingProgress
+                                                      .expectedTotalBytes !=
+                                                  null
+                                              ? loadingProgress
+                                                        .cumulativeBytesLoaded /
+                                                    loadingProgress
+                                                        .expectedTotalBytes!
+                                              : null,
+                                          strokeWidth: 2,
+                                        ),
+                                      );
+                                    },
                                 errorBuilder: (context, error, stackTrace) {
                                   return const Icon(
                                     Icons.person,
@@ -777,30 +788,34 @@ class _ProfileScreenState extends State<ProfileScreen> {
                         }
                       },
                     ),
-                    _buildMenuItem(
-                      icon: Icons.notifications_none,
-                      title: 'Notifications',
-                      onTap: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => NotificationScreen(),
-                          ),
-                        );
-                      },
-                    ),
+                    // _buildMenuItem(
+                    //   icon: Icons.notifications_none,
+                    //   title: 'Notifications',
+                    //   onTap: () {
+                    //     Navigator.push(
+                    //       context,
+                    //       MaterialPageRoute(
+                    //         builder: (context) => NotificationScreen(),
+                    //       ),
+                    //     );
+                    //   },
+                    // ),
                     _buildMenuItem(
                       icon: Icons.privacy_tip,
                       title: 'Privacy Policy',
                       onTap: () {
-                        _launchURL('https://v-farm-houses-policies.onrender.com/privacy-policy');
+                        _launchURL(
+                          'https://v-farm-houses-policies.onrender.com/privacy-policy',
+                        );
                       },
                     ),
                     _buildMenuItem(
                       icon: Icons.article,
                       title: 'Terms & Conditions',
                       onTap: () {
-                        _launchURL('https://v-farm-houses-policies.onrender.com/terms-and-conditions');
+                        _launchURL(
+                          'https://v-farm-houses-policies.onrender.com/terms-and-conditions',
+                        );
                       },
                     ),
                     _buildMenuItem(
@@ -819,7 +834,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       icon: Icons.group,
                       title: 'Contact Us',
                       onTap: () {
-                        _launchURL('https://v-farm-houses-policies.onrender.com/contact');
+                        _launchURL(
+                          'https://v-farm-houses-policies.onrender.com/contact',
+                        );
                       },
                     ),
                     _buildMenuItem(

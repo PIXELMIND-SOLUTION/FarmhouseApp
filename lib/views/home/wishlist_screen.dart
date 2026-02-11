@@ -145,24 +145,24 @@ class _WishlistScreenState extends State<WishlistScreen> {
                 padding: const EdgeInsets.all(16.0),
                 child: Row(
                   children: [
-                    Container(
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: 12,
-                        vertical: 6,
-                      ),
-                      decoration: BoxDecoration(
-                        color: Colors.pink[50],
-                        borderRadius: BorderRadius.circular(20),
-                      ),
-                      child: Text(
-                        '${wishlistItems.length} ${wishlistItems.length == 1 ? 'Property' : 'Properties'}',
-                        style: TextStyle(
-                          fontSize: 14,
-                          color: Colors.pink[700],
-                          fontWeight: FontWeight.w600,
-                        ),
-                      ),
-                    ),
+                    // Container(
+                    //   padding: const EdgeInsets.symmetric(
+                    //     horizontal: 12,
+                    //     vertical: 6,
+                    //   ),
+                    //   decoration: BoxDecoration(
+                    //     color: Colors.pink[50],
+                    //     borderRadius: BorderRadius.circular(20),
+                    //   ),
+                    //   child: Text(
+                    //     '${wishlistItems.length} ${wishlistItems.length == 1 ? 'Property' : 'Properties'}',
+                    //     style: TextStyle(
+                    //       fontSize: 14,
+                    //       color: Colors.pink[700],
+                    //       fontWeight: FontWeight.w600,
+                    //     ),
+                    //   ),
+                    // ),
                     const Spacer(),
                   ],
                 ),

@@ -28,7 +28,7 @@ class PaymentProvider with ChangeNotifier {
   /// [userId] from SharedPrefs
   Future<void> createPayment({
     required String farmId,
-        required String slotId,
+    required String slotId,
 
     required String transactionId,
     required String userId,
@@ -38,7 +38,7 @@ class PaymentProvider with ChangeNotifier {
     try {
       _paymentResponse = await _service.createPayment(
         farmId: farmId,
-                slotId: slotId,
+        slotId: slotId,
 
         transactionId: transactionId,
         userId: userId,
@@ -46,6 +46,8 @@ class PaymentProvider with ChangeNotifier {
 
       print('transaction idddddddddddddddd $transactionId');
       print('userrrrrrrrrrrrrrrrrrrrrrrrr iddddddddddddddddd $userId');
+      print('slottttttttttttttttttttttt iddddddddddddd $slotId');
+      print('farmmmmmmmmmmmmmmmmmmmmm iddddddddddddd $farmId');
 
       _setStatus(PaymentStatus.success);
     } catch (e) {

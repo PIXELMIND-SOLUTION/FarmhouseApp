@@ -1485,6 +1485,11 @@
 //   }
 // }
 
+
+
+
+
+
 import 'dart:io';
 import 'package:farmhouse_app/provider/Location/location_provider.dart';
 import 'package:farmhouse_app/provider/Location/nearby_farmhouse_provider.dart';
@@ -1926,6 +1931,69 @@ Book now on Farmhouse App!
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
                               /// LOCATION
+                              // Consumer<LocationProvider>(
+                              //   builder: (context, locationProvider, child) {
+                              //     final rawAddress =
+                              //         locationProvider.address ?? '';
+                              //     final bool noLocation = rawAddress
+                              //         .trim()
+                              //         .isEmpty;
+
+                              //     final addressParts = rawAddress
+                              //         .split(',')
+                              //         .map((e) => e.trim())
+                              //         .toList();
+
+                              //     final primaryAddress =
+                              //         !noLocation && addressParts.isNotEmpty
+                              //         ? addressParts[0]
+                              //         : 'Set Location';
+
+                              //     return GestureDetector(
+                              //       onTap: () async {
+                              //         if (user != null) {
+                              //           final result = await Navigator.push(
+                              //             context,
+                              //             MaterialPageRoute(
+                              //               builder: (context) =>
+                              //                   LocationScreen(
+                              //                     userId: user.id.to  String(),
+                              //                   ),
+                              //             ),
+                              //           );
+                              //           if (result == true && mounted) {
+                              //             await _fetchNearbyFarmhouses();
+                              //           }
+                              //         }
+                              //       },
+                              //       child: Row(
+                              //         children: [
+                              //           Icon(
+                              //             Icons.location_on,
+                              //             color: Colors.white,
+                              //             size: 20,
+                              //           ),
+                              //           SizedBox(width: 4),
+                              //           Text(
+                              //             primaryAddress,
+                              //             style: TextStyle(
+                              //               color: Colors.white,
+                              //               fontSize: 16,
+                              //               fontWeight: FontWeight.w600,
+                              //             ),
+                              //           ),
+                              //           Icon(
+                              //             Icons.keyboard_arrow_down,
+                              //             color: Colors.white,
+                              //             size: 20,
+                              //           ),
+                              //         ],
+                              //       ),
+                              //     );
+                              //   },
+                              // ),
+
+                              /// LOCATION
                               Consumer<LocationProvider>(
                                 builder: (context, locationProvider, child) {
                                   final rawAddress =
@@ -1961,28 +2029,40 @@ Book now on Farmhouse App!
                                         }
                                       }
                                     },
-                                    child: Row(
-                                      children: [
-                                        Icon(
-                                          Icons.location_on,
-                                          color: Colors.white,
-                                          size: 20,
-                                        ),
-                                        SizedBox(width: 4),
-                                        Text(
-                                          primaryAddress,
-                                          style: TextStyle(
+                                    child: Container(
+                                      constraints: BoxConstraints(
+                                        maxWidth:
+                                            MediaQuery.of(context).size.width *
+                                            0.6, // Limit to 60% of screen width
+                                      ),
+                                      child: Row(
+                                        mainAxisSize: MainAxisSize.min,
+                                        children: [
+                                          Icon(
+                                            Icons.location_on,
                                             color: Colors.white,
-                                            fontSize: 16,
-                                            fontWeight: FontWeight.w600,
+                                            size: 20,
                                           ),
-                                        ),
-                                        Icon(
-                                          Icons.keyboard_arrow_down,
-                                          color: Colors.white,
-                                          size: 20,
-                                        ),
-                                      ],
+                                          SizedBox(width: 4),
+                                          Flexible(
+                                            child: Text(
+                                              primaryAddress,
+                                              style: TextStyle(
+                                                color: Colors.white,
+                                                fontSize: 16,
+                                                fontWeight: FontWeight.w600,
+                                              ),
+                                              overflow: TextOverflow.ellipsis,
+                                              maxLines: 1,
+                                            ),
+                                          ),
+                                          Icon(
+                                            Icons.keyboard_arrow_down,
+                                            color: Colors.white,
+                                            size: 20,
+                                          ),
+                                        ],
+                                      ),
                                     ),
                                   );
                                 },
@@ -2788,6 +2868,10 @@ Book now on Farmhouse App!
 
     return Consumer3<FarmhouseProvider, LocationProvider, WishlistProvider>(
       builder: (context, farmhouseProvider, locationProvider, wishlistProvider, child) {
+
+          if (locationProvider.isLoading) {
+        return _buildLocationLoadingAnimation();
+      }
         // Show location prompt if no location set
         if (locationProvider.address == null ||
             locationProvider.address!.trim().isEmpty) {
@@ -2796,52 +2880,52 @@ Book now on Farmhouse App!
               padding: const EdgeInsets.all(32.0),
               child: Column(
                 children: [
-                  Icon(
-                    Icons.location_off_outlined,
-                    size: 64,
-                    color: isDarkMode ? Colors.grey[600] : Colors.grey[400],
-                  ),
+                  // Icon(
+                  //   Icons.location_off_outlined,
+                  //   size: 64,
+                  //   color: isDarkMode ? Colors.grey[600] : Colors.grey[400],
+                  // ),
+                  // const SizedBox(height: 16),
+                  // Text(
+                  //   'Set your location to find nearby farmhouses',
+                  //   style: TextStyle(
+                  //     color: isDarkMode ? Colors.grey[400] : Colors.grey[600],
+                  //     fontSize: 16,
+                  //   ),
+                  //   textAlign: TextAlign.center,
+                  // ),
                   const SizedBox(height: 16),
-                  Text(
-                    'Set your location to find nearby farmhouses',
-                    style: TextStyle(
-                      color: isDarkMode ? Colors.grey[400] : Colors.grey[600],
-                      fontSize: 16,
-                    ),
-                    textAlign: TextAlign.center,
-                  ),
-                  const SizedBox(height: 16),
-                  ElevatedButton.icon(
-                    onPressed: () async {
-                      final authProvider = Provider.of<AuthProvider>(
-                        context,
-                        listen: false,
-                      );
-                      final user = authProvider.user;
-                      if (user != null) {
-                        final result = await Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) =>
-                                LocationScreen(userId: user.id.toString()),
-                          ),
-                        );
-                        if (result == true) {
-                          await _fetchNearbyFarmhouses();
-                        }
-                      }
-                    },
-                    icon: const Icon(Icons.location_on),
-                    label: const Text('Set Location'),
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: const Color(0xFF6366F1),
-                      foregroundColor: Colors.white,
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: 24,
-                        vertical: 12,
-                      ),
-                    ),
-                  ),
+                  // ElevatedButton.icon(
+                  //   onPressed: () async {
+                  //     final authProvider = Provider.of<AuthProvider>(
+                  //       context,
+                  //       listen: false,
+                  //     );
+                  //     final user = authProvider.user;
+                  //     if (user != null) {
+                  //       final result = await Navigator.push(
+                  //         context,
+                  //         MaterialPageRoute(
+                  //           builder: (context) =>
+                  //               LocationScreen(userId: user.id.toString()),
+                  //         ),
+                  //       );
+                  //       if (result == true) {
+                  //         await _fetchNearbyFarmhouses();
+                  //       }
+                  //     }
+                  //   },
+                  //   // icon: const Icon(Icons.location_on),
+                  //   label: const Text(''),
+                  //   // style: ElevatedButton.styleFrom(
+                  //   //   backgroundColor: const Color.fromARGB(255, 244, 244, 245),
+                  //   //   foregroundColor: Colors.white,
+                  //   //   // padding: const EdgeInsets.symmetric(
+                  //   //   //   horizontal: 24,
+                  //   //   //   vertical: 12,
+                  //   //   // ),
+                  //   // ),
+                  // ),
                 ],
               ),
             ),
@@ -3177,14 +3261,10 @@ Book now on Farmhouse App!
                                       width: 1,
                                     ),
                                   ),
-                                  child:Transform.rotate(
-  angle: -0.5, // radians (negative = tilt up)
-  child: Icon(
-    Icons.send,
-    color: Colors.blue,
-  ),
-)
-
+                                  child: Transform.rotate(
+                                    angle: -0.5, // radians (negative = tilt up)
+                                    child: Icon(Icons.send, color: Colors.blue),
+                                  ),
                                 ),
                               ),
                             ],
@@ -3442,4 +3522,100 @@ Book now on Farmhouse App!
       ),
     );
   }
+
+
+  Widget _buildLocationLoadingAnimation() {
+  final isDarkMode = Provider.of<ThemeProvider>(context).isDarkMode;
+
+  return Center(
+    child: Padding(
+      padding: const EdgeInsets.all(32.0),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          // Animated location icon with pulse effect
+          TweenAnimationBuilder<double>(
+            tween: Tween(begin: 0.0, end: 1.0),
+            duration: const Duration(milliseconds: 1500),
+            // repeat: true,
+            builder: (context, value, child) {
+              return Transform.scale(
+                scale: 1.0 + (value * 0.2),
+                child: Container(
+                  padding: const EdgeInsets.all(20),
+                  decoration: BoxDecoration(
+                    shape: BoxShape.circle,
+                    color: const Color(0xFF6366F1).withOpacity(0.1),
+                    boxShadow: [
+                      BoxShadow(
+                        color: const Color(0xFF6366F1).withOpacity(0.3 * value),
+                        blurRadius: 30 * value,
+                        spreadRadius: 10 * value,
+                      ),
+                    ],
+                  ),
+                  child: Icon(
+                    Icons.my_location,
+                    size: 48,
+                    color: const Color(0xFF6366F1),
+                  ),
+                ),
+              );
+            },
+          ),
+          const SizedBox(height: 32),
+          
+          // Animated dots
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: List.generate(3, (index) {
+              return TweenAnimationBuilder<double>(
+                tween: Tween(begin: 0.0, end: 1.0),
+                duration: const Duration(milliseconds: 600),
+                // repeat: true,
+                builder: (context, value, child) {
+                  final delay = index * 0.2;
+                  final animValue = (value + delay) % 1.0;
+                  
+                  return Container(
+                    margin: const EdgeInsets.symmetric(horizontal: 4),
+                    width: 8,
+                    height: 8,
+                    decoration: BoxDecoration(
+                      shape: BoxShape.circle,
+                      color: const Color(0xFF6366F1).withOpacity(
+                        0.3 + (0.7 * (1 - animValue)),
+                      ),
+                    ),
+                  );
+                },
+              );
+            }),
+          ),
+          const SizedBox(height: 24),
+          
+          // Text
+          Text(
+            'Detecting your location',
+            style: TextStyle(
+              color: isDarkMode ? Colors.grey[300] : Colors.grey[700],
+              fontSize: 18,
+              fontWeight: FontWeight.w600,
+              letterSpacing: 0.3,
+            ),
+          ),
+          const SizedBox(height: 8),
+          Text(
+            'Finding nearby farmhouses for you...',
+            style: TextStyle(
+              color: isDarkMode ? Colors.grey[400] : Colors.grey[600],
+              fontSize: 14,
+            ),
+            textAlign: TextAlign.center,
+          ),
+        ],
+      ),
+    ),
+  );
+}
 }

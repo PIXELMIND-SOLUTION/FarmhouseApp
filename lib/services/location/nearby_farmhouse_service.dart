@@ -107,6 +107,8 @@ class FarmhouseService {
       print('response status code for nearby farmhouses ${response.statusCode}');
       print('response bodyyyyy for nearby farmhouses ${response.body}');
       print('queryyyyyyyyyyyyyyyyyyy paramssssssssssss $queryParams');
+      print('urrrrrrrrrrrriiiiiiiiiiiiiiiiiii $uri');
+      
 
       if (response.statusCode == 200) {
         final data = json.decode(response.body);

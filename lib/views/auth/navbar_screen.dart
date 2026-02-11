@@ -18,7 +18,6 @@ class _NavbarScreenState extends State<NavbarScreen> {
     const FarmhouseHomePage(),
     const WishlistScreen(),
     const BookingScreen(),
-    // const WalletScreen(),
     const ProfileScreen(),
   ];
 
