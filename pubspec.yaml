@@ -84,19 +84,19 @@ flutter:
 
   # To add assets to your application, add an assets section, like this:
   assets:
-    - assets\onboardingimage1.jpg
-    - assets\onboardingimage2.jpg
-    - assets\onboardingimage3.jpg
-    - assets\22c7ca7468778df234aab7d17ed03d05c804b058.png
-    - assets\farmhouseimage.jpg
-    - assets\onboardimage.jpg
-    - assets\Gemini_Generated_Image_omv3rbomv3rbomv3.png
-    - assets\imagefarm.jpg
-    - assets\farmimage.jpg
-    - assets\farmimages.jpg
-    - assets\farmhouse.png
-    - assets\farmhouselogo.png
-    - assets\splash.png
+    - assets/onboardingimage1.jpg
+    - assets/onboardingimage2.jpg
+    - assets/onboardingimage3.jpg
+    - assets/22c7ca7468778df234aab7d17ed03d05c804b058.png
+    - assets/farmhouseimage.jpg
+    - assets/onboardimage.jpg
+    - assets/Gemini_Generated_Image_omv3rbomv3rbomv3.png
+    - assets/imagefarm.jpg
+    - assets/farmimage.jpg
+    - assets/farmimages.jpg
+    - assets/farmhouse.png
+    - assets/farmhouselogo.png
+    - assets/splash.png
   
 
   # An image asset can refer to one or more resolution-specific "variants", see
