@@ -53,13 +53,6 @@
 		<string>UIInterfaceOrientationPortrait</string>
 	</array>
 
-	<key>UISupportedInterfaceOrientations~ipad</key>
-	<array>
-		<string>UIInterfaceOrientationPortrait</string>
-		<string>UIInterfaceOrientationLandscapeLeft</string>
-		<string>UIInterfaceOrientationLandscapeRight</string>
-	</array>
-
 	<!-- ========================= -->
 	<!-- FLUTTER PERFORMANCE -->
 	<!-- ========================= -->
@@ -88,7 +81,7 @@
 	</dict>
 
 	<!-- ========================= -->
-	<!-- PERMISSIONS (APP STORE REQUIRED) -->
+	<!-- PERMISSIONS -->
 	<!-- ========================= -->
 
 	<key>NSCameraUsageDescription</key>

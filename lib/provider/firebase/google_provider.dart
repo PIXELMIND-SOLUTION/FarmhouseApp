@@ -26,31 +26,31 @@ class GoogleAuthenticationProvider extends ChangeNotifier {
   }
 
   // Sign in with Google
-  Future<bool> signInWithGoogle() async {
-    _setLoading(true);
-    _clearError();
+  // Future<bool> signInWithGoogle() async {
+  //   _setLoading(true);
+  //   _clearError();
 
-    try {
-      final userCredential = await _authService.signInWithGoogle();
+  //   try {
+  //     final userCredential = await _authService.signInWithGoogle();
       
-      if (userCredential == null) {
-        _setError('Sign in was cancelled');
-        return false;
-      }
+  //     if (userCredential == null) {
+  //       _setError('Sign in was cancelled');
+  //       return false;
+  //     }
 
-      _user = userCredential.user;
-      notifyListeners();
-      return true;
-    } on FirebaseAuthException catch (e) {
-      _handleFirebaseError(e);
-      return false;
-    } catch (e) {
-      _setError('An unexpected error occurred: $e');
-      return false;
-    } finally {
-      _setLoading(false);
-    }
-  }
+  //     _user = userCredential.user;
+  //     notifyListeners();
+  //     return true;
+  //   } on FirebaseAuthException catch (e) {
+  //     _handleFirebaseError(e);
+  //     return false;
+  //   } catch (e) {
+  //     _setError('An unexpected error occurred: $e');
+  //     return false;
+  //   } finally {
+  //     _setLoading(false);
+  //   }
+  // }
 
   Future<void> signOut() async {
     _setLoading(true);
