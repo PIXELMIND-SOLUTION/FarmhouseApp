@@ -15,7 +15,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
   final List<OnboardingPage> _pages = [
     OnboardingPage(
       image: 'assets/onboardingimage3.jpg',
-      title: 'Welcome to\nFarmHouseHub',
+      title: '',
       description:
           'Monthly hangout destinations for Indians. It is nearby & affordable.',
       isLast: true,
