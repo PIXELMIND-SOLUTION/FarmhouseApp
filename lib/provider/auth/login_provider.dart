@@ -58,6 +58,36 @@ class LoginProvider with ChangeNotifier {
     }
   }
 
+    //Guest login function
+
+    Future<bool> guestLogin() async {
+    isLoading = true;
+    errorMessage = null;
+    notifyListeners();
+
+    try {
+      final result = await _authService.guestLogin();
+
+      isLoading = false;
+
+      if (result['success'] == true && result['user'] != null) {
+        currentUser = result['user'] as UserModel;
+        notifyListeners();
+        return true;
+      } else {
+        errorMessage = result['message'] as String? ?? 'Guest login failed. Please try again.';
+        notifyListeners();
+        return false;
+      }
+    } catch (e) {
+      print('❌ Guest login error: $e');
+      isLoading = false;
+      errorMessage = _parseErrorMessage(e);
+      notifyListeners();
+      return false;
+    }
+  }
+
   /// Logout
   Future<void> logout() async {
     try {

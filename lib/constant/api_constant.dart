@@ -15,4 +15,5 @@ class ApiConstants {
   static const String addtowishlist = '$baseUrl/farmhouseId/wishlist/userId';
   static const String getwishlist = '$baseUrl/get-wishlist/userId';
   static const String payment = '$baseUrl/order/create';
+  static const String guestlogin='$baseUrl/auth/guestlogin';
 }

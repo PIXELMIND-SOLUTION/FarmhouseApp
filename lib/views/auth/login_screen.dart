@@ -1,4 +1,3 @@
-
 import 'package:farmhouse_app/provider/auth/login_provider.dart';
 import 'package:farmhouse_app/provider/firebase/google_provider.dart';
 import 'package:farmhouse_app/utils/validators.dart';
@@ -35,55 +34,51 @@ class _LoginScreenState extends State<LoginScreen> {
   }
 
   /// LOGIN HANDLER
-/// LOGIN HANDLER
-Future<void> _handleLogin() async {
-  setState(() {
-    _phoneError = Validators.validatePhone(_phoneController.text);
-    _passwordError = Validators.validatePassword(_passwordController.text);
-  });
+  /// LOGIN HANDLER
+  Future<void> _handleLogin() async {
+    setState(() {
+      _phoneError = Validators.validatePhone(_phoneController.text);
+      _passwordError = Validators.validatePassword(_passwordController.text);
+    });
 
-  if (_phoneError != null || _passwordError != null) return;
+    if (_phoneError != null || _passwordError != null) return;
 
-  if (!_rememberMe) {
-    ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(
-        content: Text('Please enable "Remember me"'),
-        backgroundColor: Colors.orange,
-      ),
-    );
-    return;
-  }
-
-  final loginProvider = Provider.of<LoginProvider>(context, listen: false);
-  final success = await loginProvider.login(
-    _phoneController.text.trim(),
-    _passwordController.text.trim(),
-  );
-
-  if (!mounted) return;
-
-  if (success) {
-    Navigator.pushReplacement(
-      context,
-      MaterialPageRoute(builder: (_) => const NavbarScreen()),
-    );
-  } else {
-    // Show backend error message
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Text(
-          loginProvider.errorMessage ?? "Invalid credentials",
+    if (!_rememberMe) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Please enable "Remember me"'),
+          backgroundColor: Colors.orange,
         ),
-        backgroundColor: Colors.red,
-        behavior: SnackBarBehavior.floating,
-        margin: const EdgeInsets.all(16),
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(8),
-        ),
-      ),
+      );
+      return;
+    }
+
+    final loginProvider = Provider.of<LoginProvider>(context, listen: false);
+    final success = await loginProvider.login(
+      _phoneController.text.trim(),
+      _passwordController.text.trim(),
     );
+
+    if (!mounted) return;
+
+    if (success) {
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(builder: (_) => const NavbarScreen()),
+      );
+    } else {
+      // Show backend error message
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(loginProvider.errorMessage ?? "Invalid credentials"),
+          backgroundColor: Colors.red,
+          behavior: SnackBarBehavior.floating,
+          margin: const EdgeInsets.all(16),
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+        ),
+      );
+    }
   }
-}
 
   /// GOOGLE LOGIN
   // Future<void> _handleGoogleSignIn() async {
@@ -260,9 +255,9 @@ Future<void> _handleLogin() async {
                                       : _handleLogin,
                                   style: ElevatedButton.styleFrom(
                                     backgroundColor: const Color(0xFFFF5A5F),
-                                    disabledBackgroundColor:
-                                        const Color(0xFFFF5A5F)
-                                            .withOpacity(0.6),
+                                    disabledBackgroundColor: const Color(
+                                      0xFFFF5A5F,
+                                    ).withOpacity(0.6),
                                   ),
                                   child: loginProvider.isLoading
                                       ? const SizedBox(
@@ -278,6 +273,115 @@ Future<void> _handleLogin() async {
                                           style: TextStyle(
                                             fontSize: 16,
                                             color: Colors.white,
+                                          ),
+                                        ),
+                                ),
+                              ),
+
+                              SizedBox(height: 12),
+
+                              // Guest Login button
+                              // SizedBox(
+                              //   width: double.infinity,
+                              //   height: 50,
+                              //   child: OutlinedButton(
+                              //     onPressed: loginProvider.isLoading
+                              //         ? null
+                              //         : () {
+                              //             Navigator.pushReplacement(
+                              //               context,
+                              //               MaterialPageRoute(
+                              //                 builder: (_) =>
+                              //                     const NavbarScreen(),
+                              //               ),
+                              //             );
+                              //           },
+                              //     style: OutlinedButton.styleFrom(
+                              //       side: const BorderSide(
+                              //         color: Colors.white38,
+                              //         width: 1.5,
+                              //       ),
+                              //       shape: RoundedRectangleBorder(
+                              //         borderRadius: BorderRadius.circular(20),
+                              //       ),
+                              //     ),
+                              //     child: const Text(
+                              //       "Continue as Guest",
+                              //       style: TextStyle(
+                              //         fontSize: 16,
+                              //         color: Colors.white60,
+                              //       ),
+                              //     ),
+                              //   ),
+                              // ),
+
+                              // Guest Login button
+                              SizedBox(
+                                width: double.infinity,
+                                height: 50,
+                                child: OutlinedButton(
+                                  onPressed: loginProvider.isLoading
+                                      ? null
+                                      : () async {
+                                          final success = await loginProvider
+                                              .guestLogin();
+
+                                          if (!mounted) return;
+
+                                          if (success) {
+                                            Navigator.pushReplacement(
+                                              context,
+                                              MaterialPageRoute(
+                                                builder: (_) =>
+                                                    const NavbarScreen(),
+                                              ),
+                                            );
+                                          } else {
+                                            ScaffoldMessenger.of(
+                                              context,
+                                            ).showSnackBar(
+                                              SnackBar(
+                                                content: Text(
+                                                  loginProvider.errorMessage ??
+                                                      "Guest login failed",
+                                                ),
+                                                backgroundColor: Colors.red,
+                                                behavior:
+                                                    SnackBarBehavior.floating,
+                                                margin: const EdgeInsets.all(
+                                                  16,
+                                                ),
+                                                shape: RoundedRectangleBorder(
+                                                  borderRadius:
+                                                      BorderRadius.circular(8),
+                                                ),
+                                              ),
+                                            );
+                                          }
+                                        },
+                                  style: OutlinedButton.styleFrom(
+                                    side: const BorderSide(
+                                      color: Colors.white38,
+                                      width: 1.5,
+                                    ),
+                                    shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(20),
+                                    ),
+                                  ),
+                                  child: loginProvider.isLoading
+                                      ? const SizedBox(
+                                          height: 20,
+                                          width: 20,
+                                          child: CircularProgressIndicator(
+                                            color: Colors.white60,
+                                            strokeWidth: 2,
+                                          ),
+                                        )
+                                      : const Text(
+                                          "Continue as Guest",
+                                          style: TextStyle(
+                                            fontSize: 16,
+                                            color: Colors.white60,
                                           ),
                                         ),
                                 ),
@@ -316,9 +420,7 @@ Future<void> _handleLogin() async {
                 if (loginProvider.isLoading)
                   Container(
                     color: Colors.black26,
-                    child: const Center(
-                      child: CircularProgressIndicator(),
-                    ),
+                    child: const Center(child: CircularProgressIndicator()),
                   ),
               ],
             );
@@ -374,24 +476,24 @@ Future<void> _handleLogin() async {
               suffixIcon: hasError
                   ? const Icon(Icons.error, color: Colors.red, size: 20)
                   : isPassword
-                      ? IconButton(
-                          icon: Text(
-                            isVisible ? "Hide" : "Show",
-                            style: const TextStyle(
-                              color: Colors.white54,
-                              fontSize: 12,
-                            ),
-                          ),
-                          onPressed: onToggleVisibility,
-                        )
-                      : null,
+                  ? IconButton(
+                      icon: Text(
+                        isVisible ? "Hide" : "Show",
+                        style: const TextStyle(
+                          color: Colors.white54,
+                          fontSize: 12,
+                        ),
+                      ),
+                      onPressed: onToggleVisibility,
+                    )
+                  : null,
             ),
           ),
         ),
         if (hasError) ...[
           const SizedBox(height: 6),
           ErrorTooltip(message: errorText),
-        ]
+        ],
       ],
     );
   }

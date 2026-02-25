@@ -5,6 +5,7 @@ class UserModel {
   final String email;
   final String phoneNumber;
   final String?token;
+  final bool isGuest;
 
   UserModel({
     required this.id,
@@ -12,7 +13,8 @@ class UserModel {
     required this.lastName,
     required this.email,
     required this.phoneNumber,
-    this.token
+    this.token,
+    this.isGuest = false,
   });
 
   factory UserModel.fromJson(Map<String, dynamic> json) {
@@ -23,6 +25,7 @@ class UserModel {
       email: json['email'] ?? '',
       phoneNumber: json['phoneNumber'] ?? '',
       token: json['token']??'',
+      isGuest: json['isGuest'] ?? false,
     );
   }
 
@@ -33,7 +36,8 @@ class UserModel {
       "lastName": lastName,
       "email": email,
       "phoneNumber": phoneNumber,
-      "token":token
+      "token":token,
+      "isGuest": isGuest,
     };
   }
 }

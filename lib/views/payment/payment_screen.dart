@@ -1216,7 +1216,9 @@ class _PaymentScreenState extends State<PaymentScreen> {
   }
 
   /// Central handler for the "Pay Now" tap
-  void _handlePayPress() {
+  void _handlePayPress()async {
+
+    
     // if (_selectedPaymentMethod == null) {
     //   _showSnackBar('Please select a payment method', Colors.orange);
     //   return;

@@ -57,4 +57,62 @@ class LoginService {
       };
     }
   }
+   
+   /////  Guest Login ///////
+
+    Future<Map<String, dynamic>> guestLogin() async {
+    try {
+      final response = await http.post(
+        Uri.parse(ApiConstants.guestlogin),
+        headers: {"Content-Type": "application/json"},
+      );
+
+      print('🔹 Guest Login status code: ${response.statusCode}');
+      print('🔹 Guest Login response body: ${response.body}');
+
+      final data = jsonDecode(response.body) as Map<String, dynamic>;
+
+      if (data["success"] == true) {
+        final userJson = data["user"] as Map<String, dynamic>;
+        final token = data["token"] as String?;
+
+        // Save token if you have a method for it
+        if (token != null) {
+          await SharedPrefs.saveToken(token);
+        }
+
+        final user = UserModel(
+          id: userJson["_id"] as String,
+          firstName: '',
+          lastName: '',
+          email: '',
+          phoneNumber: '',
+          isGuest: userJson["isGuest"] as bool? ?? true,
+        );
+
+        await SharedPrefs.saveUser(user);
+
+
+        return {
+          'success': true,
+          'user': user,
+          'token': token,
+          'message': data['message'] as String? ?? 'Logged in as guest',
+        };
+      } else {
+        return {
+          'success': false,
+          'user': null,
+          'message': data['message'] as String? ?? 'Guest login failed',
+        };
+      }
+    } catch (e) {
+      print("❌ Guest Login error: $e");
+      return {
+        'success': false,
+        'user': null,
+        'message': 'Network error. Please try again.',
+      };
+    }
+  }
 }

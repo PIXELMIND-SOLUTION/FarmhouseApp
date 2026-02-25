@@ -1677,7 +1677,9 @@
 
 import 'dart:io';
 import 'dart:convert';
+import 'package:farmhouse_app/provider/auth/login_provider.dart';
 import 'package:farmhouse_app/provider/booking/booking_provider.dart';
+import 'package:farmhouse_app/views/auth/login_screen.dart';
 import 'package:farmhouse_app/views/models/farmhouse_model.dart';
 import 'package:farmhouse_app/views/payment/payment_screen.dart';
 import 'package:farmhouse_app/widgets/like_widget.dart';
@@ -1732,6 +1734,47 @@ class _HouseDetailScreenState extends State<HouseDetailScreen> {
   }
 
   Future<void> _handleBooking() async {
+    /////// Added a separate function for checking if the user is Guest or normal user/////////
+
+    // final loginProvider = Provider.of<LoginProvider>(context, listen: false);
+
+    // if (loginProvider.currentUser == null ||
+    //     loginProvider.currentUser!.isGuest == true) {
+    //   showDialog(
+    //     context: context,
+    //     builder: (context) => AlertDialog(
+    //       shape: RoundedRectangleBorder(
+    //         borderRadius: BorderRadius.circular(16),
+    //       ),
+    //       title: const Text(
+    //         'Login Required',
+    //         style: TextStyle(fontWeight: FontWeight.bold),
+    //       ),
+    //       content: const Text('Please login first to continue the booking.'),
+    //       actions: [
+    //         TextButton(
+    //           onPressed: () => Navigator.pop(context),
+    //           child: const Text('Cancel'),
+    //         ),
+
+    //         ElevatedButton(
+    //           onPressed: () {
+    //             Navigator.pop(context);
+
+    //             Navigator.pushAndRemoveUntil(
+    //               context,
+    //               MaterialPageRoute(builder: (context) => const LoginScreen()),
+    //               (route) => false,
+    //             );
+    //           },
+    //           child: const Text('Login'),
+    //         ),
+    //       ],
+    //     ),
+    //   );
+
+    //   return; 
+    // }
     if (selectedDateIndex == null || selectedTimeSlot == null) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
@@ -1762,7 +1805,10 @@ class _HouseDetailScreenState extends State<HouseDetailScreen> {
       (slot) => slot['label'] == selectedTimeSlot,
     );
 
-    final slotId = selectedSlot['slotId']; // or slot['id']
+    // final slotId = selectedSlot['slotId']; // or slot['id']
+
+    final slotId = (selectedSlot['slotId'] ?? selectedSlot['id'] ?? '')
+        .toString();
     final farmhouseId = farmhouseData!.id;
 
     final bookingProvider = Provider.of<BookingProvider>(
@@ -1796,7 +1842,6 @@ class _HouseDetailScreenState extends State<HouseDetailScreen> {
             totalAmount: booking['priceBreakdown']['totalAmount'],
             slotId: slotId,
             farmhouseId: farmhouseId,
-            
           ),
         ),
       );
