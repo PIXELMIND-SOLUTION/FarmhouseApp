@@ -7,7 +7,6 @@ import 'dart:convert';
 import 'package:provider/provider.dart';
 
 class BookingScreen extends StatefulWidget {
-  
   const BookingScreen({super.key});
 
   @override
@@ -15,7 +14,6 @@ class BookingScreen extends StatefulWidget {
 }
 
 class _BookingScreenState extends State<BookingScreen> {
-
   String? userId;
 
   Map<String, List<dynamic>> bookingsData = {
@@ -24,7 +22,7 @@ class _BookingScreenState extends State<BookingScreen> {
     'completed': [],
     'canceled': [],
   };
-  
+
   bool isLoading = true;
 
   @override
@@ -70,12 +68,14 @@ class _BookingScreenState extends State<BookingScreen> {
     });
 
     final statuses = ['upcoming', 'active', 'completed', 'canceled'];
-    
+
     for (String status in statuses) {
       try {
         print("📡 Fetching $status bookings for userId: $userId");
         final response = await http.get(
-          Uri.parse('http://31.97.206.144:5124/api/order/all?userId=$userId&status=$status'),
+          Uri.parse(
+            'http://31.97.206.144:5124/api/order/all?userId=$userId&status=$status',
+          ),
         );
 
         print("📥 Response for $status: ${response.body}");
@@ -143,7 +143,9 @@ class _BookingScreenState extends State<BookingScreen> {
           ),
         ),
         body: isLoading
-            ? const Center(child: CircularProgressIndicator(color: Color(0xFFFF5A5F)))
+            ? const Center(
+                child: CircularProgressIndicator(color: Color(0xFFFF5A5F)),
+              )
             : TabBarView(
                 children: [
                   _buildBookingsList('upcoming'),
@@ -192,7 +194,9 @@ class _BookingScreenState extends State<BookingScreen> {
         itemBuilder: (context, index) {
           final booking = bookings[index];
           return Padding(
-            padding: EdgeInsets.only(bottom: index < bookings.length - 1 ? 16 : 0),
+            padding: EdgeInsets.only(
+              bottom: index < bookings.length - 1 ? 16 : 0,
+            ),
             child: _buildBookingCard(booking, status),
           );
         },
@@ -205,17 +209,34 @@ class _BookingScreenState extends State<BookingScreen> {
     final bookingDetails = booking['bookingDetails'];
     final formattedDates = booking['formattedDates'];
     final actions = booking['actions'];
-    
-    String title = farmhouse['name'] ?? 'Unknown Farmhouse';
-    String location = farmhouse['address'] ?? 'Unknown Location';
-    String imageUrl = (farmhouse['images'] != null && farmhouse['images'].isNotEmpty) 
-        ? farmhouse['images'][0] 
+
+    // String title = farmhouse['name'] ?? 'Unknown Farmhouse';
+
+    // Guard against null farmhouse
+    // String title = farmhouse != null ? (farmhouse['name'] ?? 'Unknown Farmhouse') : 'Unknown Farmhouse';
+    //   String location = farmhouse['address'] ?? 'Unknown Location';
+    //   String imageUrl = (farmhouse['images'] != null && farmhouse['images'].isNotEmpty)
+    //       ? farmhouse['images'][0]
+    //       : '';
+
+    String title = farmhouse != null
+        ? (farmhouse['name'] ?? 'Unknown Farmhouse')
+        : 'Unknown Farmhouse';
+    String location = farmhouse != null
+        ? (farmhouse['address'] ?? 'Unknown Location')
+        : 'Unknown Location';
+    String imageUrl =
+        (farmhouse != null &&
+            farmhouse['images'] != null &&
+            farmhouse['images'].isNotEmpty)
+        ? farmhouse['images'][0]
         : '';
-    
-    String date = '${formattedDates['checkIn']} - ${formattedDates['checkOut']}';
+
+    String date =
+        '${formattedDates['checkIn']} - ${formattedDates['checkOut']}';
     String price = '₹${booking['totalAmount']}';
     String status = booking['status'] ?? 'Unknown';
-    
+
     Color statusColor;
     switch (statusType) {
       case 'upcoming':

@@ -811,7 +811,7 @@ class _PaymentScreenState extends State<PaymentScreen> {
     int amountInPaise = (widget.totalAmount) * 100.toInt();
 
     var options = {
-      'key': 'rzp_test_BxtRNvflG06PTV',
+      'key': 'rzp_live_R7WEc7UNXkN075',
       'amount': amountInPaise,
       'name': 'V Farm',
       'description': '${widget.name ?? "Farm House"} - Calicut, Kerala',

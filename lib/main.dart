@@ -38,7 +38,7 @@ void main() async {
         ChangeNotifierProvider(create: (_) => LocationProvider()),
         ChangeNotifierProvider(create: (_) => FarmhouseProvider()),
         ChangeNotifierProvider(create: (_) => BookingProvider()),
-        ChangeNotifierProvider(create: (_) => GoogleAuthenticationProvider()),
+        // ChangeNotifierProvider(create: (_) => GoogleAuthenticationProvider()),
         ChangeNotifierProvider(create: (_) => WishlistProvider()),
         ChangeNotifierProvider(create: (_) => PaymentProvider()),
       ],
