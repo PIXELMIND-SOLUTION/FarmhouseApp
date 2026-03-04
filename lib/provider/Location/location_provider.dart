@@ -26,6 +26,18 @@ class LocationProvider extends ChangeNotifier {
   // Check if location data is available
   bool get hasLocation => _latitude != null && _longitude != null;
 
+    Future<void> initializeLocation(String userId) async {
+    try {
+      await getCurrentLocation();
+      // Optionally save location to user profile
+    } catch (e) {
+      print('Error initializing location: $e');
+      // Handle error silently - we'll still navigate
+    } finally {
+      // Ensure we still navigate even if location fails
+    }
+  }
+
   // Get current location and update API
   Future<void> getCurrentLocation() async {
     _isLoading = true;

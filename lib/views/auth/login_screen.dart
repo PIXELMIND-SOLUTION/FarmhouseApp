@@ -4,6 +4,7 @@ import 'package:farmhouse_app/utils/validators.dart';
 import 'package:farmhouse_app/views/auth/forgot_password_screen.dart';
 import 'package:farmhouse_app/views/auth/navbar_screen.dart';
 import 'package:farmhouse_app/views/auth/register_screen.dart';
+import 'package:farmhouse_app/views/splash/splash_screen.dart';
 import 'package:farmhouse_app/widgets/error_tooltip.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -64,7 +65,7 @@ class _LoginScreenState extends State<LoginScreen> {
     if (success) {
       Navigator.pushReplacement(
         context,
-        MaterialPageRoute(builder: (_) => const NavbarScreen()),
+        MaterialPageRoute(builder: (_) => const SplashScreen()),
       );
     } else {
       // Show backend error message
