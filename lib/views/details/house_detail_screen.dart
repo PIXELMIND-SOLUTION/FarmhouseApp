@@ -1677,7 +1677,6 @@
 
 import 'dart:io';
 import 'dart:convert';
-import 'package:farmhouse_app/provider/auth/login_provider.dart';
 import 'package:farmhouse_app/provider/booking/booking_provider.dart';
 import 'package:farmhouse_app/views/auth/login_screen.dart';
 import 'package:farmhouse_app/views/models/farmhouse_model.dart';
@@ -2681,47 +2680,47 @@ Book now on V FARMS!
                         const SizedBox(height: 20),
 
                         // Perfect For Badge
-                        Container(
-                          padding: const EdgeInsets.all(16),
-                          decoration: BoxDecoration(
-                            color: const Color(0xFFFEF3C7),
-                            borderRadius: BorderRadius.circular(12),
-                            border: Border.all(
-                              color: const Color(0xFFFDE047),
-                              width: 1,
-                            ),
-                          ),
-                          child: Row(
-                            children: [
-                              const Icon(
-                                Icons.celebration_rounded,
-                                color: Color(0xFFCA8A04),
-                                size: 22,
-                              ),
-                              const SizedBox(width: 12),
-                              Expanded(
-                                child: RichText(
-                                  text: TextSpan(
-                                    style: const TextStyle(
-                                      fontSize: 15,
-                                      fontWeight: FontWeight.w500,
-                                      color: Color(0xFF92400E),
-                                    ),
-                                    children: [
-                                      const TextSpan(text: 'Perfect for '),
-                                      TextSpan(
-                                        text: farmhouseData!.bookingFor,
-                                        style: const TextStyle(
-                                          fontWeight: FontWeight.bold,
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
+                        // Container(
+                        //   padding: const EdgeInsets.all(16),
+                        //   decoration: BoxDecoration(
+                        //     color: const Color(0xFFFEF3C7),
+                        //     borderRadius: BorderRadius.circular(12),
+                        //     border: Border.all(
+                        //       color: const Color(0xFFFDE047),
+                        //       width: 1,
+                        //     ),
+                        //   ),
+                        //   child: Row(
+                        //     children: [
+                        //       const Icon(
+                        //         Icons.celebration_rounded,
+                        //         color: Color(0xFFCA8A04),
+                        //         size: 22,
+                        //       ),
+                        //       const SizedBox(width: 12),
+                        //       Expanded(
+                        //         child: RichText(
+                        //           text: TextSpan(
+                        //             style: const TextStyle(
+                        //               fontSize: 15,
+                        //               fontWeight: FontWeight.w500,
+                        //               color: Color(0xFF92400E),
+                        //             ),
+                        //             children: [
+                        //               const TextSpan(text: 'Perfect for '),
+                        //               TextSpan(
+                        //                 text: farmhouseData!.bookingFor,
+                        //                 style: const TextStyle(
+                        //                   fontWeight: FontWeight.bold,
+                        //                 ),
+                        //               ),
+                        //             ],
+                        //           ),
+                        //         ),
+                        //       ),
+                        //     ],
+                        //   ),
+                        // ),
                         const SizedBox(height: 32),
 
                         // Divider

@@ -34,47 +34,65 @@ class FarmhouseModel {
   });
 
   // Add this method inside FarmhouseModel class
-Farmhouse toFarmhouse() {
-  return Farmhouse(
-    id: id,
-    name: name,
-    images: images,
-    address: address,
-    description: description,
-    amenities: amenities,
-    bookingFor: bookingFor,
-    pricePerHour: pricePerHour,
-    pricePerDay: pricePerDay,
-    timePrices: [], // Empty list if not available in wishlist
-    rating: rating,
-    feedbackSummary: feedbackSummary ?? '',
-    location: Location(
-      type: 'Point',
-      coordinates: [longitude, latitude],
-    ),
-    wishlist: [],
-    reviews: [],
-    bookedSlots: [],
-    createdAt: '',
-  );
-}
+  Farmhouse toFarmhouse() {
+    return Farmhouse(
+      id: id,
+      name: name,
+      images: images,
+      address: address,
+      description: description,
+      amenities: amenities,
+      bookingFor: bookingFor,
+      pricePerHour: pricePerHour,
+      pricePerDay: pricePerDay,
+      timePrices: [], // Empty list if not available in wishlist
+      rating: rating,
+      feedbackSummary: feedbackSummary ?? '',
+      location: Location(type: 'Point', coordinates: [longitude, latitude]),
+      wishlist: [],
+      reviews: [],
+      bookedSlots: [],
+      createdAt: '',
+    );
+  }
+
+  // factory FarmhouseModel.fromJson(Map<String, dynamic> json) {
+  //   final location = json['location'] as Map<String, dynamic>;
+  //   final coordinates = location['coordinates'] as List<dynamic>;
+
+  //   return FarmhouseModel(
+  //     id: json['_id'],
+  //     name: json['name'],
+  //     images: List<String>.from(json['images']),
+  //     address: json['address'],
+  //     description: json['description'],
+  //     amenities: List<String>.from(json['amenities']),
+  //     bookingFor: json['bookingFor'],
+  //     pricePerHour: (json['pricePerHour'] as num).toDouble(),
+  //     pricePerDay: (json['pricePerDay'] as num).toDouble(),
+  //     rating: (json['rating'] as num).toDouble(),
+  //     feedbackSummary: json['feedbackSummary'],
+  //     longitude: (coordinates[0] as num).toDouble(),
+  //     latitude: (coordinates[1] as num).toDouble(),
+  //   );
+  // }
 
   factory FarmhouseModel.fromJson(Map<String, dynamic> json) {
     final location = json['location'] as Map<String, dynamic>;
     final coordinates = location['coordinates'] as List<dynamic>;
 
     return FarmhouseModel(
-      id: json['_id'],
-      name: json['name'],
-      images: List<String>.from(json['images']),
-      address: json['address'],
-      description: json['description'],
-      amenities: List<String>.from(json['amenities']),
-      bookingFor: json['bookingFor'],
-      pricePerHour: (json['pricePerHour'] as num).toDouble(),
-      pricePerDay: (json['pricePerDay'] as num).toDouble(),
-      rating: (json['rating'] as num).toDouble(),
-      feedbackSummary: json['feedbackSummary'],
+      id: (json['_id'] ?? json['id'] ?? '').toString(),
+      name: (json['name'] ?? '').toString(),
+      images: List<String>.from(json['images'] ?? []),
+      address: (json['address'] ?? '').toString(),
+      description: (json['description'] ?? '').toString(),
+      amenities: List<String>.from(json['amenities'] ?? []),
+      bookingFor: (json['bookingFor'] ?? '').toString(),
+      pricePerHour: (json['pricePerHour'] as num? ?? 0).toDouble(),
+      pricePerDay: (json['pricePerDay'] as num? ?? 0).toDouble(),
+      rating: (json['rating'] as num? ?? 0).toDouble(),
+      feedbackSummary: json['feedbackSummary']?.toString(),
       longitude: (coordinates[0] as num).toDouble(),
       latitude: (coordinates[1] as num).toDouble(),
     );
@@ -127,10 +145,7 @@ class WishlistToggleResponseModel {
   final bool success;
   final String message;
 
-  WishlistToggleResponseModel({
-    required this.success,
-    required this.message,
-  });
+  WishlistToggleResponseModel({required this.success, required this.message});
 
   factory WishlistToggleResponseModel.fromJson(Map<String, dynamic> json) {
     return WishlistToggleResponseModel(
