@@ -37,13 +37,15 @@ class ForgotPasswordProvider extends ChangeNotifier {
         notifyListeners();
         return true;
       } else {
-        _errorMessage = response["message"] ?? "Failed to send OTP. Please try again.";
+        _errorMessage =
+            response["message"] ?? "Failed to send OTP. Please try again.";
         _isLoading = false;
         notifyListeners();
         return false;
       }
     } catch (e) {
-      _errorMessage = "An error occurred. Please check your connection and try again.";
+      _errorMessage =
+          "An error occurred. Please check your connection and try again.";
       _isLoading = false;
       notifyListeners();
       return false;
@@ -53,7 +55,7 @@ class ForgotPasswordProvider extends ChangeNotifier {
   // =============================
   // 2️⃣ Verify OTP (Forgot Password Flow)
   // =============================
-  Future<bool> verifyOtp(String otp, String token) async {
+  Future<bool> verifyOtp(String otp) async {
     if (_token == null) {
       _errorMessage = "Session expired. Please request OTP again.";
       notifyListeners();
@@ -66,23 +68,29 @@ class ForgotPasswordProvider extends ChangeNotifier {
 
     try {
       final response = await _authService.verifyOtp(
-        token: _token!,
+        token: _token!, // ✅ ALWAYS use latest token
         otp: otp,
       );
 
       if (response["success"] == true) {
         _errorMessage = null;
         _isLoading = false;
+
+        // ✅ update token if backend sends new one
+        if (response["token"] != null) {
+          _token = response["token"].toString();
+        }
+
         notifyListeners();
         return true;
       } else {
-        _errorMessage = response["message"] ?? "Invalid OTP. Please try again.";
+        _errorMessage = response["message"] ?? "Invalid OTP.";
         _isLoading = false;
         notifyListeners();
         return false;
       }
     } catch (e) {
-      _errorMessage = "An error occurred. Please check your connection and try again.";
+      _errorMessage = "Something went wrong.";
       _isLoading = false;
       notifyListeners();
       return false;
@@ -99,9 +107,9 @@ class ForgotPasswordProvider extends ChangeNotifier {
 
     try {
       print('Verifying OTP: $otp with token: $token');
-      
+
       final response = await _authService.verifyOtp(
-        token: token,  // ✅ Use the passed token (registration token)
+        token: token, // ✅ Use the passed token (registration token)
         otp: otp,
       );
 
@@ -120,7 +128,8 @@ class ForgotPasswordProvider extends ChangeNotifier {
       }
     } catch (e) {
       print('Verification error: $e');
-      _errorMessage = "An error occurred. Please check your connection and try again.";
+      _errorMessage =
+          "An error occurred. Please check your connection and try again.";
       _isLoading = false;
       notifyListeners();
       return false;
@@ -130,8 +139,7 @@ class ForgotPasswordProvider extends ChangeNotifier {
   // =============================
   // 3️⃣ Reset Password
   // =============================
-  Future<bool> resetPassword(
-      String newPassword, String confirmPassword) async {
+  Future<bool> resetPassword(String newPassword, String confirmPassword) async {
     if (_token == null) {
       _errorMessage = "Session expired. Please start the process again.";
       notifyListeners();
@@ -155,13 +163,16 @@ class ForgotPasswordProvider extends ChangeNotifier {
         notifyListeners();
         return true;
       } else {
-        _errorMessage = response["message"] ?? "Failed to reset password. Please try again.";
+        _errorMessage =
+            response["message"] ??
+            "Failed to reset password. Please try again.";
         _isLoading = false;
         notifyListeners();
         return false;
       }
     } catch (e) {
-      _errorMessage = "An error occurred. Please check your connection and try again.";
+      _errorMessage =
+          "An error occurred. Please check your connection and try again.";
       _isLoading = false;
       notifyListeners();
       return false;

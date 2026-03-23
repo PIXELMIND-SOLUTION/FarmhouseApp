@@ -42,8 +42,7 @@ class _FarmhouseHomePageState extends State<FarmhouseHomePage> {
     _loadProfileData();
     Provider.of<AuthProvider>(context, listen: false).loadUserFromPrefs();
     // _setupLocationListener();
-            _fetchNearbyFarmhouses();
-
+    _fetchNearbyFarmhouses();
 
     // Load wishlist on init
     WidgetsBinding.instance.addPostFrameCallback((_) {
@@ -440,7 +439,6 @@ Book now on Farmhouse App!
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
-
                               /// LOCATION
                               Consumer<LocationProvider>(
                                 builder: (context, locationProvider, child) {
@@ -653,8 +651,7 @@ Book now on Farmhouse App!
 
                     _buildFixedDateSelector(),
 
-                                        const SizedBox(height: 10),
-
+                    const SizedBox(height: 10),
 
                     /// 🏡 PROPERTY LIST
                     _buildPropertyCardsList(),
@@ -677,7 +674,6 @@ Book now on Farmhouse App!
       ),
     );
   }
-
 
   Widget _buildSkeletonCard() {
     return Padding(
@@ -730,23 +726,16 @@ Book now on Farmhouse App!
 
     return Consumer3<FarmhouseProvider, LocationProvider, WishlistProvider>(
       builder: (context, farmhouseProvider, locationProvider, wishlistProvider, child) {
-
-          if (locationProvider.isLoading) {
-        return _buildLocationLoadingAnimation();
-      }
+        if (locationProvider.isLoading) {
+          return _buildLocationLoadingAnimation();
+        }
         // Show location prompt if no location set
         if (locationProvider.address == null ||
             locationProvider.address!.trim().isEmpty) {
           return Center(
             child: Padding(
               padding: const EdgeInsets.all(32.0),
-              child: Column(
-                children: [
-
-                  const SizedBox(height: 16),
-     
-                ],
-              ),
+              child: Column(children: [const SizedBox(height: 16)]),
             ),
           );
         }
@@ -904,7 +893,7 @@ Book now on Farmhouse App!
 
               return Center(
                 child: Padding(
-                  padding: const EdgeInsets.only( bottom: 20),
+                  padding: const EdgeInsets.only(bottom: 20),
                   child: GestureDetector(
                     onTap: () {
                       Navigator.push(
@@ -957,7 +946,8 @@ Book now on Farmhouse App!
                                       height: double.infinity,
                                       fit: BoxFit.cover,
                                       loadingBuilder: (context, child, loadingProgress) {
-                                        if (loadingProgress == null) return child;
+                                        if (loadingProgress == null)
+                                          return child;
                                         return Container(
                                           color: Colors.grey[300],
                                           child: Center(
@@ -976,18 +966,19 @@ Book now on Farmhouse App!
                                           ),
                                         );
                                       },
-                                      errorBuilder: (context, error, stackTrace) {
-                                        return Container(
-                                          color: Colors.grey[300],
-                                          child: const Center(
-                                            child: Icon(
-                                              Icons.home,
-                                              size: 80,
-                                              color: Colors.grey,
-                                            ),
-                                          ),
-                                        );
-                                      },
+                                      errorBuilder:
+                                          (context, error, stackTrace) {
+                                            return Container(
+                                              color: Colors.grey[300],
+                                              child: const Center(
+                                                child: Icon(
+                                                  Icons.home,
+                                                  size: 80,
+                                                  color: Colors.grey,
+                                                ),
+                                              ),
+                                            );
+                                          },
                                     ),
                                     // Dark gradient overlay
                                     Container(
@@ -1009,7 +1000,38 @@ Book now on Farmhouse App!
                               },
                             ),
                           ),
-                
+
+                          Positioned(
+                            top: 16,
+                            left: 16, // moved to left
+                            child: Container(
+                              padding: const EdgeInsets.symmetric(
+                                horizontal: 12,
+                                vertical: 6,
+                              ),
+                              decoration: BoxDecoration(
+                                color: Colors.black.withOpacity(0.6),
+                                borderRadius: BorderRadius.circular(20),
+                                boxShadow: [
+                                  BoxShadow(
+                                    color: Colors.black,
+                                    blurRadius: 2,
+                                    spreadRadius: 1,
+                                    offset: const Offset(0, 3),
+                                  ),
+                                ],
+                              ),
+                              child: Text(
+                                "₹${farmhouse.price}", // your price field
+                                style: const TextStyle(
+                                  color: Colors.white,
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 14,
+                                ),
+                              ),
+                            ),
+                          ),
+
                           // Top Right Actions (Wishlist & Share)
                           Positioned(
                             top: 16,
@@ -1083,15 +1105,19 @@ Book now on Farmhouse App!
                                       ),
                                     ),
                                     child: Transform.rotate(
-                                      angle: -0.5, // radians (negative = tilt up)
-                                      child: Icon(Icons.reply, color: Colors.blue),
+                                      angle:
+                                          -0.5, // radians (negative = tilt up)
+                                      child: Icon(
+                                        Icons.reply,
+                                        color: Colors.blue,
+                                      ),
                                     ),
                                   ),
                                 ),
                               ],
                             ),
                           ),
-                
+
                           // Bottom Info Card
                           Positioned(
                             bottom: 16,
@@ -1119,7 +1145,7 @@ Book now on Farmhouse App!
                                   ],
                                 ),
                                 const SizedBox(height: 8),
-                
+
                                 // Location & Distance
                                 Row(
                                   children: [
@@ -1144,9 +1170,9 @@ Book now on Farmhouse App!
                                   ],
                                 ),
                                 const SizedBox(height: 8),
-                
+
                                 const SizedBox(height: 12),
-                
+
                                 // Image Indicators
                                 Row(
                                   mainAxisAlignment: MainAxisAlignment.center,
@@ -1174,7 +1200,6 @@ Book now on Farmhouse App!
                               ],
                             ),
                           ),
-                
                         ],
                       ),
                     ),
@@ -1312,99 +1337,100 @@ Book now on Farmhouse App!
     );
   }
 
-
   Widget _buildLocationLoadingAnimation() {
-  final isDarkMode = Provider.of<ThemeProvider>(context).isDarkMode;
+    final isDarkMode = Provider.of<ThemeProvider>(context).isDarkMode;
 
-  return Center(
-    child: Padding(
-      padding: const EdgeInsets.all(32.0),
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          // Animated location icon with pulse effect
-          TweenAnimationBuilder<double>(
-            tween: Tween(begin: 0.0, end: 1.0),
-            duration: const Duration(milliseconds: 1500),
-            // repeat: true,
-            builder: (context, value, child) {
-              return Transform.scale(
-                scale: 1.0 + (value * 0.2),
-                child: Container(
-                  padding: const EdgeInsets.all(20),
-                  decoration: BoxDecoration(
-                    shape: BoxShape.circle,
-                    color: const Color(0xFF6366F1).withOpacity(0.1),
-                    boxShadow: [
-                      BoxShadow(
-                        color: const Color(0xFF6366F1).withOpacity(0.3 * value),
-                        blurRadius: 30 * value,
-                        spreadRadius: 10 * value,
-                      ),
-                    ],
-                  ),
-                  child: Icon(
-                    Icons.my_location,
-                    size: 48,
-                    color: const Color(0xFF6366F1),
-                  ),
-                ),
-              );
-            },
-          ),
-          const SizedBox(height: 32),
-          
-          // Animated dots
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: List.generate(3, (index) {
-              return TweenAnimationBuilder<double>(
-                tween: Tween(begin: 0.0, end: 1.0),
-                duration: const Duration(milliseconds: 600),
-                // repeat: true,
-                builder: (context, value, child) {
-                  final delay = index * 0.2;
-                  final animValue = (value + delay) % 1.0;
-                  
-                  return Container(
-                    margin: const EdgeInsets.symmetric(horizontal: 4),
-                    width: 8,
-                    height: 8,
+    return Center(
+      child: Padding(
+        padding: const EdgeInsets.all(32.0),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            // Animated location icon with pulse effect
+            TweenAnimationBuilder<double>(
+              tween: Tween(begin: 0.0, end: 1.0),
+              duration: const Duration(milliseconds: 1500),
+              // repeat: true,
+              builder: (context, value, child) {
+                return Transform.scale(
+                  scale: 1.0 + (value * 0.2),
+                  child: Container(
+                    padding: const EdgeInsets.all(20),
                     decoration: BoxDecoration(
                       shape: BoxShape.circle,
-                      color: const Color(0xFF6366F1).withOpacity(
-                        0.3 + (0.7 * (1 - animValue)),
-                      ),
+                      color: const Color(0xFF6366F1).withOpacity(0.1),
+                      boxShadow: [
+                        BoxShadow(
+                          color: const Color(
+                            0xFF6366F1,
+                          ).withOpacity(0.3 * value),
+                          blurRadius: 30 * value,
+                          spreadRadius: 10 * value,
+                        ),
+                      ],
                     ),
-                  );
-                },
-              );
-            }),
-          ),
-          const SizedBox(height: 24),
-          
-          // Text
-          Text(
-            'Detecting your location',
-            style: TextStyle(
-              color: isDarkMode ? Colors.grey[300] : Colors.grey[700],
-              fontSize: 18,
-              fontWeight: FontWeight.w600,
-              letterSpacing: 0.3,
+                    child: Icon(
+                      Icons.my_location,
+                      size: 48,
+                      color: const Color(0xFF6366F1),
+                    ),
+                  ),
+                );
+              },
             ),
-          ),
-          const SizedBox(height: 8),
-          Text(
-            'Finding nearby farmhouses for you...',
-            style: TextStyle(
-              color: isDarkMode ? Colors.grey[400] : Colors.grey[600],
-              fontSize: 14,
+            const SizedBox(height: 32),
+
+            // Animated dots
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: List.generate(3, (index) {
+                return TweenAnimationBuilder<double>(
+                  tween: Tween(begin: 0.0, end: 1.0),
+                  duration: const Duration(milliseconds: 600),
+                  // repeat: true,
+                  builder: (context, value, child) {
+                    final delay = index * 0.2;
+                    final animValue = (value + delay) % 1.0;
+
+                    return Container(
+                      margin: const EdgeInsets.symmetric(horizontal: 4),
+                      width: 8,
+                      height: 8,
+                      decoration: BoxDecoration(
+                        shape: BoxShape.circle,
+                        color: const Color(
+                          0xFF6366F1,
+                        ).withOpacity(0.3 + (0.7 * (1 - animValue))),
+                      ),
+                    );
+                  },
+                );
+              }),
             ),
-            textAlign: TextAlign.center,
-          ),
-        ],
+            const SizedBox(height: 24),
+
+            // Text
+            Text(
+              'Detecting your location',
+              style: TextStyle(
+                color: isDarkMode ? Colors.grey[300] : Colors.grey[700],
+                fontSize: 18,
+                fontWeight: FontWeight.w600,
+                letterSpacing: 0.3,
+              ),
+            ),
+            const SizedBox(height: 8),
+            Text(
+              'Finding nearby farmhouses for you...',
+              style: TextStyle(
+                color: isDarkMode ? Colors.grey[400] : Colors.grey[600],
+                fontSize: 14,
+              ),
+              textAlign: TextAlign.center,
+            ),
+          ],
+        ),
       ),
-    ),
-  );
-}
+    );
+  }
 }

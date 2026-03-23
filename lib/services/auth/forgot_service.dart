@@ -64,6 +64,7 @@ class ForgotService {
   }) async {
     try {
       final url = Uri.parse(ApiConstants.verifyOtp);
+      print('Status Codeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee: $token');
 
       final response = await http.post(
         url,
@@ -80,13 +81,11 @@ class ForgotService {
         return {
           "success": data["success"] ?? true,
           "message": data["message"] ?? "OTP verified successfully",
+          "token": data["token"] ?? "",
         };
       } else if (response.statusCode == 400) {
         final data = jsonDecode(response.body);
-        return {
-          "success": false,
-          "message": data["message"] ?? "Invalid OTP",
-        };
+        return {"success": false, "message": data["message"] ?? "Invalid OTP"};
       } else if (response.statusCode == 401) {
         final data = jsonDecode(response.body);
         return {
@@ -97,7 +96,8 @@ class ForgotService {
         final data = jsonDecode(response.body);
         return {
           "success": false,
-          "message": data["message"] ?? "Failed to verify OTP. Please try again.",
+          "message":
+              data["message"] ?? "Failed to verify OTP. Please try again.",
         };
       }
     } catch (e) {
@@ -145,7 +145,8 @@ class ForgotService {
         final data = jsonDecode(response.body);
         return {
           "success": false,
-          "message": data["message"] ?? "Invalid password or passwords do not match",
+          "message":
+              data["message"] ?? "Invalid password or passwords do not match",
         };
       } else if (response.statusCode == 401) {
         final data = jsonDecode(response.body);
@@ -157,7 +158,8 @@ class ForgotService {
         final data = jsonDecode(response.body);
         return {
           "success": false,
-          "message": data["message"] ?? "Failed to reset password. Please try again.",
+          "message":
+              data["message"] ?? "Failed to reset password. Please try again.",
         };
       }
     } catch (e) {

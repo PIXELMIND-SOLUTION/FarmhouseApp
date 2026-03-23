@@ -8,9 +8,13 @@ class AuthProvider with ChangeNotifier {
   bool _loading = false;
   String? _errorMessage;
 
+  Map<String, dynamic>? _lastRegisterPayload;
+
   UserModel? get user => _user;
   bool get isLoading => _loading;
   String? get errorMessage => _errorMessage;
+  String? _registerToken;
+  String? get registerToken => _registerToken;
 
   final AuthService _authService = AuthService();
 
@@ -34,6 +38,14 @@ class AuthProvider with ChangeNotifier {
     notifyListeners();
 
     try {
+      _lastRegisterPayload = {
+        "firstName": firstName,
+        "lastName": lastName,
+        "email": email,
+        "phoneNumber": phoneNumber,
+        "password": password,
+        "confirmPassword": confirmPassword,
+      };
       final response = await _authService.register(
         firstName: firstName,
         lastName: lastName,
@@ -47,32 +59,27 @@ class AuthProvider with ChangeNotifier {
 
       if (response != null && response['success'] == true) {
         // Extract user data and token
-        final userJson = response['user'] as Map<String, dynamic>?;
+        // final userJson = response['user'] as Map<String, dynamic>?;
         final token = response['token'] as String?;
 
-        if (userJson == null) {
-          _errorMessage = 'Invalid response from server';
-          notifyListeners();
-          return false;
-        }
+        // if (userJson == null) {
+        //   _errorMessage = 'Invalid response from server';
+        //   notifyListeners();
+        //   return false;
+        // }
 
         // Add token to user object
         if (token != null) {
-          userJson['token'] = token;
+          _registerToken = token;
         }
 
-        // Create user model
-        _user = UserModel.fromJson(userJson);
-
-        // Save to shared preferences
-        await SharedPrefs.saveUser(_user!);
-        
         notifyListeners();
         return true;
       } else {
         // Handle error response
-        _errorMessage = response?['message'] as String? ?? 
-                       'Registration failed. Please try again.';
+        _errorMessage =
+            response?['message'] as String? ??
+            'Registration failed. Please try again.';
         notifyListeners();
         return false;
       }
@@ -80,6 +87,46 @@ class AuthProvider with ChangeNotifier {
       print('❌ Registration error: $e');
       _loading = false;
       _errorMessage = _parseErrorMessage(e);
+      notifyListeners();
+      return false;
+    }
+  }
+
+  Future<bool> resendOtp() async {
+    if (_lastRegisterPayload == null) return false;
+
+    _loading = true;
+    notifyListeners();
+
+    try {
+      final response = await _authService.register(
+        firstName: _lastRegisterPayload!["firstName"],
+        lastName: _lastRegisterPayload!["lastName"],
+        email: _lastRegisterPayload!["email"],
+        phoneNumber: _lastRegisterPayload!["phoneNumber"],
+        password: _lastRegisterPayload!["password"],
+        confirmpassword: _lastRegisterPayload!["confirmPassword"],
+      );
+
+      _loading = false;
+
+      if (response != null && response['success'] == true) {
+        // update token if backend sends new one
+        final token = response['token'];
+        if (token != null) {
+          _registerToken = token.toString();
+        }
+
+        notifyListeners();
+        return true;
+      } else {
+        _errorMessage = response?['message'] ?? "Failed to resend OTP";
+        notifyListeners();
+        return false;
+      }
+    } catch (e) {
+      _loading = false;
+      _errorMessage = "Something went wrong";
       notifyListeners();
       return false;
     }

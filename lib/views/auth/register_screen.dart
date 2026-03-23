@@ -53,10 +53,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
   Future<void> _launchURL(String url) async {
     final Uri uri = Uri.parse(url);
 
-    if (!await launchUrl(
-      uri,
-      mode: LaunchMode.externalApplication,
-    )) {
+    if (!await launchUrl(uri, mode: LaunchMode.externalApplication)) {
       throw 'Could not launch $url';
     }
   }
@@ -117,16 +114,14 @@ class _RegisterScreenState extends State<RegisterScreen> {
       Navigator.pushReplacement(
         context,
         MaterialPageRoute(
-          builder: (_) => OtpScreen(
-            number: authProvider.user!.phoneNumber,
-            token: authProvider.user!.token,
-          ),
+          builder: (_) => OtpScreen(number: _phoneController.text.trim()),
         ),
       );
     } else {
       _showSnackBar(
-          authProvider.errorMessage ?? 'Registration failed. Please try again.',
-          isError: true);
+        authProvider.errorMessage ?? 'Registration failed. Please try again.',
+        isError: true,
+      );
     }
   }
 
@@ -289,14 +284,16 @@ class _RegisterScreenState extends State<RegisterScreen> {
                                         });
                                       },
                                       fillColor:
-                                          MaterialStateProperty.resolveWith(
-                                              (states) {
-                                        if (states
-                                            .contains(MaterialState.selected)) {
-                                          return const Color(0xFFFF5A5F);
-                                        }
-                                        return Colors.transparent;
-                                      }),
+                                          MaterialStateProperty.resolveWith((
+                                            states,
+                                          ) {
+                                            if (states.contains(
+                                              MaterialState.selected,
+                                            )) {
+                                              return const Color(0xFFFF5A5F);
+                                            }
+                                            return Colors.transparent;
+                                          }),
                                       side: const BorderSide(
                                         color: Color(0xFFFF5A5F),
                                         width: 2,
@@ -320,7 +317,9 @@ class _RegisterScreenState extends State<RegisterScreen> {
                                           fontSize: 12,
                                         ),
                                         children: [
-                                          const TextSpan(text: 'I agree to the '),
+                                          const TextSpan(
+                                            text: 'I agree to the ',
+                                          ),
 
                                           TextSpan(
                                             text: 'Privacy Policy',
@@ -332,7 +331,8 @@ class _RegisterScreenState extends State<RegisterScreen> {
                                             recognizer: TapGestureRecognizer()
                                               ..onTap = () {
                                                 _launchURL(
-                                                    "https://v-farm-houses-policies.onrender.com/privacy-policy");
+                                                  "https://v-farm-houses-policies.onrender.com/privacy-policy",
+                                                );
                                               },
                                           ),
 
@@ -348,7 +348,8 @@ class _RegisterScreenState extends State<RegisterScreen> {
                                             recognizer: TapGestureRecognizer()
                                               ..onTap = () {
                                                 _launchURL(
-                                                    "https://v-farm-houses-policies.onrender.com/terms-and-conditions");
+                                                  "https://v-farm-houses-policies.onrender.com/terms-and-conditions",
+                                                );
                                               },
                                           ),
                                         ],
@@ -365,15 +366,16 @@ class _RegisterScreenState extends State<RegisterScreen> {
                                 width: double.infinity,
                                 height: 50,
                                 child: ElevatedButton(
-                                  onPressed: (!_agreedToPolicy ||
+                                  onPressed:
+                                      (!_agreedToPolicy ||
                                           authProvider.isLoading)
                                       ? null // ❌ disabled
                                       : _handleRegister, // ✅ enabled
                                   style: ElevatedButton.styleFrom(
                                     backgroundColor: const Color(0xFFFF5A5F),
-                                    disabledBackgroundColor:
-                                        const Color(0xFFFF5A5F)
-                                            .withOpacity(0.4),
+                                    disabledBackgroundColor: const Color(
+                                      0xFFFF5A5F,
+                                    ).withOpacity(0.4),
                                     shape: RoundedRectangleBorder(
                                       borderRadius: BorderRadius.circular(25),
                                     ),
@@ -387,7 +389,8 @@ class _RegisterScreenState extends State<RegisterScreen> {
                                             strokeWidth: 2,
                                             valueColor:
                                                 AlwaysStoppedAnimation<Color>(
-                                                    Colors.white),
+                                                  Colors.white,
+                                                ),
                                           ),
                                         )
                                       : const Text(
@@ -504,12 +507,8 @@ class _RegisterScreenState extends State<RegisterScreen> {
                     LengthLimitingTextInputFormatter(10),
                   ]
                 : lettersOnly
-                    ? [
-                        FilteringTextInputFormatter.allow(
-                          RegExp(r"[a-zA-Z\s\-']"),
-                        ),
-                      ]
-                    : null,
+                ? [FilteringTextInputFormatter.allow(RegExp(r"[a-zA-Z\s\-']"))]
+                : null,
             decoration: InputDecoration(
               hintText: hint,
               hintStyle: const TextStyle(color: Colors.white38, fontSize: 13),
@@ -525,27 +524,27 @@ class _RegisterScreenState extends State<RegisterScreen> {
                       child: Icon(Icons.error, color: Colors.red, size: 18),
                     )
                   : isPassword
-                      ? Padding(
-                          padding: const EdgeInsets.only(right: 4),
-                          child: TextButton(
-                            onPressed: onToggleVisibility,
-                            child: Text(
-                              isVisible ? 'Hide' : 'Show',
-                              style: const TextStyle(
-                                color: Colors.white54,
-                                fontSize: 11,
-                              ),
-                            ),
+                  ? Padding(
+                      padding: const EdgeInsets.only(right: 4),
+                      child: TextButton(
+                        onPressed: onToggleVisibility,
+                        child: Text(
+                          isVisible ? 'Hide' : 'Show',
+                          style: const TextStyle(
+                            color: Colors.white54,
+                            fontSize: 11,
                           ),
-                        )
-                      : null,
+                        ),
+                      ),
+                    )
+                  : null,
             ),
           ),
         ),
         if (hasError) ...[
           const SizedBox(height: 6),
           ErrorTooltip(message: errorText),
-        ]
+        ],
       ],
     );
   }
