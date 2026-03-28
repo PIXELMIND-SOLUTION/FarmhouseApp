@@ -1673,8 +1673,6 @@
 //   }
 // }
 
-
-
 import 'dart:io';
 import 'dart:convert';
 import 'package:farmhouse_app/provider/booking/booking_provider.dart';
@@ -1688,6 +1686,7 @@ import 'package:intl/intl.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:provider/provider.dart';
 import 'package:share_plus/share_plus.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class HouseDetailScreen extends StatefulWidget {
   final Farmhouse? farmhouse;
@@ -1772,7 +1771,7 @@ class _HouseDetailScreenState extends State<HouseDetailScreen> {
     //     ),
     //   );
 
-    //   return; 
+    //   return;
     // }
     if (selectedDateIndex == null || selectedTimeSlot == null) {
       ScaffoldMessenger.of(context).showSnackBar(
@@ -2318,29 +2317,40 @@ Book now on V FARMS!
                   ),
                 ),
                 actions: [
-                  // Padding(
-                  //   padding: const EdgeInsets.all(8.0),
-                  //   child: Container(
-                  //     decoration: BoxDecoration(
-                  //       color: Colors.white,
-                  //       shape: BoxShape.circle,
-                  //       boxShadow: [
-                  //         BoxShadow(
-                  //           color: Colors.black.withOpacity(0.1),
-                  //           blurRadius: 8,
-                  //           offset: const Offset(0, 2),
-                  //         ),
-                  //       ],
-                  //     ),
-                  //     child: IconButton(
-                  //       icon: Icon(
-                  //         isInWishlist ? Icons.favorite : Icons.favorite_border,
-                  //         color: isInWishlist ? const Color(0xFFDC2626) : Colors.black,
-                  //       ),
-                  //       onPressed: _toggleWishlist,
-                  //     ),
-                  //   ),
-                  // ),
+                  Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Container(
+                      decoration: BoxDecoration(
+                        color: Colors.white,
+                        shape: BoxShape.circle,
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.black.withOpacity(0.1),
+                            blurRadius: 8,
+                            offset: const Offset(0, 2),
+                          ),
+                        ],
+                      ),
+                      child: IconButton(
+                        icon: const Icon(
+                          Icons.call,
+                          color: Colors.green, // call color
+                        ),
+                        onPressed: () async {
+                          final Uri phoneUri = Uri(
+                            scheme: 'tel',
+                            path: '8106740447',
+                          );
+
+                          if (await canLaunchUrl(phoneUri)) {
+                            await launchUrl(phoneUri);
+                          } else {
+                            print("❌ Could not launch dialer");
+                          }
+                        },
+                      ),
+                    ),
+                  ),
                   Padding(
                     padding: const EdgeInsets.all(8.0),
                     child: Container(
