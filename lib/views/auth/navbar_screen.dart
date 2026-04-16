@@ -5,14 +5,19 @@ import 'package:farmhouse_app/views/home/wishlist_screen.dart';
 import 'package:flutter/material.dart';
 
 class NavbarScreen extends StatefulWidget {
-  const NavbarScreen({super.key});
+  final int initialIndex;
+
+  const NavbarScreen({
+    super.key,
+    this.initialIndex = 0, // Default to Explore (index 0)
+  });
 
   @override
   State<NavbarScreen> createState() => _NavbarScreenState();
 }
 
 class _NavbarScreenState extends State<NavbarScreen> {
-  int _selectedIndex = 0; 
+  late int _selectedIndex;
 
   final List<Widget> _screens = [
     const FarmhouseHomePage(),
@@ -22,10 +27,16 @@ class _NavbarScreenState extends State<NavbarScreen> {
   ];
 
   @override
+  void initState() {
+    super.initState();
+    _selectedIndex = widget.initialIndex;
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
-      body: _screens[_selectedIndex], 
+      body: _screens[_selectedIndex],
       bottomNavigationBar: Container(
         decoration: BoxDecoration(
           color: Colors.white,
@@ -58,11 +69,7 @@ class _NavbarScreenState extends State<NavbarScreen> {
                   icon: Icons.calendar_today_outlined,
                   label: 'Bookings',
                 ),
-                _buildNavItem(
-                  index: 3,
-                  icon: Icons.person,
-                  label: 'Profile',
-                ),
+                _buildNavItem(index: 3, icon: Icons.person, label: 'Profile'),
               ],
             ),
           ),
@@ -77,7 +84,7 @@ class _NavbarScreenState extends State<NavbarScreen> {
     required String label,
   }) {
     final isSelected = _selectedIndex == index;
-    
+
     return GestureDetector(
       onTap: () {
         setState(() {
